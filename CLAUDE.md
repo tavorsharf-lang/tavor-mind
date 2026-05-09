@@ -237,3 +237,28 @@ src/
 - כל `w:rPr` חייב לכלול `<w:rtl w:val="1"/>`
 
 חוסר באחד מהם = טקסט ייראה הפוך / שבור ב-Word על Windows.
+
+## Auto-deploy workflow
+
+This project deploys to GitHub Pages from the `main` branch via GitHub Actions.
+Local-only changes are invisible to the user, who tests on
+`https://tavorsharf-lang.github.io/tavor-mind/`.
+
+After every successful code change (build clean, no errors), Claude Code
+auto-commits and pushes:
+
+1. `git add` only the files that were modified in this task
+2. `git commit -m "<concise message describing the change>"` using imperative
+   mood and a conventional-commits prefix when appropriate (`fix:`, `feat:`,
+   `refactor:`, `chore:`, `docs:`)
+3. `git push`
+
+Skip auto-push only if:
+- Build failed or has errors
+- The change is incomplete / WIP / mid-iteration
+- The user explicitly asked not to commit
+
+When skipping, mention it explicitly: "לא commit — [סיבה]".
+
+After pushing, briefly report: `pushed: <short SHA> · <commit message>` so
+the user knows the deploy is on its way (1-2 min via GitHub Actions to be live).
