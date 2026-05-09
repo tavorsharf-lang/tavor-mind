@@ -51,6 +51,20 @@ export function buildRunShortcutUrl(sessionId) {
   return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}`;
 }
 
+// Trigger a custom-scheme URL without navigating Safari away from the page.
+// Setting window.location.href causes Safari to keep the broken URL in history;
+// a hidden iframe gets iOS to handle the scheme while the main document stays put.
+export function launchShortcut(sessionId) {
+  if (!sessionId) return;
+  const url = buildRunShortcutUrl(sessionId);
+  const frame = document.createElement('iframe');
+  frame.style.display = 'none';
+  frame.setAttribute('aria-hidden', 'true');
+  frame.src = url;
+  document.body.appendChild(frame);
+  setTimeout(() => { frame.remove(); }, 400);
+}
+
 // Returns an unsubscribe fn. The callback receives `{ samples, lastTs }` where
 // samples is sorted ascending by ts. RTDB onValue fires once with current data
 // then on every update — for samples this means new keys appearing.

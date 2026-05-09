@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   subscribeLiveHrSamples,
-  buildRunShortcutUrl,
+  launchShortcut,
 } from '../../../utils/liveHr.js';
 
 // Sample is stale if no update arrived for this long. The Shortcut polls every
@@ -43,7 +43,7 @@ export default function LiveHrPanel({ sessionId, autoStart = false }) {
   const handleLaunchShortcut = () => {
     if (!sessionId) return;
     setShortcutLaunched(true);
-    window.location.href = buildRunShortcutUrl(sessionId);
+    launchShortcut(sessionId);
   };
 
   if (!sessionId) return null;

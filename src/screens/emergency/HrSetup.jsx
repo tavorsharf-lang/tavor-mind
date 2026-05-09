@@ -4,7 +4,7 @@ import {
   getCurrentUid,
   generateHrSessionId,
   buildShortcutWriteBase,
-  buildRunShortcutUrl,
+  launchShortcut,
   getHrSessionSnapshot,
   isHrSetupDone,
   markHrSetupDone,
@@ -63,7 +63,7 @@ export default function HrSetup() {
     setTestStatus('launching');
     setTimeout(() => {
       setTestStatus('waiting');
-      window.location.href = buildRunShortcutUrl(fresh);
+      launchShortcut(fresh);
     }, 200);
   };
 
