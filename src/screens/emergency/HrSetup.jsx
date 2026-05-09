@@ -133,9 +133,8 @@ export default function HrSetup() {
               <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 16 }}>
                 <li><b>Wait</b> — 5 seconds.</li>
                 <li><b>Find Health Samples where</b> — Type: Heart Rate, Sort by Start Date Latest First, Limit 1.</li>
-                <li><b>Get Numerical Value</b> from the sample (BPM).</li>
-                <li><b>Get Current Date</b> → <b>Format Date</b> כ-Unix Time → <b>Calculate</b> ×1000 (כדי לקבל ms).</li>
-                <li><b>Get Contents of URL</b>: URL = <span style={{fontFamily:'monospace'}}>{'{BaseUrl}/samples/{ms}.json'}</span>, Method: PUT, Request Body: JSON, top-level value = ה-BPM (מספר).</li>
+                <li><b>Get Value from Health Sample</b> — מחלץ את ה-BPM כמספר.</li>
+                <li><b>Get Contents of URL</b>: URL = <span style={{fontFamily:'monospace'}}>{'{BaseUrl}/samples.json'}</span>, Method: <b>POST</b>, Request Body: JSON, שדה: <span style={{fontFamily:'monospace'}}>bpm</span> = ה-BPM שחילצת.</li>
               </ol>
             </li>
             <li><b>End Workout</b>.</li>

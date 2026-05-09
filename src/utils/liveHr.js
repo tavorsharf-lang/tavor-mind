@@ -24,7 +24,22 @@ export function generateHrSessionId() {
   return `${t}-${r}`;
 }
 
-// The Shortcut PUTs samples to <base>/samples/<tsMs>.json with body = HR int.
+// Firebase push IDs encode a 48-bit ms timestamp in their first 8 chars,
+// using a custom base64 alphabet (lex-sortable). Decoded value is ms since epoch.
+const PUSH_ID_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+function decodePushIdTimestamp(key) {
+  if (typeof key !== 'string' || key.length < 8) return NaN;
+  let ts = 0;
+  for (let i = 0; i < 8; i++) {
+    const idx = PUSH_ID_CHARS.indexOf(key[i]);
+    if (idx < 0) return NaN;
+    ts = ts * 64 + idx;
+  }
+  return ts;
+}
+
+// The Shortcut POSTs samples to <base>/samples.json with body `{"bpm": <num>}`.
+// Firebase generates an auto-id key whose timestamp we decode on read.
 export function buildShortcutWriteBase(sessionId) {
   const uid = getUid();
   if (!uid || !sessionId) return null;
@@ -50,7 +65,15 @@ export function subscribeLiveHrSamples(sessionId, onSnapshot) {
     }
     const val = snap.val() || {};
     const samples = Object.entries(val)
-      .map(([ts, hr]) => ({ ts: Number(ts), hr: Number(hr) }))
+      .map(([key, raw]) => {
+        // Body shape: `{"bpm": <num>}` (preferred). Bare numbers also accepted.
+        const hr = typeof raw === 'object' && raw !== null ? Number(raw.bpm) : Number(raw);
+        // Key shape: numeric ms (PUT path), or Firebase push id (POST path —
+        // first 8 chars encode ms since epoch in a base64-like alphabet).
+        let ts = Number(key);
+        if (!Number.isFinite(ts)) ts = decodePushIdTimestamp(key);
+        return { ts, hr };
+      })
       .filter((s) => Number.isFinite(s.ts) && Number.isFinite(s.hr) && s.hr > 0)
       .sort((a, b) => a.ts - b.ts);
     onSnapshot({
