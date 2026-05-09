@@ -1,4 +1,5 @@
 import { dominantSchemas } from '../../data/schemas.js';
+import HrSummaryCard from './components/HrSummaryCard.jsx';
 
 const MOOD_LABELS = ['מאוד לא נעים', 'לא נעים', 'מעט לא נעים', 'ניטרלי', 'ניטרלי', 'מעט נעים', 'נעים', 'מאוד נעים', 'נפלא'];
 
@@ -132,6 +133,13 @@ export default function PhaseSummary({
         </div>
 
         <div className="ds3-stack-3">
+          {session.hrSessionId && (
+            <HrSummaryCard
+              sessionId={session.hrSessionId}
+              startedAtMs={session.startedAtMs}
+              endedAtMs={session.endedAtMs}
+            />
+          )}
           {cards.map((card, i) => (
             <div key={i} style={{
               background: '#fff', borderRadius: 22, padding: '16px 18px',

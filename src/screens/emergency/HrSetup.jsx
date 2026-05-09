@@ -14,7 +14,7 @@ import {
   SHORTCUT_NAME,
 } from '../../utils/liveHr.js';
 
-const TEST_TIMEOUT_MS = 60000;
+const TEST_TIMEOUT_MS = 90000;
 
 export default function HrSetup() {
   const navigate = useNavigate();
@@ -56,8 +56,6 @@ export default function HrSetup() {
   };
 
   const handleTest = () => {
-    // Fresh probe each click — otherwise stale samples from a prior test
-    // would show ✓ immediately without proving the Shortcut just ran.
     const fresh = `probe-${generateHrSessionId()}`;
     setProbeId(fresh);
     setTestStatus('launching');
@@ -98,20 +96,19 @@ export default function HrSetup() {
         <div className="ds3-stack-2" style={{ marginTop: 8 }}>
           <h1 className="ds3-h1">חיבור Apple Watch</h1>
           <p className="ds3-body ds3-text-muted">
-            כדי לראות את הדופק זז תוך כדי סשן, נצטרך Shortcut באייפון שמקריא דגימות
-            מ-HealthKit ושולח ל-Firebase. הגדרה חד-פעמית — חינם, בלי App Store.
+            iOS לא חושף דופק חי מ-workout ל-Shortcuts (מגבלת אפל). במקום זה — אתה מתחיל workout בשעון לפני סשן, רץ דרך הסשן, ובסוף ה-Shortcut קורא את כל הדגימות מ-HealthKit ושולח לאפליקציה. תקבל גרף + סיכום בסוף הסשן.
           </p>
         </div>
 
         {done && (
           <div className="hr-setup-status is-ok">
-            ההגדרה הושלמה ✓ אפשר להפעיל מעקב מתוך סשן חירום
+            ההגדרה הושלמה ✓ הסיכום יופיע בסוף סשן חירום
           </div>
         )}
 
-        <Step num={1} title="צור Shortcut חדש באייפון">
+        <Step num={1} title="צור Shortcut באייפון">
           <p className="hr-setup-step-body">
-            פתח את אפליקציית <b>Shortcuts</b> → לחץ על <b>+</b> בפינה. תן לו שם בדיוק:
+            פתח את אפליקציית <b>Shortcuts</b> באייפון. אם יש לך כבר Shortcut קיים בשם "TavorMind HR" — מחק אותו ותיצור חדש. צור חדש עם השם בדיוק:
           </p>
           <CopyRow
             label="copy-name"
@@ -119,53 +116,47 @@ export default function HrSetup() {
             copied={copied === 'copy-name'}
             onCopy={() => copyText('copy-name', SHORTCUT_NAME)}
           />
-          <p className="hr-setup-step-body" style={{ marginTop: 4, fontSize: 13 }}>
-            השם חייב להיות מדויק — האפליקציה משתמשת בו כדי לפתוח את ה-Shortcut.
-          </p>
         </Step>
 
-        <Step num={2} title="הוסף את הפעולות הבאות (לפי הסדר)">
+        <Step num={2} title="הוסף את הפעולות (לפי הסדר)">
           <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-            <li><b>Receive Input</b> — Type: Text. Set as variable <span style={{fontFamily:'monospace'}}>SessionId</span>.</li>
-            <li><b>Text</b> — value הדבק בו את ה-URL שלמטה. Set as variable <span style={{fontFamily:'monospace'}}>BaseUrl</span>.</li>
-            <li><b>Start Workout</b> — Type: Other. (פעולה מ-Apple Watch — תצא לאייפון אבל מפעילה את השעון).</li>
-            <li><b>Repeat</b> — 200 times. בתוך הלולאה:
+            <li><b>קבלת מלל מ:</b> בחר "קלט של קיצור" — מקבל את ה-sessionId שעובר ב-URL.</li>
+            <li><b>מלל</b> (Text) — הדבק כאן את ה-BaseUrl מצעד 3, ובסוף הוסף את משתנה ה-"מלל" מהפעולה הקודמת.</li>
+            <li><b>הגדרת המשתנה</b> בשם <span style={{fontFamily:'monospace'}}>BaseUrl</span>, הערך = פלט פעולה 2.</li>
+            <li><b>חיפוש דגימות בריאות</b> — Type: <b>Heart Rate</b>, תאריך התחלה בטווח של <b>שעה</b> (או 30 דק' — תלוי באורך הסשנים שלך). <b>הגבלה: כבוי</b> (כדי לקבל הכל). מיון: תאריך התחלה, סדר: אפשר כל אחד.</li>
+            <li><b>חזור עם כל אחד מהפריטים</b> (Repeat with Each) — תוך הלולאה:
               <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 16 }}>
-                <li><b>Wait</b> — 5 seconds.</li>
-                <li><b>Find Health Samples where</b> — Type: Heart Rate, Sort by Start Date Latest First, Limit 1.</li>
-                <li><b>Get Value from Health Sample</b> — מחלץ את ה-BPM כמספר.</li>
-                <li><b>Get Contents of URL</b>: URL = <span style={{fontFamily:'monospace'}}>{'{BaseUrl}/samples.json'}</span>, Method: <b>POST</b>, Request Body: JSON, שדה: <span style={{fontFamily:'monospace'}}>bpm</span> = ה-BPM שחילצת.</li>
+                <li><b>קבלת ערך מתוך דגימת בריאות</b> — Attribute: <b>תאריך התחלה</b>. שם המשתנה: <span style={{fontFamily:'monospace'}}>SampleDate</span>.</li>
+                <li><b>קבלת התוכן של URL</b>: URL = <span style={{fontFamily:'monospace'}}>{'{BaseUrl}/samples.json'}</span>, Method: <b>POST</b>, Request Body: <b>JSON</b>.<br/>שדות:<br/>
+                  • <span style={{fontFamily:'monospace'}}>bpm</span> = משתנה <b>"פריט החזרה"</b> (Repeat Item) — זו הדגימה עצמה (Shortcuts יחלץ את הערך כמספר אוטומטית)<br/>
+                  • <span style={{fontFamily:'monospace'}}>ts</span> = משתנה <span style={{fontFamily:'monospace'}}>SampleDate</span></li>
               </ol>
             </li>
-            <li><b>End Workout</b>.</li>
           </ol>
           <p className="hr-setup-step-body" style={{ marginTop: 8, fontSize: 13, color: 'var(--ink-muted)' }}>
-            טיפ: ב-"Get Contents of URL" → Show More → Method: PUT, Request Body: JSON, ובחר את ה-BPM כ-Top-Level Item.
+            הערה: לא צריך Start/End Workout בתוך ה-Shortcut הזה. את ה-workout אתה תתחיל ידנית בשעון לפני הסשן ותסיים אחריו.
           </p>
         </Step>
 
-        <Step num={3} title="הדבק את ה-BaseUrl לתוך ה-Text action">
+        <Step num={3} title="ה-BaseUrl שלך">
           <p className="hr-setup-step-body">
-            זה ה-URL הייחודי שלך (כולל ה-UID האנונימי שלך + ה-SessionId כמשתנה):
+            הדבק את זה לפעולה השנייה (מלל), ואחריו הוסף את משתנה ה-"מלל" מהפעולה הראשונה:
           </p>
           {writeBase ? (
             <CopyRow
               label="copy-url"
-              value={`${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/[SessionId]`}
+              value={`${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/`}
               copied={copied === 'copy-url'}
               onCopy={() => copyText('copy-url', `${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/`)}
             />
           ) : (
             <div className="hr-setup-code">UID לא זמין — רענן את הדף</div>
           )}
-          <p className="hr-setup-step-body" style={{ marginTop: 4, fontSize: 13, color: 'var(--ink-muted)' }}>
-            בתוך ה-Text action, לאחר ההדבקה — מחק את <span style={{fontFamily:'monospace'}}>[SessionId]</span> והכנס במקומו את משתנה <span style={{fontFamily:'monospace'}}>SessionId</span> מצעד 2.1.
-          </p>
         </Step>
 
-        <Step num={4} title="עדכן את כללי Firebase">
+        <Step num={4} title="כללי Firebase (אם עוד לא עדכנת)">
           <p className="hr-setup-step-body">
-            בקונסולת Firebase ({'>'} Realtime Database {'>'} Rules), הוסף את הענף הבא בנוסף לכללים הקיימים:
+            בקונסולת Firebase → Realtime Database → Rules, ודא שיש את הענף:
           </p>
           <CopyRow
             label="copy-rules"
@@ -173,15 +164,11 @@ export default function HrSetup() {
             copied={copied === 'copy-rules'}
             onCopy={() => copyText('copy-rules', `"${LIVE_HR_ROOT}": {\n  "$uid": {\n    ".read": true,\n    ".write": true\n  }\n}`)}
           />
-          <p className="hr-setup-step-body" style={{ marginTop: 4, fontSize: 13, color: 'var(--ink-muted)' }}>
-            ה-UID שלך הוא 28 תווים אקראיים — זה ה"סיסמה" של הנתיב. רק מי שיודע אותו יכול לכתוב.
-          </p>
         </Step>
 
-        <Step num={5} title="בדיקה מהירה">
+        <Step num={5} title="בדיקה">
           <p className="hr-setup-step-body">
-            לחץ על הכפתור — האפליקציה תפעיל את ה-Shortcut עם session ID לבדיקה. אם הכל תקין,
-            תוך כ-15 שניות נראה כאן ✓.
+            ודא שיש לך לפחות דגימת Heart Rate אחת ב-HealthKit מהשעה האחרונה (אם לא — שב 5 דקות עם השעון על היד, או הפעל workout קצר ועצור). לחץ "הפעל בדיקה" — ה-Shortcut יקרא את הדגימות וישלח. תוך 15-30 שניות תראה ✓.
           </p>
           <button
             type="button"
@@ -199,15 +186,23 @@ export default function HrSetup() {
 
           {testStatus === 'ok' && (
             <div className="hr-setup-status is-ok">
-              דגימה התקבלה. ה-Shortcut עובד.
+              דגימות התקבלו. ה-Shortcut עובד.
             </div>
           )}
           {testStatus === 'fail' && (
             <div className="hr-setup-status is-fail">
-              לא התקבלה דגימה תוך {TEST_TIMEOUT_MS/1000} שניות. בדוק שהשם של ה-Shortcut הוא בדיוק "{SHORTCUT_NAME}",
-              שה-BaseUrl מכיל את ה-SessionId, ושה-Firebase rules עודכנו.
+              לא התקבלו דגימות תוך {TEST_TIMEOUT_MS/1000} שניות. ודא שיש דגימות Heart Rate ב-HealthKit ושה-Firebase rules עודכנו.
             </div>
           )}
+        </Step>
+
+        <Step num={6} title="זרימת השימוש בפועל">
+          <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
+            <li>לפני סשן חירום: <b>התחל workout בשעון</b> (אפליקציית Workout → Other → Start). זה יגרום לשעון לדגום HR בתדירות גבוהה.</li>
+            <li>פתח tavor-mind, רוץ דרך כל הסשן רגיל.</li>
+            <li>בסוף הסשן (לפני "סיימתי"): <b>עצור את ה-workout בשעון</b>.</li>
+            <li>במסך הסיכום של tavor-mind, לחץ "טען נתוני דופק". ה-Shortcut יקרא הכל ויציג גרף.</li>
+          </ol>
         </Step>
 
         <div className="ds3-stack-3" style={{ paddingTop: 8 }}>

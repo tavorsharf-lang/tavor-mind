@@ -1,7 +1,6 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
 import { Phase2BreathingIcon } from '../../components/icons/index.jsx';
-import LiveHrPanel from './components/LiveHrPanel.jsx';
 import { PhysioSighAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import {
@@ -31,21 +30,12 @@ export default function Phase2Body({
   onNext,
   onSkip,
   onExit,
-  hrEnabled = false,
-  getHrSessionId = null,
 }) {
-  // Resolve HR session id once on mount so the panel persists across the
-  // hyper/hypo/mid branch's internal stage transitions.
-  const hrSessionId = useMemo(
-    () => (hrEnabled && getHrSessionId ? getHrSessionId() : null),
-    [hrEnabled, getHrSessionId],
-  );
-  const hrSlot = hrSessionId ? <LiveHrPanel sessionId={hrSessionId} /> : null;
   const noteProps = { note: breathingNote, setNote: setBreathingNote };
   const felt62Props = { felt62: breathingFelt62, setFelt62: setBreathingFelt62 };
-  if (activation === 'hyper') return <HyperBranch onNext={onNext} onSkip={onSkip} onExit={onExit} hrSlot={hrSlot} />;
-  if (activation === 'hypo')  return <HypoBranch onNext={onNext} onSkip={onSkip} onExit={onExit} hrSlot={hrSlot} {...noteProps} {...felt62Props} />;
-  return <MidBranch onNext={onNext} onSkip={onSkip} onExit={onExit} hrSlot={hrSlot} {...noteProps} />;
+  if (activation === 'hyper') return <HyperBranch onNext={onNext} onSkip={onSkip} onExit={onExit} />;
+  if (activation === 'hypo')  return <HypoBranch onNext={onNext} onSkip={onSkip} onExit={onExit} {...noteProps} {...felt62Props} />;
+  return <MidBranch onNext={onNext} onSkip={onSkip} onExit={onExit} {...noteProps} />;
 }
 
 function Topbar({ onExit }) {
@@ -93,7 +83,7 @@ const HYPER_PRESTEP_DURATION_SEC = 18;
 const HYPER_CYCLES_FIRST_ROUND = 2;
 const HYPER_CYCLES_NEXT_ROUND = 3;
 
-function HyperBranch({ onNext, onSkip, onExit, hrSlot = null }) {
+function HyperBranch({ onNext, onSkip, onExit }) {
   const [stage, setStage] = useState('somatic');
   const [pattern, setPattern] = useState(PATTERN_BY_ACTIVATION.hyper);
   const [round, setRound] = useState(1);
@@ -118,7 +108,6 @@ function HyperBranch({ onNext, onSkip, onExit, hrSlot = null }) {
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-text-center">
-          {hrSlot}
           <h1 className="ds3-h1">נשמת.</h1>
         </main>
         <footer className="ds3-screen-footer ds3-stack-3">
@@ -140,7 +129,6 @@ function HyperBranch({ onNext, onSkip, onExit, hrSlot = null }) {
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-stack-5 ds3-text-center">
-          {hrSlot}
           <div className="ds3-stack-2">
             <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
             <p className="ds3-body ds3-text-muted">
@@ -162,7 +150,6 @@ function HyperBranch({ onNext, onSkip, onExit, hrSlot = null }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        {hrSlot}
         <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
         <BreathingExercise
           key={`hyper-${round}`}
@@ -180,7 +167,7 @@ function HyperBranch({ onNext, onSkip, onExit, hrSlot = null }) {
   );
 }
 
-function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62, hrSlot = null }) {
+function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }) {
   const [stepIdx, setStepIdx] = useState(0);
   const [stage, setStage] = useState('activate');
   const [round, setRound] = useState(1);
@@ -290,7 +277,6 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62, 
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-          {hrSlot}
           <div className="ds3-stack-2">
             <div style={{
               display: 'inline-flex',
@@ -362,7 +348,6 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62, 
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-          {hrSlot}
           <div className="ds3-stack-2">
             <div style={{
               display: 'inline-flex',
@@ -481,7 +466,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62, 
   );
 }
 
-function MidBranch({ onNext, onSkip, onExit, note, setNote, hrSlot = null }) {
+function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
   const [pattern, setPattern] = useState(PATTERN_BY_ACTIVATION.mid);
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
@@ -492,7 +477,6 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote, hrSlot = null }) {
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content">
-          {hrSlot}
           <div className="ds3-stack-3" style={{ marginTop: 12 }}>
             <h1 className="ds3-h1">נשמת.</h1>
             <p className="ds3-body ds3-text-muted">{AFTER_LINE}</p>
@@ -517,7 +501,6 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote, hrSlot = null }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        {hrSlot}
         <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
         <BreathingExercise
           key={`mid-${round}`}

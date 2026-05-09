@@ -1,10 +1,17 @@
-import { ref, onValue, off, get, set } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { db, auth } from '../firebase.js';
 
-// Live heart-rate sessions live under a top-level node so that an iOS Shortcut
+// Heart-rate sessions live under a top-level node so that an iOS Shortcut
 // (no Firebase auth) can write to them via the REST API. Each session is
 // scoped under the user's anonymous-auth uid — that uid is unguessable random
 // (~28 chars), so it functions as the bearer of the path.
+//
+// Architecture: post-session, not live. iOS HealthKit doesn't surface live
+// workout HR samples to Shortcuts, so we don't try. The user starts a workout
+// on the Apple Watch before the emergency session, runs through it normally,
+// and at the end taps a button that triggers the Shortcut. The Shortcut reads
+// all HR samples from the workout window and POSTs each to Firebase. The web
+// app then renders a chart in PhaseSummary.
 export const LIVE_HR_ROOT = 'tavormindLiveHr';
 export const FIREBASE_DB_URL = 'https://yaniv-game-aeb26-default-rtdb.firebaseio.com';
 export const SHORTCUT_NAME = 'TavorMind HR';
@@ -24,22 +31,32 @@ export function generateHrSessionId() {
   return `${t}-${r}`;
 }
 
-// Firebase push IDs encode a 48-bit ms timestamp in their first 8 chars,
-// using a custom base64 alphabet (lex-sortable). Decoded value is ms since epoch.
-const PUSH_ID_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
-function decodePushIdTimestamp(key) {
-  if (typeof key !== 'string' || key.length < 8) return NaN;
-  let ts = 0;
-  for (let i = 0; i < 8; i++) {
-    const idx = PUSH_ID_CHARS.indexOf(key[i]);
-    if (idx < 0) return NaN;
-    ts = ts * 64 + idx;
+// Each sample's value is `{bpm: <num>, ts: <ms-or-iso>}`. We accept ts as either
+// a numeric ms timestamp or an ISO 8601 string (Date.parse handles both).
+function parseTs(rawTs, fallbackKey) {
+  if (typeof rawTs === 'number' && Number.isFinite(rawTs)) return rawTs;
+  if (typeof rawTs === 'string') {
+    const n = Number(rawTs);
+    if (Number.isFinite(n)) return n;
+    const parsed = Date.parse(rawTs);
+    if (Number.isFinite(parsed)) return parsed;
   }
-  return ts;
+  // Fallback: Firebase push IDs encode a 48-bit ms timestamp in their first 8
+  // chars, using a custom base64 alphabet (lex-sortable).
+  if (typeof fallbackKey === 'string' && fallbackKey.length >= 8) {
+    let ts = 0;
+    for (let i = 0; i < 8; i++) {
+      const idx = PUSH_ID_CHARS.indexOf(fallbackKey[i]);
+      if (idx < 0) return NaN;
+      ts = ts * 64 + idx;
+    }
+    return ts;
+  }
+  return NaN;
 }
 
-// The Shortcut POSTs samples to <base>/samples.json with body `{"bpm": <num>}`.
-// Firebase generates an auto-id key whose timestamp we decode on read.
+const PUSH_ID_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+
 export function buildShortcutWriteBase(sessionId) {
   const uid = getUid();
   if (!uid || !sessionId) return null;
@@ -65,60 +82,6 @@ export function launchShortcut(sessionId) {
   setTimeout(() => { frame.remove(); }, 400);
 }
 
-// Returns an unsubscribe fn. The callback receives `{ samples, lastTs }` where
-// samples is sorted ascending by ts. RTDB onValue fires once with current data
-// then on every update — for samples this means new keys appearing.
-export function subscribeLiveHrSamples(sessionId, onSnapshot) {
-  const uid = getUid();
-  if (!uid || !sessionId) return () => {};
-  const samplesRef = ref(db, `${LIVE_HR_ROOT}/${uid}/${sessionId}/samples`);
-  const handler = (snap) => {
-    if (!snap.exists()) {
-      onSnapshot({ samples: [], lastTs: 0 });
-      return;
-    }
-    const val = snap.val() || {};
-    const samples = Object.entries(val)
-      .map(([key, raw]) => {
-        // Body shape: `{"bpm": <num>}` (preferred). Bare numbers also accepted.
-        const hr = typeof raw === 'object' && raw !== null ? Number(raw.bpm) : Number(raw);
-        // Key shape: numeric ms (PUT path), or Firebase push id (POST path —
-        // first 8 chars encode ms since epoch in a base64-like alphabet).
-        let ts = Number(key);
-        if (!Number.isFinite(ts)) ts = decodePushIdTimestamp(key);
-        return { ts, hr };
-      })
-      .filter((s) => Number.isFinite(s.ts) && Number.isFinite(s.hr) && s.hr > 0)
-      .sort((a, b) => a.ts - b.ts);
-    onSnapshot({
-      samples,
-      lastTs: samples.length ? samples[samples.length - 1].ts : 0,
-    });
-  };
-  onValue(samplesRef, handler);
-  return () => off(samplesRef, 'value', handler);
-}
-
-export async function markHrSessionStart(sessionId) {
-  const uid = getUid();
-  if (!uid || !sessionId) return;
-  try {
-    await set(ref(db, `${LIVE_HR_ROOT}/${uid}/${sessionId}/meta/startedAt`), Date.now());
-  } catch (err) {
-    console.warn('markHrSessionStart failed', err?.message || err);
-  }
-}
-
-export async function markHrSessionEnd(sessionId) {
-  const uid = getUid();
-  if (!uid || !sessionId) return;
-  try {
-    await set(ref(db, `${LIVE_HR_ROOT}/${uid}/${sessionId}/meta/endedAt`), Date.now());
-  } catch (err) {
-    console.warn('markHrSessionEnd failed', err?.message || err);
-  }
-}
-
 export async function getHrSessionSnapshot(sessionId) {
   const uid = getUid();
   if (!uid || !sessionId) return null;
@@ -127,14 +90,33 @@ export async function getHrSessionSnapshot(sessionId) {
     if (!snap.exists()) return null;
     const val = snap.val() || {};
     const samples = Object.entries(val.samples || {})
-      .map(([ts, hr]) => ({ ts: Number(ts), hr: Number(hr) }))
-      .filter((s) => Number.isFinite(s.ts) && Number.isFinite(s.hr) && s.hr > 0)
+      .map(([key, raw]) => {
+        if (raw == null) return null;
+        // Preferred body: {bpm, ts}. Legacy: bare number.
+        const isObj = typeof raw === 'object';
+        const hr = isObj ? Number(raw.bpm) : Number(raw);
+        const ts = parseTs(isObj ? raw.ts : null, key);
+        return { ts, hr };
+      })
+      .filter((s) => s && Number.isFinite(s.ts) && Number.isFinite(s.hr) && s.hr > 0)
       .sort((a, b) => a.ts - b.ts);
     return { samples, meta: val.meta || {} };
   } catch (err) {
     console.warn('getHrSessionSnapshot failed', err?.message || err);
     return null;
   }
+}
+
+// Restrict samples to the session window when one is provided. The Shortcut
+// reads HR samples from a relative window (e.g., last 60 minutes), which can
+// include data outside the actual emergency session — clip it here.
+export function clipToWindow(samples, startMs, endMs) {
+  if (!samples) return [];
+  return samples.filter((s) => {
+    if (startMs != null && s.ts < startMs) return false;
+    if (endMs != null && s.ts > endMs) return false;
+    return true;
+  });
 }
 
 export function summarizeSamples(samples) {
@@ -167,11 +149,4 @@ export function markHrSetupDone() {
 
 export function clearHrSetup() {
   try { localStorage.removeItem(HR_SETUP_KEY); } catch {}
-}
-
-// Single-write probe for the setup-screen "test connection" button.
-// Writes a fake HR sample under a probe sessionId so the user can verify their
-// Shortcut config + Firebase rules end-to-end before relying on it in a real session.
-export async function readProbeSnapshot(sessionId) {
-  return getHrSessionSnapshot(sessionId);
 }

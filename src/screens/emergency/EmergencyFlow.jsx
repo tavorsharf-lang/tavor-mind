@@ -36,10 +36,6 @@ import {
 import {
   isHrSetupDone,
   generateHrSessionId,
-  getHrSessionSnapshot,
-  summarizeSamples,
-  markHrSessionStart,
-  markHrSessionEnd,
 } from '../../utils/liveHr.js';
 
 const EMPTY_TRIGGER = {
@@ -110,15 +106,12 @@ export default function EmergencyFlow() {
   const [savingState, setSavingState] = useState('idle');
   const startedAtRef = useRef(Date.now());
 
-  // Live HR session id — generated lazily on first request so that flows where
-  // the user never opens HR tracking don't write empty meta nodes to RTDB.
-  // markHrSessionStart fires once on first creation; end is fired in finish/exit.
+  // HR session id — pre-generated when HR is set up, so PhaseSummary can fetch
+  // post-session samples written by the iOS Shortcut. Lazy: not created until
+  // the session ends (Phase 11) so that flows without HR don't pollute RTDB.
   const hrSessionIdRef = useRef(null);
-  const getOrCreateHrSessionId = useCallback(() => {
-    if (!hrSessionIdRef.current) {
-      hrSessionIdRef.current = generateHrSessionId();
-      markHrSessionStart(hrSessionIdRef.current).catch(() => {});
-    }
+  const ensureHrSessionId = useCallback(() => {
+    if (!hrSessionIdRef.current) hrSessionIdRef.current = generateHrSessionId();
     return hrSessionIdRef.current;
   }, []);
   const hrEnabled = isHrSetupDone();
@@ -173,7 +166,7 @@ export default function EmergencyFlow() {
   }, [activation]);
 
   // Emergency session payload — kept lean. Stage-2 detail goes to trigger_analyses.
-  const buildSession = ({ partial = false, hrSummary = null } = {}) => {
+  const buildSession = ({ partial = false, hrSessionId = null } = {}) => {
     const startedAt = startedAtRef.current;
     const session = {
       activation,
@@ -187,9 +180,7 @@ export default function EmergencyFlow() {
       stage2Completed: analyzed,
       earlyBridgeChoice,
       bodyRegulationScore: bodyRegulationScore != null ? bodyRegulationScore : null,
-      hrTrack: hrSessionIdRef.current
-        ? { sessionId: hrSessionIdRef.current, summary: hrSummary }
-        : null,
+      hrTrack: hrSessionId ? { sessionId: hrSessionId } : null,
       emotionsNamed: selectedEmotions.length > 0 || customEmotion.trim() ? {
         list: selectedEmotions,
         custom: customEmotion.trim() || null,
@@ -245,20 +236,11 @@ export default function EmergencyFlow() {
     };
   };
 
-  const fetchHrSummary = async () => {
-    if (!hrSessionIdRef.current) return null;
-    await markHrSessionEnd(hrSessionIdRef.current).catch(() => {});
-    try {
-      const snap = await getHrSessionSnapshot(hrSessionIdRef.current);
-      return summarizeSamples(snap?.samples || []);
-    } catch {
-      return null;
-    }
-  };
-
   const persistAll = async () => {
-    const hrSummary = await fetchHrSummary();
-    const ops = [logEmergencySession(buildSession({ hrSummary }))];
+    // hrSessionId is set if user opted into HR tracking. Summary is fetched
+    // lazily in PhaseSummary after the iOS Shortcut posts the samples.
+    const hrSessionId = hrEnabled ? ensureHrSessionId() : null;
+    const ops = [logEmergencySession(buildSession({ hrSessionId }))];
     if (analyzed) ops.push(logTriggerAnalysis(buildTriggerPayload()));
     const results = await Promise.all(ops);
     const allOk = results.every((r) => r?.ok);
@@ -287,8 +269,8 @@ export default function EmergencyFlow() {
   const handleSaveAndExit = async () => {
     if (savingState === 'saving') return;
     setSavingState('saving');
-    const hrSummary = await fetchHrSummary();
-    const result = await logEmergencySession(buildSession({ partial: true, hrSummary }));
+    const hrSessionId = hrEnabled ? ensureHrSessionId() : null;
+    const result = await logEmergencySession(buildSession({ partial: true, hrSessionId }));
     // Partial trigger-analysis is also saved when applicable, so the rich state isn't lost.
     if (analyzed) {
       logTriggerAnalysis({ ...buildTriggerPayload(), partial: true, lastPhase: phase }).catch(() => {});
@@ -332,8 +314,6 @@ export default function EmergencyFlow() {
           onNext={() => setPhase(3)}
           onSkip={() => setPhase(3)}
           onExit={handleSaveAndExit}
-          hrEnabled={hrEnabled}
-          getHrSessionId={getOrCreateHrSessionId}
         />
       )}
       {phase === 3 && (
@@ -571,6 +551,9 @@ export default function EmergencyFlow() {
             closingScore: score,
             moodIndex,
             somaticRan: activation === 'hypo',
+            hrSessionId: hrEnabled ? ensureHrSessionId() : null,
+            startedAtMs: startedAtRef.current,
+            endedAtMs: Date.now(),
           }}
           onClose={() => navigate('/', { replace: true })}
         />
