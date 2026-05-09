@@ -26,7 +26,7 @@
 - Repo: `tavorsharf-lang/tavor-mind`
 - URL: https://tavorsharf-lang.github.io/tavor-mind/
 - Base path ב-Vite: `/tavor-mind/`
-- Deploy: `npm run deploy` (משתמש ב-`gh-pages` package, פושל ל-branch `gh-pages`)
+- Deploy: אוטומטי ב-GitHub Actions בכל push ל-`main` (workflow ב-`.github/workflows/`). אין יותר `npm run deploy` — ה-package `gh-pages` הוסר.
 
 ### Live HR (Apple Watch) — Firebase rules
 

@@ -121,76 +121,137 @@ ${thoughtsBlock}
 - מה שהמבוגר הבריא אמר: ${healthyResponse}`;
 }
 
-// New, richer prompt produced when the user completed the full trigger-analysis flow.
-// Reads the trigger_analyses payload directly (richer than emergency_session schema).
-// Empty fields are rendered as "ללא" / "לא תואר" so the structure is stable for parsing.
 export function buildTriggerAnalysisPrompt(session) {
   const occurredAt = resolveOccurredAt(session);
-  const closingNote = (session.closingNote ?? session.note ?? '').toString().trim() || 'ללא';
-  const score = (session.closingScore ?? null);
-  const initialActivation = (typeof session.initialActivation === 'number')
-    ? `${session.initialActivation}/10`
-    : 'ללא';
+  const event = (session.event ?? '').toString().trim();
+  const sensationsLabels = (session.bodySignals || [])
+    .map((id) => SENSATION_LABEL_BY_ID[id] || id);
+  const thoughts = (session.thoughts || [])
+    .map(t => (t ?? '').toString().trim())
+    .filter(Boolean);
+  const readBackFeeling = (session.readBackFeeling ?? '').toString().trim();
+  const distortionLabels = (session.distortions || [])
+    .map((id) => DISTORTION_LABEL_BY_ID[id] || id);
 
-  const event = (session.event ?? '').toString().trim() || 'לא תואר';
-  const sensationsLabels = (session.bodySignals || []).map((id) => SENSATION_LABEL_BY_ID[id] || id);
-  const distortionLabels = (session.distortions || []).map((id) => DISTORTION_LABEL_BY_ID[id] || id);
-  const thoughtsBlock = formatThoughts(session.thoughts);
-  const readBackFeeling = (session.readBackFeeling ?? '').toString().trim() || 'ללא';
-  const childNeeds = (session.childNeeds ?? '').toString().trim() || 'ללא';
-  const healthyAdultMessage = (session.healthyAdultMessage ?? '').toString().trim() || 'ללא';
-
-  const schemasLine = formatSchemas(session.schemas, session.otherSchemaText);
+  const allSchemaIds = (session.schemas || []);
   const dominantId = session.dominantSchema || null;
-  const dominantLine = dominantId
+  const dominantSchemaName = dominantId
     ? (dominantId === OTHER_SCHEMA
         ? (session.otherSchemaText && session.otherSchemaText.trim()
-            ? `[סכמה דומיננטית: אחרת — ${session.otherSchemaText.trim()}]`
-            : `[סכמה דומיננטית: אחרת]`)
-        : `[סכמה דומיננטית: ${SCHEMA_NAME_BY_ID[dominantId] || dominantId}]`)
+            ? `אחרת — ${session.otherSchemaText.trim()}`
+            : 'אחרת')
+        : (SCHEMA_NAME_BY_ID[dominantId] || dominantId))
     : null;
+  const otherSchemaIds = allSchemaIds.filter(id => id !== dominantId);
+  const otherSchemaLabels = otherSchemaIds.map(id => {
+    if (id === OTHER_SCHEMA) {
+      return session.otherSchemaText && session.otherSchemaText.trim()
+        ? `אחרת — ${session.otherSchemaText.trim()}`
+        : 'אחרת';
+    }
+    return SCHEMA_NAME_BY_ID[id] || id;
+  });
+
+  const childNeeds = (session.childNeeds ?? '').toString().trim();
+  const healthyAdultMessage = (session.healthyAdultMessage ?? '').toString().trim();
 
   const modeIds = session.identifiedModes || [];
-  const modesLine = (Array.isArray(modeIds) && modeIds.length > 0)
-    ? modeIds.map(modeLabel).join(', ')
-    : 'ללא';
+  const primaryModeId = modeIds[0] || null;
+  const primaryModeLabel = primaryModeId ? modeLabel(primaryModeId) : null;
+  const otherModeLabels = modeIds.slice(1).map(modeLabel);
+  const customModeDescription = (session.phase9CustomDescription ?? '').toString().trim();
+
+  const initialActivation = (typeof session.initialActivation === 'number')
+    ? `${session.initialActivation}/10`
+    : null;
+  const closingScore = (session.closingScore != null)
+    ? `${session.closingScore}/10`
+    : null;
+  const closingNote = (session.closingNote ?? session.note ?? '').toString().trim();
 
   const lines = [
     '[trigger_analysis]',
     '',
     'סיימתי כעת ניתוח טריגר באפליקציה. אני רוצה לעבד מה שלא נסגר.',
-    '',
-    'נתוני הסשן:',
-    `- תאריך וזמן: ${formatHebrewDateTime(occurredAt)}`,
-    `- משך: ${formatDuration(session.durationSeconds)}`,
-    `- מד הפעלה ראשוני: ${initialActivation}`,
-    `- ציון סגירה: ${score == null ? 'ללא' : `${score}/10`}`,
-    '',
-    'האירוע:',
-    event,
-    '',
-    `תחושות גוף: ${joinList(sensationsLabels)}`,
-    '',
-    'מחשבות שעלו:',
-    thoughtsBlock,
-    '',
-    `איך זה הרגיש לקרוא: ${readBackFeeling}`,
-    '',
-    `עיוותי חשיבה: ${joinList(distortionLabels)}`,
-    '',
-    `סכמות שפעלו: ${schemasLine}`,
   ];
-  if (dominantLine) lines.push(dominantLine);
-  lines.push(
-    '',
-    `מה הילד צריך עכשיו: ${childNeeds}`,
-    '',
-    `מה אני צריך לשמוע מהמבוגר הבריא: ${healthyAdultMessage}`,
-    '',
-    `מודים שזיהיתי: ${modesLine}`,
-    '',
-    `הערה אישית: ${closingNote}`,
-  );
+
+  const whatHappenedHasContent = event || sensationsLabels.length > 0
+    || thoughts.length > 0 || readBackFeeling;
+
+  if (whatHappenedHasContent) {
+    lines.push('', '—— מה קרה ——', '');
+    if (event) {
+      lines.push(`האירוע: ${event}`, '');
+    }
+    if (sensationsLabels.length > 0) {
+      lines.push(`בגוף הופיע: ${sensationsLabels.join(', ')}`, '');
+    }
+    if (thoughts.length > 0) {
+      lines.push('המחשבות שעלו:');
+      thoughts.forEach((t, i) => lines.push(`  ${i + 1}. ${t}`));
+      lines.push('');
+    }
+    if (readBackFeeling) {
+      lines.push(`קראתי לעצמי את המחשבות האלה, וזה הרגיש: ${readBackFeeling}`);
+    }
+    while (lines[lines.length - 1] === '') lines.pop();
+  }
+
+  const whatItMeansHasContent = dominantSchemaName || primaryModeLabel;
+
+  if (whatItMeansHasContent) {
+    lines.push('', '', '—— מה זה אומר ——', '');
+    if (dominantSchemaName) {
+      lines.push(`הסכמה הדומיננטית שפעלה כאן: ${dominantSchemaName}.`, '');
+    }
+    if (primaryModeLabel) {
+      lines.push(`המוד שדיבר עכשיו: ${primaryModeLabel}.`);
+      if (customModeDescription) {
+        lines.push(`תיארתי אותו במילים שלי: ${customModeDescription}`);
+      }
+    }
+  }
+
+  const childSectionHasContent = childNeeds || healthyAdultMessage;
+
+  if (childSectionHasContent) {
+    lines.push('', '', '—— מה הילד צריך ——', '');
+    if (childNeeds) {
+      lines.push(`הילד צריך עכשיו: ${childNeeds}`, '');
+    }
+    if (healthyAdultMessage) {
+      lines.push(`מה אני צריך לשמוע מהמבוגר הבריא: ${healthyAdultMessage}`);
+    }
+    while (lines[lines.length - 1] === '') lines.pop();
+  }
+
+  const metaLines = [];
+  metaLines.push(`- תאריך וזמן: ${formatHebrewDateTime(occurredAt)}`);
+  metaLines.push(`- משך הסשן: ${formatDuration(session.durationSeconds)}`);
+
+  if (initialActivation && closingScore) {
+    metaLines.push(`- הפעלה ראשונית: ${initialActivation}  ·  סגירה: ${closingScore}`);
+  } else if (initialActivation) {
+    metaLines.push(`- הפעלה ראשונית: ${initialActivation}`);
+  } else if (closingScore) {
+    metaLines.push(`- סגירה: ${closingScore}`);
+  }
+
+  if (otherModeLabels.length > 0) {
+    metaLines.push(`- מודים נוספים שזוהו: ${otherModeLabels.join(', ')}`);
+  }
+  if (otherSchemaLabels.length > 0) {
+    metaLines.push(`- סכמות נוספות שפעלו: ${otherSchemaLabels.join(', ')}`);
+  }
+  if (distortionLabels.length > 0) {
+    metaLines.push(`- עיוותי חשיבה שזיהיתי: ${distortionLabels.join(', ')}`);
+  }
+  if (closingNote) {
+    metaLines.push(`- הערה אישית: ${closingNote}`);
+  }
+
+  lines.push('', '', '—— מטא-נתונים ——', '');
+  lines.push(...metaLines);
 
   return lines.join('\n');
 }
