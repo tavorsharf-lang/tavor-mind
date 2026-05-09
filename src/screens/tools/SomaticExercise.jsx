@@ -4,6 +4,7 @@ import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import { getSomaticExercise } from '../../data/somatic.js';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { SomaticAnimation } from './components/somatic/SomaticAnimations.jsx';
+import { colorForScore } from '../../utils/scoreColor.js';
 
 function moodForScore(s) {
   if (s <= 3) return 'עדיין כבד';
@@ -28,6 +29,8 @@ export default function SomaticExercise() {
   const [stage, setStage] = useState('select'); // select | running | rating
   const [afterScore, setAfterScore] = useState(5);
   const [completedFully, setCompletedFully] = useState(false);
+  const [silent, setSilent] = useState(false);
+  const [vibrationFelt, setVibrationFelt] = useState(null); // null | true | false
   const [savingState, setSavingState] = useState('idle'); // idle | saving | saved | offline
   const startedAtRef = useRef(null);
   const [, setTick] = useState(0);
@@ -77,6 +80,8 @@ export default function SomaticExercise() {
       completedFully,
       afterScore: includeScore ? afterScore : null,
       durationSec,
+      silent: exercise.supportsSilent ? silent : undefined,
+      vibrationFelt: id === 'vagal_humming' ? vibrationFelt : undefined,
     });
     setSavingState(result.ok ? 'saved' : 'offline');
     setTimeout(() => navigate('/tools/somatic'), result.ok ? 600 : 1400);
@@ -137,6 +142,16 @@ export default function SomaticExercise() {
             <div className="somatic-countdown" aria-live="polite">
               {formatRemaining(variantConfig.durationSec * 1000 - (Date.now() - startedAtRef.current))}
             </div>
+            {exercise.supportsSilent && (
+              <button
+                type="button"
+                className="link-btn somatic-silent-toggle"
+                onClick={() => setSilent((s) => !s)}
+                aria-pressed={silent}
+              >
+                {silent ? 'מצב ללא קול פעיל' : (exercise.silentNote || 'אפשר גם בפה סגור')}
+              </button>
+            )}
             <button
               type="button"
               className="link-btn somatic-early-finish"
@@ -147,13 +162,15 @@ export default function SomaticExercise() {
           </section>
         )}
 
-        {stage === 'rating' && (
+        {stage === 'rating' && (() => {
+          const tint = colorForScore(afterScore, 'high-good');
+          return (
           <section className="somatic-rating">
             <h2 className="somatic-rating-title">איך אתה עכשיו?</h2>
-            <div className="score-mood" key={moodForScore(afterScore)} aria-hidden="true">
+            <div className="score-mood" key={moodForScore(afterScore)} aria-hidden="true" style={{ color: tint.main }}>
               {moodForScore(afterScore)}
             </div>
-            <div className="score-display" aria-hidden="true">{afterScore}</div>
+            <div className="score-display" aria-hidden="true" style={{ color: tint.main }}>{afterScore}</div>
             <div className="score-slider-wrap">
               <input
                 type="range"
@@ -163,6 +180,7 @@ export default function SomaticExercise() {
                 value={afterScore}
                 onChange={(e) => setAfterScore(parseInt(e.target.value, 10))}
                 className="score-slider"
+                style={{ '--slider-tint': tint.main, '--slider-tint-glow': tint.glow }}
                 aria-label="איך אתה עכשיו, מ-1 עד 10"
               />
               <div className="score-labels">
@@ -170,6 +188,35 @@ export default function SomaticExercise() {
                 <span className="score-label-high">טוב יותר</span>
               </div>
             </div>
+
+            {id === 'vagal_humming' && completedFully && (
+              <div className="vibration-feedback">
+                <p className="vibration-feedback-q">האם הצלחת לחוש את הוויברציה?</p>
+                <div className="vibration-feedback-btns">
+                  <button
+                    type="button"
+                    aria-pressed={vibrationFelt === true}
+                    className={`vibration-btn ${vibrationFelt === true ? 'is-selected' : ''}`}
+                    onClick={() => setVibrationFelt(true)}
+                  >
+                    כן
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={vibrationFelt === false}
+                    className={`vibration-btn ${vibrationFelt === false ? 'is-selected' : ''}`}
+                    onClick={() => setVibrationFelt(false)}
+                  >
+                    לא
+                  </button>
+                </div>
+                {vibrationFelt === false && (
+                  <p className="vibration-feedback-tip">
+                    נסה שוב — צליל יותר נמוך, נשיפה יותר ארוכה. הוויברציה מורגשת בעיקר באזור הצוואר והעצם החזה.
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="somatic-rating-actions">
               <button
@@ -190,7 +237,8 @@ export default function SomaticExercise() {
               </button>
             </div>
           </section>
-        )}
+          );
+        })()}
       </main>
     </div>
   );

@@ -1,0 +1,1468 @@
+/* src/styles/ds3.css
+ * Design System v3 — direct port of Tough Moment Flow handoff (claude.ai/design).
+ * Apple Health "State of Mind" vivid aesthetic — vivid category accents,
+ * white cards, big rounded pills, bold display typography, generous whitespace.
+ *
+ * Loaded after styles.css. Classes are unscoped to allow use in any context.
+ * Token VALUES come from tokens.css. Hardcoded values here only when the
+ * design specifies a precise px/opacity/shadow that doesn't generalize.
+ */
+
+/* ===== TYPOGRAPHY UTILITIES ============================================ */
+
+.ds3-display {
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.ds3-h1 {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ds3-h2 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ds3-h3 {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ds3-body {
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.ds3-body-lg {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.ds3-caption {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--ink-muted);
+}
+
+.ds3-micro {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+
+.ds3-eyebrow {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink-muted);
+  margin: 0 0 6px;
+}
+
+.ds3-text-muted   { color: var(--ink-muted); }
+.ds3-text-soft    { color: var(--ink-soft); }
+.ds3-text-terra   { color: var(--terra); }
+.ds3-text-blue    { color: var(--lichen); }
+.ds3-text-coral   { color: var(--heart); }
+
+.ds3-text-center  { text-align: center; }
+
+/* ===== SCREEN SCAFFOLDING ============================================== */
+
+.ds3-screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100dvh;
+  background: var(--canvas);
+  color: var(--ink);
+  direction: rtl;
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.ds3-screen-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 24px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ds3-screen-content-center {
+  justify-content: center;
+}
+
+.ds3-screen-footer {
+  flex-shrink: 0;
+  padding: 10px 20px max(18px, env(safe-area-inset-bottom));
+}
+
+/* Top bar — back arrow on right (RTL = back), optional skip on left.
+ * The arrow points right because RTL "back" goes to the right (where reading
+ * starts). */
+.ds3-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 8px;
+  flex-shrink: 0;
+  height: 56px;
+}
+
+.ds3-topbar-back {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.ds3-topbar-back:hover {
+  background: rgba(60, 60, 67, 0.08);
+}
+
+.ds3-topbar-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.01em;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Phase glyph rendered inside .ds3-topbar-label — small icon in the family color */
+.ds3-topbar-label-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+.ds3-topbar-label-icon svg { width: 22px; height: 22px; }
+
+.ds3-topbar-skip {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 6px 4px;
+  height: 32px;
+}
+
+.ds3-topbar-skip:hover { color: var(--ink); }
+
+.ds3-topbar-spacer {
+  width: 40px;
+}
+
+/* Inline X close button (used in modals + closing screen) */
+.ds3-x-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 17px;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--ink-muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.ds3-x-btn:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== BUTTONS ========================================================= */
+
+/* Full pill — design's standard CTA (56px height, 28px radius). */
+.ds3-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 28px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out),
+              transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+  text-align: center;
+  padding: 0 22px;
+}
+
+.ds3-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ds3-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.ds3-btn-primary {
+  background: var(--terra);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(255, 106, 79, 0.40);
+}
+
+.ds3-btn-primary:hover:not(:disabled) {
+  background: #FF5538;
+  box-shadow: 0 10px 26px rgba(255, 106, 79, 0.50);
+}
+
+.ds3-btn-blue {
+  background: var(--lichen);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(10, 132, 255, 0.40);
+}
+
+.ds3-btn-blue:hover:not(:disabled) {
+  background: var(--lichen-deep);
+}
+
+.ds3-btn-coral {
+  background: var(--heart);
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(255, 59, 48, 0.40);
+}
+
+.ds3-btn-coral:hover:not(:disabled) {
+  background: #E33327;
+}
+
+.ds3-btn-ink {
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.20);
+}
+
+.ds3-btn-ink:hover:not(:disabled) {
+  background: #2A2520;
+}
+
+.ds3-btn-cream {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-soft);
+  font-weight: 600;
+}
+
+.ds3-btn-cream:hover:not(:disabled) {
+  background: var(--surface-alt);
+  border-color: var(--line);
+}
+
+.ds3-btn-outline-terra {
+  background: var(--surface);
+  color: var(--terra);
+  border: 1.5px solid var(--terra);
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.ds3-btn-outline-terra:hover:not(:disabled) {
+  background: var(--terra-soft);
+}
+
+.ds3-btn-outline-blue {
+  background: var(--surface);
+  color: var(--lichen);
+  border: 1.5px solid var(--lichen);
+  font-weight: 600;
+  box-shadow: none;
+}
+
+/* Quiet button — text-only, muted, for "skip"/"finish here" */
+.ds3-btn-quiet {
+  width: 100%;
+  height: 48px;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.ds3-btn-quiet:hover { color: var(--ink); }
+
+/* Stack of CTA buttons — common pattern */
+.ds3-btn-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ds3-btn-stack-wide {
+  gap: 14px;
+}
+
+/* Pill row — segmented buttons */
+.ds3-pill-row {
+  display: flex;
+  gap: 8px;
+}
+
+.ds3-pill {
+  flex: 1;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  padding: 0 14px;
+}
+
+.ds3-pill:hover {
+  border-color: var(--line);
+  color: var(--ink);
+}
+
+.ds3-pill.is-active {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ===== CARDS =========================================================== */
+
+/* Apple Health style — white surface, hairline ring, soft shadow. */
+.ds3-card {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
+              0 0 0 0.5px rgba(60, 60, 67, 0.10);
+}
+
+.ds3-card-tight {
+  padding: 14px 16px;
+  border-radius: 16px;
+}
+
+.ds3-card-loose {
+  padding: 18px 20px;
+  border-radius: 22px;
+}
+
+/* Selectable card — with a "selected" state */
+.ds3-card-button {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 14px 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: right;
+  direction: rtl;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all var(--duration-fast) var(--ease-out);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.ds3-card-button:hover {
+  border-color: var(--line);
+}
+
+.ds3-card-button:active {
+  transform: scale(0.99);
+}
+
+.ds3-card-button.is-selected {
+  background: var(--terra-soft);
+  border-color: var(--terra);
+  border-width: 1.5px;
+  box-shadow: 0 1px 2px rgba(255, 106, 79, 0.20);
+}
+
+/* Bordered emphasis card (used in Closing variant A) */
+.ds3-card-bordered-terra {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 18px 20px;
+  border: 1.5px solid var(--terra);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* Callout / dashed (used in Phase 7 contextual question) */
+.ds3-callout-terra {
+  background: var(--terra-soft);
+  border-radius: 16px;
+  padding: 14px 16px;
+  border: 1px dashed rgba(255, 106, 79, 0.50);
+}
+
+.ds3-callout-terra-tag {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--terra);
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+/* ===== FORM CONTROLS =================================================== */
+
+.ds3-textarea, .ds3-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink);
+  direction: rtl;
+  text-align: right;
+  resize: none;
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-out);
+  box-sizing: border-box;
+}
+
+.ds3-textarea:focus, .ds3-input:focus {
+  border-color: var(--terra);
+}
+
+.ds3-textarea::placeholder, .ds3-input::placeholder {
+  color: var(--ink-muted);
+  opacity: 0.6;
+}
+
+.ds3-input-counter {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Slider — design's signature big-handle slider for body check + closing */
+.ds3-slider-wrap {
+  position: relative;
+  height: 64px;
+  padding: 0 4px;
+}
+
+.ds3-slider-track {
+  position: absolute;
+  inset: 50% 4px auto;
+  height: 14px;
+  transform: translateY(-50%);
+  background: var(--surface);
+  border-radius: 99px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--line-soft);
+}
+
+.ds3-slider-fill {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 4px;
+  height: 14px;
+  background: linear-gradient(270deg, var(--lichen-soft), var(--lichen));
+  border-radius: 99px;
+  opacity: 0.9;
+  transition: width 0.15s ease;
+}
+
+.ds3-slider-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 3px var(--lichen),
+              0 6px 18px rgba(10, 132, 255, 0.35);
+  transition: right 0.15s ease;
+}
+
+.ds3-slider-handle-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  background: var(--lichen);
+}
+
+.ds3-slider-handle-terra {
+  box-shadow: 0 0 0 3px var(--terra),
+              0 6px 18px rgba(255, 106, 79, 0.35);
+}
+
+.ds3-slider-handle-terra .ds3-slider-handle-dot { background: var(--terra); }
+
+.ds3-slider-fill-terra {
+  background: linear-gradient(270deg, var(--terra-soft), var(--terra));
+}
+
+.ds3-slider-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  direction: ltr;
+  margin: 0;
+}
+
+.ds3-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.ds3-slider-value {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--lichen);
+  font-variant-numeric: tabular-nums;
+}
+
+.ds3-slider-value-terra { color: var(--terra); }
+
+/* ===== ICON TILES + GLYPHS ============================================= */
+
+.ds3-icon-tile {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.ds3-icon-tile-blue   { background: rgba(10, 132, 255, 0.15);  color: var(--lichen); }
+.ds3-icon-tile-terra  { background: rgba(255, 106, 79, 0.15);  color: var(--terra); }
+.ds3-icon-tile-orange { background: rgba(255, 138, 42, 0.15);  color: var(--orange); }
+.ds3-icon-tile-green  { background: rgba(52, 168, 106, 0.15);  color: var(--green); }
+.ds3-icon-tile-indigo { background: rgba(94, 92, 230, 0.15);   color: var(--indigo); }
+.ds3-icon-tile-coral  { background: rgba(255, 59, 48, 0.15);   color: var(--heart); }
+.ds3-icon-tile-purple { background: rgba(175, 82, 222, 0.15);  color: var(--purple); }
+.ds3-icon-tile-teal   { background: rgba(31, 182, 166, 0.15);  color: var(--teal); }
+.ds3-icon-tile-yellow { background: rgba(255, 185, 56, 0.18);  color: #B8924E; }
+
+/* Phosphor Duotone family tones — generic, reusable on any icon container.
+ * Works on .hub-card-icon, .tools-card-icon, .ck-card-icon, etc.
+ * Family map:
+ *   crisis  → heart red       (Emergency, triggers, hyper, activated)
+ *   calm    → lichen blue     (Mindfulness, breath, on-edge)
+ *   body    → green           (Somatic, grounding, body)
+ *   self    → purple          (Modes, parts, schemas, profile)
+ *   warmth  → clay orange     (Gratitude, mood, morning, mid-balance)
+ *   reflect → indigo          (Therapy, repository, i-language, catastrophe)
+ *   mind    → teal            (Review, history, meta, settings)
+ */
+.icon-tone-crisis  { background: rgba(255, 59, 48, 0.15)  !important; color: var(--heart)  !important; }
+.icon-tone-calm    { background: rgba(10, 132, 255, 0.15) !important; color: var(--lichen) !important; }
+.icon-tone-body    { background: rgba(52, 168, 106, 0.15) !important; color: var(--green)  !important; }
+.icon-tone-self    { background: rgba(175, 82, 222, 0.15) !important; color: var(--purple) !important; }
+.icon-tone-warmth  { background: rgba(255, 138, 42, 0.15) !important; color: var(--orange) !important; }
+.icon-tone-reflect { background: rgba(94, 92, 230, 0.15)  !important; color: var(--indigo) !important; }
+.icon-tone-mind    { background: rgba(31, 182, 166, 0.15) !important; color: var(--teal)   !important; }
+
+/* Color-only variants — no background, just the family hue. Use inline (e.g.,
+ * topbar labels) where a tile would feel too heavy. */
+.color-tone-crisis  { color: var(--heart); }
+.color-tone-calm    { color: var(--lichen); }
+.color-tone-body    { color: var(--green); }
+.color-tone-self    { color: var(--purple); }
+.color-tone-warmth  { color: var(--orange); }
+.color-tone-reflect { color: var(--indigo); }
+.color-tone-mind    { color: var(--teal); }
+
+/* ===== AMBIENT BACKDROPS =============================================== */
+
+/* Two-blob soft backdrop, used on home, landing, paths, breathing screens */
+.ds3-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.ds3-ambient::before,
+.ds3-ambient::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+
+.ds3-ambient::before {
+  top: -80px; left: -60px;
+  width: 280px; height: 280px;
+  background: var(--terra-soft);
+  opacity: 0.55;
+}
+
+.ds3-ambient::after {
+  bottom: -100px; right: -80px;
+  width: 320px; height: 320px;
+  background: var(--lichen-soft);
+  opacity: 0.5;
+  filter: blur(80px);
+}
+
+.ds3-ambient-cool::before { background: var(--lichen-soft); }
+.ds3-ambient-cool::after  { background: var(--surface-alt); }
+
+/* Subtle breathing-circle background (Phase 7 body check) */
+.ds3-breath-bg {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(10, 132, 255, 0.10) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  animation: ds3BreathScale 10s ease-in-out infinite;
+}
+
+@keyframes ds3BreathScale {
+  0%, 100% { transform: translate(-50%, -50%) scale(0.7); opacity: 0.7; }
+  50%      { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-breath-bg { animation: none; }
+}
+
+/* ===== STEP DOTS (progress) ============================================ */
+
+.ds3-step-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.ds3-step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--line-soft);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.ds3-step-dot.is-current {
+  width: 18px;
+  background: var(--ink);
+}
+
+/* ===== CHIPS (emotion picker) ========================================== */
+
+.ds3-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ds3-chip {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.ds3-chip:hover {
+  border-color: var(--line);
+}
+
+.ds3-chip.is-selected {
+  background: var(--terra);
+  border-color: var(--terra);
+  color: #fff;
+  font-weight: 500;
+}
+
+.ds3-chip-dashed {
+  border-style: dashed;
+  color: var(--ink-muted);
+}
+
+.ds3-chip-group-label {
+  font-size: 14px;
+  color: var(--ink-muted);
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+/* ===== MODE / CHOICE CARD ============================================== */
+
+/* The mode card from modes-flow.jsx — glyph + name + desc + checkbox */
+.ds3-mode-card {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  direction: rtl;
+  text-align: right;
+  cursor: pointer;
+  transition: all 0.18s var(--ease-out);
+  font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.ds3-mode-card:hover {
+  border-color: var(--line);
+}
+
+.ds3-mode-card.is-selected {
+  background: var(--terra-soft);
+  border-color: var(--terra);
+  border-width: 1.5px;
+  box-shadow: 0 1px 2px rgba(255, 106, 79, 0.20);
+}
+
+.ds3-mode-card-glyph {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--surface-alt);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.ds3-mode-card.is-selected .ds3-mode-card-glyph {
+  background: #fff;
+}
+
+.ds3-mode-card-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds3-mode-card-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+
+.ds3-mode-card-desc {
+  font-size: 14px;
+  color: var(--ink-muted);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.ds3-mode-card-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line-soft);
+  background: transparent;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: all 0.18s var(--ease-out);
+}
+
+.ds3-mode-card.is-selected .ds3-mode-card-checkbox {
+  border-color: var(--terra);
+  background: var(--terra);
+}
+
+/* ===== MODAL / OVERLAY ================================================= */
+
+.ds3-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(20, 18, 16, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: ds3FadeIn 0.25s var(--ease-out);
+}
+
+.ds3-modal-card {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 24px 22px;
+  max-width: 360px;
+  width: 100%;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--line-soft);
+}
+
+.ds3-modal-card-tight {
+  padding: 20px 18px;
+}
+
+@keyframes ds3FadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ===== DIVIDERS ======================================================== */
+
+.ds3-divider {
+  height: 1px;
+  background: var(--line-soft);
+  border: none;
+  margin: 0;
+}
+
+.ds3-divider-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 32px 0 16px;
+}
+
+.ds3-divider-section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line-soft);
+}
+
+.ds3-divider-section-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ===== UTILITIES ======================================================= */
+
+.ds3-flex-col   { display: flex; flex-direction: column; }
+.ds3-flex-row   { display: flex; flex-direction: row; }
+.ds3-grow       { flex: 1; }
+.ds3-center     { display: grid; place-items: center; }
+.ds3-mt-auto    { margin-top: auto; }
+
+.ds3-stack-1  { display: flex; flex-direction: column; gap: 4px; }
+.ds3-stack-2  { display: flex; flex-direction: column; gap: 8px; }
+.ds3-stack-3  { display: flex; flex-direction: column; gap: 12px; }
+.ds3-stack-4  { display: flex; flex-direction: column; gap: 16px; }
+.ds3-stack-5  { display: flex; flex-direction: column; gap: 20px; }
+.ds3-stack-6  { display: flex; flex-direction: column; gap: 24px; }
+
+.ds3-row-1  { display: flex; flex-direction: row; gap: 4px; }
+.ds3-row-2  { display: flex; flex-direction: row; gap: 8px; }
+.ds3-row-3  { display: flex; flex-direction: row; gap: 12px; }
+.ds3-row-4  { display: flex; flex-direction: row; gap: 16px; }
+
+/* ===== ANIMATIONS ====================================================== */
+
+@keyframes ds3BreathPulse {
+  0%, 100% { transform: scale(1);    opacity: 0.4; }
+  50%      { transform: scale(1.12); opacity: 0.65; }
+}
+
+@keyframes ds3BreathDot {
+  0%, 100% { transform: scale(0.8); opacity: 0.6; }
+  50%      { transform: scale(1.4); opacity: 1; }
+}
+
+@keyframes ds3CursorBlink {
+  0%, 50%   { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.ds3-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 18px;
+  background: var(--terra);
+  margin-right: 2px;
+  vertical-align: middle;
+  animation: ds3CursorBlink 1s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-cursor { animation: none; }
+}
+
+/* ===== HOME SCREEN ===================================================== */
+
+.ds3-home {
+  padding: 24px 24px max(28px, env(safe-area-inset-bottom));
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ds3-home-greeting {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.ds3-home-greeting-text {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.ds3-home-greeting-name {
+  font-weight: 800;
+  color: var(--terra);
+}
+
+.ds3-home-continuity {
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  margin: 4px 0 0;
+  animation: ds3FadeIn 480ms var(--ease-out);
+}
+
+.ds3-home-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  margin: 28px 0;
+}
+
+.ds3-home-hero-btn {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  font-family: inherit;
+}
+
+.ds3-home-hero-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--terra-soft);
+  opacity: 0.35;
+  animation: ds3BreathPulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ds3-home-hero-pulse-2 {
+  inset: 24px;
+  opacity: 0.55;
+  animation-direction: reverse;
+}
+
+.ds3-home-hero-core {
+  position: relative;
+  z-index: 2;
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: var(--terra);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  box-shadow:
+    0 8px 24px rgba(255, 106, 79, 0.40),
+    0 2px 6px rgba(255, 106, 79, 0.28);
+  transition: transform 200ms var(--ease-out);
+}
+
+.ds3-home-hero-btn:active .ds3-home-hero-core {
+  transform: scale(0.96);
+}
+
+.ds3-home-hero-btn:focus-visible .ds3-home-hero-core {
+  outline: 3px solid var(--terra-soft);
+  outline-offset: 6px;
+}
+
+.ds3-home-hero-caption {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 280px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-home-hero-pulse { animation: none; }
+}
+
+.ds3-home-waiting {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  margin: 8px 0 8px;
+}
+
+.ds3-home-waiting-btn {
+  background: var(--clay-soft);
+  border: 1px solid rgba(255, 138, 42, 0.30);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--clay);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.ds3-home-waiting-btn:hover {
+  background: rgba(255, 138, 42, 0.20);
+}
+
+.ds3-home-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ds3-home-tile {
+  background: var(--surface);
+  border: none;
+  border-radius: 22px;
+  padding: 16px 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
+              0 0 0 0.5px rgba(60, 60, 67, 0.10);
+  font-family: inherit;
+  text-align: right;
+  direction: rtl;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  position: relative;
+  min-height: 110px;
+  transition: transform var(--duration-fast) var(--ease-out),
+              box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.ds3-home-tile:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06),
+              0 0 0 0.5px rgba(60, 60, 67, 0.10);
+}
+
+.ds3-home-tile:active {
+  transform: scale(0.98);
+}
+
+.ds3-home-tile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.ds3-home-tile-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+.ds3-home-tile-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--terra-soft);
+  color: var(--terra);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+}
+
+.ds3-home-tile-sub {
+  font-size: 13px;
+  color: var(--ink-muted);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.ds3-home-tile-chevron {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+.ds3-home-footer {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.ds3-home-footer-link {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  padding: 6px 4px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ds3-home-footer-link:hover { color: var(--ink-muted); }
+
+/* ===== ACTIVATION CARDS (Phase 1) ====================================== */
+
+.ds3-activation-card {
+  padding: 16px 18px;
+  min-height: 88px;
+}
+
+.ds3-activation-card-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ds3-activation-card-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+}
+
+.ds3-activation-card-sub {
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+
+.ds3-chevron-end {
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+
+/* ===== LIVE HR PANEL =================================================== */
+
+.live-hr-panel {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 14px 16px 12px;
+  border-radius: 18px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.live-hr-panel--idle {
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+}
+
+.live-hr-launch {
+  width: 100%;
+  height: 48px;
+  border-radius: 24px;
+  font-size: 15px;
+}
+
+.live-hr-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ink-muted);
+  line-height: 1.4;
+}
+
+.live-hr-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.live-hr-main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.live-hr-number {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--lichen);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  transition: color 200ms ease;
+}
+
+.live-hr-number.is-stale { color: var(--ink-muted); }
+
+.live-hr-unit {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+
+.live-hr-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.live-hr-delta {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.live-hr-delta.is-down { color: var(--green); }
+.live-hr-delta.is-up { color: var(--orange); }
+.live-hr-delta.is-pending {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
+.live-hr-delta-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.live-hr-status {
+  font-size: 11px;
+  color: var(--ink-muted);
+  letter-spacing: 0.02em;
+}
+
+.live-hr-sparkline {
+  width: 100%;
+  height: 44px;
+  display: block;
+}
+
+.live-hr-sparkline--empty {
+  background: linear-gradient(90deg, transparent, var(--line-soft), transparent);
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+/* ===== HR SETUP SCREEN ================================================ */
+
+.hr-setup-step {
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hr-setup-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--lichen-soft);
+  color: var(--lichen-deep);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.hr-setup-step-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.hr-setup-step-body {
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.hr-setup-code {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--canvas);
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  color: var(--ink);
+  word-break: break-all;
+  user-select: all;
+}
+
+.hr-setup-copy {
+  flex-shrink: 0;
+  background: var(--lichen);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hr-setup-copy:hover { background: var(--lichen-deep); }
+.hr-setup-copy.is-done { background: var(--green); }
+
+.hr-setup-status {
+  text-align: center;
+  font-size: 13px;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--canvas);
+  color: var(--ink-soft);
+}
+
+.hr-setup-status.is-ok {
+  background: rgba(52, 168, 106, 0.10);
+  color: var(--green);
+  font-weight: 600;
+}
+
+.hr-setup-status.is-fail {
+  background: rgba(255, 138, 42, 0.10);
+  color: var(--orange);
+  font-weight: 600;
+}

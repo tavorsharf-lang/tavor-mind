@@ -1,5 +1,6 @@
 import EmptyState from './EmptyState.jsx';
 import { VALENCE_COLORS, VALENCE_LABELS } from '../../../data/emotionsCorpus.js';
+import { CheckinRhythmIcon } from '../../../components/icons/index.jsx';
 
 function trendDirection(points) {
   if (!Array.isArray(points) || points.length < 4) return null;
@@ -46,7 +47,10 @@ export default function MoodRhythm({ data }) {
     return (
       <section className="review-section">
         <header className="review-section-header">
-          <h3 className="review-section-title">קצב מצב הרוח</h3>
+          <h3 className="review-section-title">
+            <span className="review-section-icon icon-tone-mind" aria-hidden="true"><CheckinRhythmIcon /></span>
+            קצב מצב הרוח
+          </h3>
           <p className="review-section-sub">איזה גוון נשא איתך כל יום</p>
         </header>
         <EmptyState inline />
@@ -66,7 +70,10 @@ export default function MoodRhythm({ data }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">קצב מצב הרוח</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-mind" aria-hidden="true"><CheckinRhythmIcon /></span>
+          קצב מצב הרוח
+        </h3>
         <p className="review-section-sub">איזה גוון נשא איתך כל יום</p>
       </header>
       <div className={`mood-ribbon ${sizeClass}`} aria-label={`קצב מצב הרוח על פני ${totalDays} ימים`}>

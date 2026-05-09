@@ -1,58 +1,80 @@
 /* src/styles/tokens.css
- * Design System v2 — Architect's Workbench palette.
- * Loaded BEFORE styles.css. New token names that don't clash with old ones
- * (--canvas, --ink, --lichen, --terra, etc.) take effect globally.
- * Names that DO clash (--surface, --shadow-*, --radius-*) keep their old
- * values at :root because styles.css :root loads later. They are
- * scope-redeclared inside .ds2-page in styles.css for new-design contexts.
+ * Design System v3 — Apple Health "State of Mind" vivid palette.
+ * Ported 2026-05-09 from claude.ai/design "Tough Moment Flow" handoff.
+ *
+ * Token NAMES kept stable (--canvas, --ink, --lichen, --terra, --clay) so
+ * existing CSS keeps compiling. Token VALUES remapped to the vivid system:
+ *   --canvas        → cool light gray (Apple Health bg)
+ *   --surface       → white card
+ *   --ink           → near-black, high contrast
+ *   --lichen (was green) → BLUE — calm body / primary navigation
+ *   --terra         → bright coral — emotional, primary CTA
+ *   --clay          → orange — warning / attention
+ * Auxiliary category accents (--heart, --orange, --teal, --indigo, --purple)
+ * available for category cards in the summary screen.
  */
 
 :root {
   /* === SURFACES === */
-  --canvas: #F5F2EC;          /* primary background — aged paper */
-  --surface: #FBFAF6;          /* cards, panels — softer paper */
+  --canvas: #F2F2F7;          /* iOS secondary system grouped bg */
+  --surface: #FFFFFF;          /* white card */
+  --surface-alt: #F9F9FB;      /* slightly tinted surface */
   --elevated: #FFFFFF;         /* modals, emphasized moments */
 
   /* === TEXT === */
-  --ink: #2A2520;              /* primary text — warm charcoal */
-  --ink-muted: #736B5E;        /* secondary text — earth gray */
-  --ink-soft: #A89E8E;         /* tertiary text — sand gray */
+  --ink: #0E0D0C;              /* primary text — near-black, vivid contrast */
+  --ink-soft: #1C1B19;         /* secondary heading */
+  --ink-muted: #6B6258;        /* tertiary text — muted */
 
   /* === BORDERS === */
-  --line-soft: #E5DFD3;        /* subtle borders — light sand */
-  --line: #C9C0AF;             /* standard borders — medium sand */
+  --line-soft: rgba(60, 60, 67, 0.10);    /* iOS hairline */
+  --line: rgba(60, 60, 67, 0.20);          /* standard border */
 
-  /* === ACCENT: LICHEN GREEN === */
-  --lichen: #5C7A65;           /* primary accent — actions, emphasis */
-  --lichen-deep: #4A6553;      /* hover, pressed states */
-  --lichen-soft: #E8EDE6;      /* callout backgrounds */
+  /* === ACCENT: PRIMARY (BLUE — body, calm, navigation) === */
+  --lichen: #0A84FF;           /* primary accent — was green, now Apple blue */
+  --lichen-deep: #0066D6;      /* hover, pressed states */
+  --lichen-soft: #D9E8FA;      /* callout backgrounds */
 
-  /* === ACCENT: TERRACOTTA === */
-  --terra: #A8624A;            /* secondary accent — emergency, central sentence */
-  --terra-soft: #F5E8E2;       /* terra callout backgrounds */
+  /* === ACCENT: TERRACOTTA (CORAL — emotional, primary CTA) === */
+  --terra: #FF6A4F;            /* bright coral — emotional content, CTAs */
+  --terra-soft: #FFD6C7;       /* terra callout backgrounds */
 
-  /* === WARNING: CLAY STONE === */
-  --clay: #8B6F47;             /* attention markers — recurring triggers */
-  --clay-soft: #F0E8DA;
+  /* === WARNING/ATTENTION: ORANGE === */
+  --clay: #FF8A2A;             /* attention markers — recurring triggers */
+  --clay-soft: #FFE4C7;
+
+  /* === Apple Health category accents === */
+  --heart:  #FF3B30;           /* alert, urgent help */
+  --coral:  #FF6A4F;           /* alias of --terra */
+  --orange: #FF8A2A;           /* breath, body warmth */
+  --yellow: #FFB938;
+  --green:  #34A86A;           /* grounding, pleasant mood */
+  --teal:   #1FB6A6;           /* mind, "הלך רוח" */
+  --blue:   #0A84FF;           /* alias of --lichen — primary */
+  --indigo: #5E5CE6;           /* schema, reflection */
+  --purple: #AF52DE;           /* parts, unpleasant mood */
+  --pink:   #FF6B9C;
 
   /* === TYPOGRAPHY SCALE === */
-  --text-xs: 12px;
+  /* Apple Health-inspired: heavier display, denser tracking */
+  --text-xs: 13px;
   --text-sm: 14px;
   --text-base: 15px;
   --text-md: 17px;
-  --text-lg: 20px;
-  --text-xl: 24px;
-  --text-2xl: 32px;
+  --text-lg: 19px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 34px;            /* display weight */
 
-  --weight-light: 300;
-  --weight-regular: 400;
-  --weight-medium: 500;
-  --weight-semibold: 600;
-  --weight-bold: 700;
+  --weight-light: 400;          /* nudged up — vivid system avoids hairline */
+  --weight-regular: 500;
+  --weight-medium: 600;
+  --weight-semibold: 700;
+  --weight-bold: 800;
 
-  --line-tight: 1.3;
+  --line-tight: 1.25;
   --line-normal: 1.5;
-  --line-relaxed: 1.7;
+  --line-relaxed: 1.65;
 
   /* === SPACING === */
   --space-1: 4px;
@@ -66,17 +88,17 @@
   --space-12: 48px;
   --space-16: 64px;
 
-  /* === RADII === */
-  --radius-sm: 4px;            /* buttons, inputs, chips */
-  --radius-md: 6px;             /* standard cards */
-  --radius-lg: 8px;             /* emphasized cards */
-  --radius-xl: 12px;            /* modals */
-  --radius-pill: 999px;         /* full-pill chips */
+  /* === RADII (vivid system uses much larger pills) === */
+  --radius-sm: 12px;            /* chips, inputs */
+  --radius-md: 16px;             /* standard cards */
+  --radius-lg: 22px;             /* emphasized cards (Apple Health card) */
+  --radius-xl: 28px;             /* large primary CTAs (full pill) */
+  --radius-pill: 999px;          /* fully round pills */
 
-  /* === SHADOWS === */
-  --shadow-soft: 0 1px 2px rgba(42, 37, 32, 0.04);
-  --shadow-medium: 0 2px 8px rgba(42, 37, 32, 0.06);
-  --shadow-elevated: 0 4px 16px rgba(42, 37, 32, 0.08);
+  /* === SHADOWS (softer, color-tinted) === */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(60, 60, 67, 0.10);
+  --shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(60, 60, 67, 0.08);
+  --shadow-elevated: 0 14px 40px rgba(0, 0, 0, 0.18);
 
   /* === TRANSITIONS === */
   --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
@@ -86,27 +108,20 @@
 
 body {
   background-color: var(--canvas);
-  background-image: url('../assets/grain.svg');
-  background-attachment: fixed;
-  background-size: 240px;
+  background-image: none;       /* vivid system: clean — no grain */
   color: var(--ink);
-  font-family: 'Heebo', system-ui, sans-serif;
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
   font-feature-settings: 'kern' 1, 'liga' 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 800ms var(--ease-out);
 }
 
-/* === Time-of-day adaptation ===
- * Subtle dimming at night so the screen is gentler at 2am.
- * Tokens shift only — components inherit naturally via var(--*).
- * `evening` and `dawn` reserved for future warm-cast overrides. */
+/* Time-of-day adaptation kept as a stub — currently no-op since vivid system
+ * is consistent across day/night. Override here later if you want a dimmed
+ * variant at night. */
 [data-time-of-day="night"] {
-  --canvas: #ECE6D8;
-  --surface: #F4EFE4;
-  --line-soft: #DED6C7;
-  --shadow-soft: 0 1px 2px rgba(42, 37, 32, 0.06);
-  --shadow-medium: 0 2px 8px rgba(42, 37, 32, 0.09);
+  /* no overrides for now */
 }
 
 @media (prefers-reduced-motion: reduce) {

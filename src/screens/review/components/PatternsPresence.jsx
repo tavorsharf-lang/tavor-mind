@@ -1,5 +1,6 @@
 import EmptyState from './EmptyState.jsx';
 import { PATTERN_LABELS } from '../../../data/analysisSchemas.js';
+import { PatternsIcon } from '../../../components/icons/index.jsx';
 
 const ORDER = ['not_enough_appeared', 'dichotomous_phrasing', 'body_as_compass', 'core_child_addressed'];
 
@@ -33,7 +34,10 @@ export default function PatternsPresence({ data }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">דפוסים שצפו</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-reflect" aria-hidden="true"><PatternsIcon /></span>
+          דפוסים שצפו
+        </h3>
         <p className="review-section-sub">מה שהופיע במילים שלך — לא רק במה שהרגשת</p>
       </header>
 

@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { getBreathingHaptic } from '../../../utils/breathingHaptic.js';
 
 const PATTERNS = {
   '478': {
@@ -58,7 +59,43 @@ const PATTERNS = {
       ],
     },
   },
+  '62': {
+    paces: {
+      slow: [
+        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 7 },
+        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+      ],
+      normal: [
+        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 6 },
+        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+      ],
+      fast: [
+        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 5 },
+        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+      ],
+    },
+  },
 };
+
+// Physiological easing per breath phase.
+// Inhale: symmetric ease-in-out-sine — sigmoid lung-volume curve during relaxed active inhalation.
+// Exhale: ease-out-quad — bias toward early release (elastic recoil) with gentle settle, soft enough for guided breathing.
+// Hold: linear placeholder (scale doesn't change so curve is irrelevant).
+const EASING_INHALE = 'cubic-bezier(0.37, 0, 0.63, 1)';
+const EASING_EXHALE = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+const EASING_HOLD = 'linear';
+
+function easingFor(label) {
+  if (label === 'שאף') return EASING_INHALE;
+  if (label === 'נשוף') return EASING_EXHALE;
+  return EASING_HOLD;
+}
+
+function prefersReducedMotion() {
+  return typeof window !== 'undefined'
+    && window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
 
 const PATTERN_LABELS = [
   { id: '478',      label: '4-7-8',   sublabel: 'הרגעה' },
@@ -122,13 +159,13 @@ function DirectionIcon({ step }) {
       el.style.transition = 'none';
       el.style.transform = 'translateY(4px)';
       void el.offsetWidth;
-      el.style.transition = `transform ${step.sec}s cubic-bezier(0.4, 0, 0.4, 1)`;
+      el.style.transition = `transform ${step.sec}s ${EASING_INHALE}`;
       el.style.transform = 'translateY(-4px)';
     } else if (step.label === 'נשוף') {
       el.style.transition = 'none';
       el.style.transform = 'translateY(-4px)';
       void el.offsetWidth;
-      el.style.transition = `transform ${step.sec}s cubic-bezier(0.4, 0, 0.4, 1)`;
+      el.style.transition = `transform ${step.sec}s ${EASING_EXHALE}`;
       el.style.transform = 'translateY(4px)';
     } else {
       el.style.transition = 'transform 200ms ease-out';
@@ -159,7 +196,7 @@ function DirectionIcon({ step }) {
   );
 }
 
-export default function BreathingExercise({ defaultPattern = '478', defaultPace = 'normal', cycles, onComplete, onPatternChange }) {
+export default function BreathingExercise({ defaultPattern = '478', defaultPace = 'normal', cycles, onComplete, onPatternChange, lockPattern = false }) {
   const [pattern, setPattern] = useState(defaultPattern);
   const [pace, setPace] = useState(defaultPace);
   const [cycle, setCycle] = useState(1);
@@ -173,6 +210,7 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
   const isBox = pattern === 'box';
 
   const circleRef = useRef(null);
+  const auraRef = useRef(null);
   const traceRef = useRef(null);
 
   // Timestamps — useMemo so reset is synchronous with the deps change (no stale-render frame).
@@ -202,13 +240,44 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
 
   useLayoutEffect(() => {
     if (done) return;
+    const reduce = prefersReducedMotion();
+    const ease = easingFor(step.label);
+    const haptic = getBreathingHaptic();
+    // Cancel anything scheduled from the previous step, then schedule taps only for inhale.
+    // Same effect that wires the visual transition → audio fires in the same frame as the visual.
+    haptic.cancel();
+    if (step.label === 'שאף' && !reduce) {
+      haptic.scheduleInhale(step.sec);
+    }
     const el = circleRef.current;
     if (el) {
-      el.style.transition = 'none';
-      el.style.transform = `scale(${step.from})`;
-      void el.offsetWidth;
-      el.style.transition = `transform ${step.sec}s cubic-bezier(0.4, 0, 0.4, 1)`;
-      el.style.transform = `scale(${step.to})`;
+      if (reduce) {
+        el.style.transition = 'none';
+        el.style.transform = `scale(${(step.from + step.to) / 2})`;
+      } else {
+        el.style.transition = 'none';
+        el.style.transform = `scale(${step.from})`;
+        void el.offsetWidth;
+        el.style.transition = `transform ${step.sec}s ${ease}`;
+        el.style.transform = `scale(${step.to})`;
+      }
+    }
+    // Aura tracks the breath at a softer amplitude — anchored at 1.0, expands ~10% on inhale peak.
+    // This makes the surrounding halo feel like it's breathing with the body, not just the orb.
+    const aura = auraRef.current;
+    if (aura) {
+      const auraFrom = 1 + (step.from - 1) * 0.18;
+      const auraTo = 1 + (step.to - 1) * 0.18;
+      if (reduce) {
+        aura.style.transition = 'none';
+        aura.style.transform = `scale(${(auraFrom + auraTo) / 2})`;
+      } else {
+        aura.style.transition = 'none';
+        aura.style.transform = `scale(${auraFrom})`;
+        void aura.offsetWidth;
+        aura.style.transition = `transform ${step.sec}s ${ease}`;
+        aura.style.transform = `scale(${auraTo})`;
+      }
     }
     if (isBox && traceRef.current) {
       const t = traceRef.current;
@@ -244,6 +313,19 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
     if (done) onComplete?.();
   }, [done, onComplete]);
 
+  // iOS Safari requires a user gesture to unlock the AudioContext. Most paths into the breathing
+  // screen include a click that already unlocked it, but if the user landed here via a refresh,
+  // the context starts suspended. Resume on the first pointerdown anywhere in the page.
+  useEffect(() => {
+    const haptic = getBreathingHaptic();
+    const onInteract = () => haptic.resumeIfNeeded();
+    window.addEventListener('pointerdown', onInteract);
+    return () => {
+      window.removeEventListener('pointerdown', onInteract);
+      haptic.cancel();
+    };
+  }, []);
+
   const displayCycle = Math.min(cycle, cycles);
   const renderTime = Date.now();
   const remainingMs = Math.max(0, step.sec * 1000 - (renderTime - stepStartedAt));
@@ -253,38 +335,42 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
 
   return (
     <div className="breathing">
-      <div className="pattern-selector" role="radiogroup" aria-label="תבנית נשימה">
-        {PATTERN_LABELS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            role="radio"
-            aria-checked={pattern === p.id}
-            className={`pattern-pill ${pattern === p.id ? 'is-active' : ''}`}
-            onClick={() => handlePatternChange(p.id)}
-          >
-            <span className="pattern-pill-label">{p.label}</span>
-            <span className="pattern-pill-sub">{p.sublabel}</span>
-          </button>
-        ))}
-      </div>
+      {!lockPattern && (
+        <>
+          <div className="pattern-selector" role="radiogroup" aria-label="תבנית נשימה">
+            {PATTERN_LABELS.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                role="radio"
+                aria-checked={pattern === p.id}
+                className={`pattern-pill ${pattern === p.id ? 'is-active' : ''}`}
+                onClick={() => handlePatternChange(p.id)}
+              >
+                <span className="pattern-pill-label">{p.label}</span>
+                <span className="pattern-pill-sub">{p.sublabel}</span>
+              </button>
+            ))}
+          </div>
 
-      <div className="pace-selector" role="radiogroup" aria-label="קצב נשימה">
-        {PACE_LABELS.map((p) => (
-          <button
-            key={p.id}
-            type="button"
-            role="radio"
-            aria-checked={pace === p.id}
-            className={`pace-pill ${pace === p.id ? 'is-active' : ''}`}
-            onClick={() => setPace(p.id)}
-          >
-            <PaceRhythm rhythm={p.rhythm} />
-            <span>{p.label}</span>
-          </button>
-        ))}
-      </div>
-      <p className="pace-hint">אם הקצב או התבנית לא נוחים — שנה כל רגע</p>
+          <div className="pace-selector" role="radiogroup" aria-label="קצב נשימה">
+            {PACE_LABELS.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                role="radio"
+                aria-checked={pace === p.id}
+                className={`pace-pill ${pace === p.id ? 'is-active' : ''}`}
+                onClick={() => setPace(p.id)}
+              >
+                <PaceRhythm rhythm={p.rhythm} />
+                <span>{p.label}</span>
+              </button>
+            ))}
+          </div>
+          <p className="pace-hint">אם הקצב או התבנית לא נוחים — שנה כל רגע</p>
+        </>
+      )}
 
       <div className="breathing-elapsed" aria-hidden="true">{elapsedTotal}</div>
 
@@ -311,6 +397,7 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
             />
           </svg>
         )}
+        <div ref={auraRef} className="breathing-aura" aria-hidden="true" />
         <div ref={circleRef} className="breathing-circle" aria-hidden="true" />
         <div className="breathing-countdown" aria-hidden="true">{remainingSec}</div>
       </div>

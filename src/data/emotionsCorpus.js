@@ -131,11 +131,11 @@ export const VALENCE_LABELS = {
 };
 
 export const VALENCE_COLORS = {
-  1: '#6B3D3D',
-  2: '#A0817A',
-  3: '#C9C2B3',
-  4: '#8FAB91',
-  5: '#5C7A65',
+  1: '#FF3B30',
+  2: '#FF8A2A',
+  3: '#FFB938',
+  4: '#34A86A',
+  5: '#0A84FF',
 };
 
 export function getEmotionsForValence(valence) {

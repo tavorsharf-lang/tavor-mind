@@ -1,4 +1,4 @@
-import { ref, set, get, update, remove, serverTimestamp } from 'firebase/database';
+import { ref, set, get, update, remove, serverTimestamp, query, orderByChild, limitToLast } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { decorateOnQueue, decorateFailure, markFailureForType } from './syncQueue.js';
 import { isSoftDeleted } from './softDelete.js';
@@ -237,6 +237,43 @@ export async function flushPendingTriggerAnalyses() {
     }
   }
   savePendingTriggers(remaining);
+}
+
+// Returns how many of the most recent consecutive mid-activation sessions
+// chose 'analyze' in the early bridge. A 'continue' breaks the streak; a mid
+// session without earlyBridgeChoice (pre-feature) also stops the count.
+// Non-mid sessions are skipped (they don't break or extend the streak).
+export async function getMidEarlyBridgeStreak() {
+  try {
+    const uid = getUid();
+    if (!uid || !navigator.onLine) return 0;
+    const sessionsRef = ref(db, `${ROOM}/${uid}/emergency_sessions`);
+    const q = query(sessionsRef, orderByChild('startedAtClient'), limitToLast(50));
+    const snap = await get(q);
+    if (!snap.exists()) return 0;
+
+    const sessions = [];
+    snap.forEach((child) => {
+      const v = child.val();
+      if (v && !isSoftDeleted(v)) sessions.push(v);
+    });
+    sessions.sort((a, b) => (b.startedAtClient || 0) - (a.startedAtClient || 0));
+
+    let streak = 0;
+    for (const s of sessions) {
+      if (s.activation !== 'mid') continue;
+      if (s.earlyBridgeChoice === 'analyze') {
+        streak += 1;
+      } else if (s.earlyBridgeChoice === 'continue') {
+        break;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  } catch {
+    return 0;
+  }
 }
 
 export async function flushPendingSessions() {

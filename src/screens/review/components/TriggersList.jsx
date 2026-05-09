@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import EmptyState from './EmptyState.jsx';
 import { SCHEMA_LABELS } from '../../../data/analysisSchemas.js';
+import { TriggersIcon } from '../../../components/icons/index.jsx';
 
 export default function TriggersList({ data, scope }) {
   const [openIdx, setOpenIdx] = useState(null);
@@ -11,7 +12,10 @@ export default function TriggersList({ data, scope }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">מה הפעיל</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-crisis" aria-hidden="true"><TriggersIcon /></span>
+          מה הפעיל
+        </h3>
         <p className="review-section-sub">הטריגרים שחזרו, והסכמות שעלו איתם</p>
       </header>
 

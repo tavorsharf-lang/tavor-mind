@@ -1,59 +1,116 @@
 import { useState } from 'react';
-import PhaseHeader from './components/PhaseHeader.jsx';
-import SoftButton from './components/SoftButton.jsx';
 import MeditationPlayer from './components/MeditationPlayer.jsx';
 import { EMERGENCY_TO_MEDITATION } from '../../data/emergencyMeditationMap.js';
+import { Phase4MeditationIcon } from '../../components/icons/index.jsx';
 
-const STAGE_TOTAL = 7;
-const STAGE_LABEL = 'שלב 1 — להירגע';
+function Topbar({ onExit }) {
+  return (
+    <div className="ds3-topbar">
+      <span className="ds3-topbar-spacer" />
+      <span className="ds3-topbar-label">
+        <span className="ds3-topbar-label-icon color-tone-calm" aria-hidden="true"><Phase4MeditationIcon /></span>
+        שלב 1 · להירגע · מדיטציה
+      </span>
+      <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function LengthCard({ length, meditation, onPlay }) {
+  const lengthLabel = length === 'short' ? 'קצרה' : 'ארוכה';
+  return (
+    <button
+      type="button"
+      onClick={onPlay}
+      className="ds3-card"
+      aria-label={`נגן: ${meditation.title}, גרסה ${lengthLabel}`}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 14,
+        width: '100%', padding: '16px 18px',
+        background: 'var(--surface)',
+        border: '1px solid var(--line-soft)',
+        borderRadius: 'var(--radius-lg)',
+        boxShadow: 'var(--shadow-soft)',
+        cursor: 'pointer',
+        textAlign: 'right',
+        fontFamily: 'inherit',
+      }}
+    >
+      <span
+        aria-hidden="true"
+        style={{
+          width: 48, height: 48, borderRadius: '50%',
+          background: 'var(--lichen)',
+          color: '#fff',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
+        }}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </span>
+      <span style={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 0, flex: 1 }}>
+        <span style={{ fontSize: 16, fontWeight: 700, color: 'var(--ink)' }}>
+          גרסה {lengthLabel} · {meditation.title}
+        </span>
+        <span style={{ fontSize: 14, color: 'var(--ink-muted)' }}>
+          {meditation.subtitle}
+        </span>
+      </span>
+    </button>
+  );
+}
 
 export default function Phase4Meditation({ activation, onNext, onSkip, onExit }) {
-  const meditation = activation ? EMERGENCY_TO_MEDITATION[activation] : null;
-  const [open, setOpen] = useState(false);
+  const pair = activation ? EMERGENCY_TO_MEDITATION[activation] : null;
+  const [active, setActive] = useState(null); // null | 'short' | 'long'
 
-  if (!meditation) {
-    // No mapping for this activation — skip silently.
+  if (!pair) {
     return (
-      <div className="phase phase-meditation-page">
-        <PhaseHeader phase={4} total={STAGE_TOTAL} stageLabel={STAGE_LABEL} onExit={onExit} />
-        <main className="phase-content phase-content-center">
-          <h1 className="phase-title">אין מדיטציה מותאמת כעת</h1>
+      <div className="ds3-screen">
+        <Topbar onExit={onExit} />
+        <main className="ds3-screen-content ds3-screen-content-center ds3-text-center">
+          <h1 className="ds3-h1">אין מדיטציה מותאמת כעת</h1>
         </main>
-        <footer className="phase-footer">
-          <SoftButton onClick={onNext}>הלאה</SoftButton>
+        <footer className="ds3-screen-footer">
+          <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
         </footer>
       </div>
     );
   }
 
+  const playing = active ? pair[active] : null;
+
   return (
-    <div className="phase phase-meditation-page">
-      <PhaseHeader phase={4} total={STAGE_TOTAL} stageLabel={STAGE_LABEL} onExit={onExit} />
-      <main className="phase-content phase-content-center">
-        <h1 className="phase-title">רוצה רגע של מדיטציה?</h1>
-        <p className="phase-subline">{meditation.title} — {meditation.subtitle}</p>
-        <button
-          type="button"
-          className="phase-meditation-card phase-meditation-cta"
-          onClick={() => setOpen(true)}
-        >
-          <span className="phase-meditation-name">השמע</span>
-        </button>
+    <div className="ds3-screen">
+      <Topbar onExit={onExit} />
+      <main className="ds3-screen-content ds3-stack-5">
+        <div className="ds3-stack-2 ds3-text-center">
+          <h1 className="ds3-h1">רוצה רגע של מדיטציה?</h1>
+          <p className="ds3-body ds3-text-muted">בחר אורך שמתאים לרגע</p>
+        </div>
+        <div className="ds3-stack-3">
+          <LengthCard length="short" meditation={pair.short} onPlay={() => setActive('short')} />
+          <LengthCard length="long"  meditation={pair.long}  onPlay={() => setActive('long')} />
+        </div>
       </main>
-      <footer className="phase-footer phase-footer-stack">
-        <SoftButton onClick={onNext}>הלאה</SoftButton>
-        <button type="button" className="link-btn phase-skip" onClick={onSkip}>
-          דלג לשלב הבא
-        </button>
+      <footer className="ds3-screen-footer ds3-stack-3">
+        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
+        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>דלג לשלב הבא</button>
       </footer>
 
       <MeditationPlayer
-        open={open}
-        src={meditation.src}
-        title={meditation.title}
-        subtitle={meditation.subtitle}
-        onClose={() => setOpen(false)}
-        onComplete={() => { setOpen(false); onNext(); }}
+        open={!!playing}
+        src={playing?.src}
+        title={playing?.title}
+        subtitle={playing?.subtitle}
+        onClose={() => setActive(null)}
+        onComplete={() => { setActive(null); onNext(); }}
       />
     </div>
   );

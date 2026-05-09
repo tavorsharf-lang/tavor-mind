@@ -28,32 +28,79 @@
 - Base path ב-Vite: `/tavor-mind/`
 - Deploy: `npm run deploy` (משתמש ב-`gh-pages` package, פושל ל-branch `gh-pages`)
 
-## 5. Color palette (CSS variables ב-[src/styles.css](src/styles.css))
+### Live HR (Apple Watch) — Firebase rules
+
+נתיב נפרד `tavormindLiveHr/{uid}/{sessionId}` עבור דגימות דופק שנכתבות מ-iOS Shortcut (REST API ללא auth). ה-uid הוא מזהה Firebase האנונימי של המשתמש (28 תווים אקראיים) ומשמש כסוד הנתיב. דרושה תוספת לכללי RTDB:
+
+```json
+"tavormindLiveHr": {
+  "$uid": {
+    ".read": true,
+    ".write": true
+  }
+}
+```
+
+הגדרת ה-Shortcut נעשית פעם אחת דרך מסך [/emergency/hr-setup](src/screens/emergency/HrSetup.jsx). לאחר ההגדרה, Phase 2 (נשימה) מציג פאנל דופק חי עם sparkline + delta מההתחלה. סיכום HR (start/end/min/max/avg/delta) נשמר ב-`emergency_sessions/{ts}/hrTrack` בסוף הסשן דרך [src/utils/liveHr.js](src/utils/liveHr.js).
+
+## 5. Color palette — DS3 "Apple Health Vivid" (CSS tokens ב-[src/styles/tokens.css](src/styles/tokens.css))
+
+נבחר 2026-05-09 כתחליף ל-DS2 "Architect's Workbench" (אזוב/טרקוטה ארצית). העיצוב הזה מקורו ב-Claude Design "Tough Moment Flow" handoff ושאוב מ-Apple Health "State of Mind".
 
 ```css
---accent: #2C5F6F;          /* calm sea blue — primary */
---accent-soft: #4A7E8E;     /* lighter for hover */
---accent-bg: #E8F0F2;       /* very pale wash for cards */
---bg: #FAFBFC;              /* near-white, slightly cool */
---surface: #FFFFFF;
---text: #1A2832;            /* deep blue-charcoal */
---text-soft: #5A6B7A;
---border: #E2E8EC;
---danger: #C75D5D;          /* muted red, crisis button */
---radius-sm: 8px;
---radius-md: 16px;
---radius-lg: 24px;
---shadow-soft: 0 2px 12px rgba(44, 95, 111, 0.06);
---shadow-medium: 0 4px 24px rgba(44, 95, 111, 0.10);
+/* Surfaces */
+--canvas: #F2F2F7;          /* iOS secondary system grouped bg — cool light gray */
+--surface: #FFFFFF;          /* white cards */
+--surface-alt: #F9F9FB;
+--elevated: #FFFFFF;
+
+/* Text */
+--ink: #0E0D0C;              /* primary — near-black, vivid contrast */
+--ink-soft: #1C1B19;         /* secondary heading */
+--ink-muted: #6B6258;        /* tertiary muted */
+
+/* Borders — iOS hairlines */
+--line-soft: rgba(60, 60, 67, 0.10);
+--line: rgba(60, 60, 67, 0.20);
+
+/* Primary (BLUE — body, calm, navigation) */
+--lichen: #0A84FF;            /* Apple blue — primary accent (was green in DS2) */
+--lichen-deep: #0066D6;
+--lichen-soft: #D9E8FA;
+
+/* Terracotta (CORAL — emotional content, primary CTA) */
+--terra: #FF6A4F;             /* bright coral */
+--terra-soft: #FFD6C7;
+
+/* Warning/attention */
+--clay: #FF8A2A;              /* orange */
+--clay-soft: #FFE4C7;
+
+/* Apple Health category accents (used per phase) */
+--heart: #FF3B30;  --orange: #FF8A2A;  --yellow: #FFB938;
+--green: #34A86A;  --teal:   #1FB6A6;  --indigo: #5E5CE6;
+--purple: #AF52DE; --pink:   #FF6B9C;
+
+/* Radii (vivid system uses large pills) */
+--radius-sm: 12px;  --radius-md: 16px;  --radius-lg: 22px;  --radius-xl: 28px;
+--radius-pill: 999px;
+
+/* Shadows — soft, iOS-style with hairline ring */
+--shadow-soft: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px rgba(60,60,67,0.10);
+--shadow-medium: 0 2px 8px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(60,60,67,0.08);
+--shadow-elevated: 0 14px 40px rgba(0,0,0,0.18);
 ```
+
+טוקני שמות (lichen / terra / clay / canvas / ink) נשמרו מ-DS2 כדי שכל ה-CSS הקיים ימשיך להידור — רק הערכים הוחלפו. אין יותר גריין ברקע (היה ב-DS2). אין יותר adaptation ל-time-of-day.
 
 ## 6. Design philosophy
 
 - **crisis-first** — הפעולה החשובה ביותר היא תמיד הכי בולטת ונגישה.
-- **breathing** — מרווחים נדיבים, line-height גבוה (1.6+), הרבה whitespace. לא צפוף.
-- **calm** — צבעים רכים, ללא alarms, ללא צבעים זוהרים. הכפתור האדום הוא muted (`#C75D5D`), לא צעקני.
+- **vivid yet calm** — צבעי קטגוריה עזים בנפרד, אבל הקומפוזיציה כולה לבנה ושקטה. כפתורי CTA טרקוטה מלאים = "זה מה שחשוב". כחול = body work, calm.
+- **bold typography** — H1 בכובד 700, display 800. בלי hairline weights. מאזן את הצבעוניות — ה"שקט" מגיע מהווייטספייס, לא ממשקל הטקסט.
+- **rounded pills** — הכל ברדיוסים של 16-28px, כפתורי CTA ב-`--radius-xl` (28px = פיל מלא). זה ה-vibe של Apple Health.
 - **RTL Hebrew** — כל ה-UI בעברית, dir="rtl" ב-`<html>`.
-- **minimal** — אין dashboards עמוסים, אין מספרים, אין metrics. שונה מ-tavors-tasks (שם המידע צפוף).
+- **breathing layout** — מרווחים נדיבים, line-height גבוה (1.55-1.65), הרבה whitespace.
 
 ## 7. מבנה התיקיות
 
@@ -172,7 +219,7 @@ src/
 
 - עברית RTL בכל מקום.
 - אל תוסיף dependencies מבלי שהתבקשת.
-- אל תשנה את ה-color palette. זו זהות המוצר.
+- הפלטה היא DS3 "Apple Health Vivid" (סעיף 5). אל תשנה אותה ללא אישור מפורש מהמשתמש — זו זהות המוצר.
 - אל תוסיף Tailwind / framework / TypeScript.
 - אל תכפיל קוד מ-tavors-tasks — הפרויקטים שונים, גם אם stack דומה.
 - כשמדווח על שינוי — דווח קצר, בעברית.

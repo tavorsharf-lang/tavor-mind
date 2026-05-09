@@ -1,5 +1,20 @@
 import { ANALYSIS_TYPES } from '../../../data/analysisSchemas.js';
 import { formatHebrewDate } from '../../../utils/dateHelpers.js';
+import {
+  EmotionRecognitionIcon,
+  GratitudeIcon,
+  ILanguageIcon,
+  TherapyIcon,
+  MetaAnalysisIcon,
+} from '../../../components/icons/index.jsx';
+
+const TYPE_ICON = {
+  emotion_recognition: EmotionRecognitionIcon,
+  gratitude: GratitudeIcon,
+  i_language: ILanguageIcon,
+  therapy_session: TherapyIcon,
+  meta_analysis: MetaAnalysisIcon,
+};
 
 function fmtDate(s) {
   if (!s) return '—';
@@ -12,12 +27,17 @@ function fmtDate(s) {
 
 export default function EnvelopeHeader({ analysis }) {
   const meta = ANALYSIS_TYPES[analysis.type];
+  const TypeIcon = TYPE_ICON[analysis.type];
   return (
     <header className="env-header">
       <div className="env-top-row">
         {meta && (
-          <span className="type-chip" style={{ background: meta.color, color: '#fff' }}>
-            <span aria-hidden="true">{meta.icon}</span>
+          <span className={`type-chip icon-tone-${meta.tone || 'reflect'}`}>
+            {TypeIcon && (
+              <span className="type-chip-icon" aria-hidden="true">
+                <TypeIcon size={14} />
+              </span>
+            )}
             {meta.label}
           </span>
         )}

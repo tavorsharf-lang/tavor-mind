@@ -189,8 +189,7 @@ function ItemLabel({ item }) {
   return (
     <div className="recycle-row-title-wrap">
       {meta && (
-        <span className="type-chip type-chip-sm" style={{ background: meta.color, color: '#fff' }}>
-          <span aria-hidden="true">{meta.icon}</span>
+        <span className={`type-chip type-chip-sm icon-tone-${meta.tone || 'reflect'}`}>
           {meta.label}
         </span>
       )}

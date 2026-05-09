@@ -1,4 +1,5 @@
 import EmptyState from './EmptyState.jsx';
+import { ModesIcon } from '../../../components/icons/index.jsx';
 
 const DOMINANT_LINE = {
   performer_manager: 'המנהל הביצועיסט הוביל. שווה לשאול: מה הוא מגן עליו השבוע?',
@@ -18,7 +19,10 @@ export default function ModesActive({ data }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">הקולות</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-self" aria-hidden="true"><ModesIcon /></span>
+          הקולות
+        </h3>
         <p className="review-section-sub">מי הוביל את התקופה הזו</p>
       </header>
 

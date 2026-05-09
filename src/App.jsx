@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen.jsx';
 import EmergencyFlow from './screens/emergency/EmergencyFlow.jsx';
 import EmergencyHistory from './screens/emergency/EmergencyHistory.jsx';
 import EmergencySessionDetail from './screens/emergency/EmergencySessionDetail.jsx';
+import HrSetup from './screens/emergency/HrSetup.jsx';
 import ToolboxHub from './screens/toolbox/ToolboxHub.jsx';
 import SchemaProfile from './screens/toolbox/SchemaProfile.jsx';
 import AttachmentProfile from './screens/toolbox/AttachmentProfile.jsx';
@@ -28,8 +29,9 @@ import ReviewScreen from './screens/review/ReviewScreen.jsx';
 import MindfulnessHub from './screens/mindfulness/MindfulnessHub.jsx';
 import TherapyFrameScreen from './screens/therapy/TherapyFrameScreen.jsx';
 import TherapyDaySettings from './screens/therapy/TherapyDaySettings.jsx';
+import SomethingWaitingScreen from './screens/something-waiting/SomethingWaitingScreen.jsx';
 import NavRail from './components/ui/NavRail.jsx';
-import SyncStatusBadge from './components/ui/SyncStatusBadge.jsx';
+import { NavProvider } from './utils/navContext.jsx';
 import { flushPendingSessions } from './utils/emergencyLog.js';
 import { flushPendingCheckins } from './utils/checkinStorage.js';
 import { flushPendingTools } from './utils/toolsStorage.js';
@@ -91,14 +93,15 @@ export default function App() {
 
   return (
     <BrowserRouter basename="/tavor-mind">
-      <a href="#main-content" className="ds2-skip-link">דלג לתוכן הראשי</a>
-      <SyncStatusBadge />
-      <NavRail />
-      <Routes>
+      <NavProvider>
+        <a href="#main-content" className="ds2-skip-link">דלג לתוכן הראשי</a>
+        <NavRail />
+        <Routes>
         <Route path="/" element={<HomeScreen authError={authError} />} />
         <Route path="/emergency" element={<EmergencyFlow />} />
         <Route path="/emergency/history" element={<EmergencyHistory />} />
         <Route path="/emergency/history/:sessionId" element={<EmergencySessionDetail />} />
+        <Route path="/emergency/hr-setup" element={<HrSetup />} />
         <Route path="/toolbox" element={<ToolboxHub />} />
         <Route path="/toolbox/schemas" element={<SchemaProfile />} />
         <Route path="/toolbox/attachment" element={<AttachmentProfile />} />
@@ -122,7 +125,9 @@ export default function App() {
         <Route path="/mindfulness" element={<MindfulnessHub />} />
         <Route path="/therapy/frame" element={<TherapyFrameScreen />} />
         <Route path="/settings/therapy-day" element={<TherapyDaySettings />} />
-      </Routes>
+        <Route path="/something-waiting" element={<SomethingWaitingScreen />} />
+        </Routes>
+      </NavProvider>
     </BrowserRouter>
   );
 }

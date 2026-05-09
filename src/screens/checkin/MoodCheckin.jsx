@@ -7,6 +7,7 @@ import MoodPhase3Emotions from './components/MoodPhase3_Emotions.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
 import { saveMoodCheckin } from '../../utils/checkinStorage.js';
+import { useBackHandler } from '../../utils/navContext.jsx';
 
 const TOTAL = 3;
 
@@ -20,6 +21,11 @@ export default function MoodCheckin() {
   const [saved, setSaved] = useState(false);
 
   const exit = () => navigate('/checkin', { replace: true });
+
+  useBackHandler(() => {
+    if (phase > 1) setPhase(phase - 1);
+    else navigate(-1);
+  });
 
   const handleSave = async () => {
     setSaving(true);

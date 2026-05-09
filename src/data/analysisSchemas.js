@@ -1,37 +1,46 @@
+// Analysis type metadata.
+// `tone` maps to the Phosphor Duotone family system (icon-tone-* CSS class).
+// `icon` (unicode) and `color` are kept for legacy chip rendering;
+//   actual SVG icon components are imported by consumers from /components/icons.
 export const ANALYSIS_TYPES = {
   emotion_recognition: {
     id: 'emotion_recognition',
     label: 'זיהוי רגשות',
     icon: '◐',
-    color: '#7A8FA8',
+    color: 'var(--indigo)',
+    tone: 'reflect',
     description: 'זיהוי רגש בזמן אמת, תרגול יומי, או ניתוח מקרה',
   },
   gratitude: {
     id: 'gratitude',
     label: 'הוקרת תודה',
     icon: '○',
-    color: '#A8967A',
+    color: 'var(--orange)',
+    tone: 'warmth',
     description: 'תרגול תודה — גרסה 2.0 עם פרוטוקולים',
   },
   i_language: {
     id: 'i_language',
     label: 'שפת אני',
     icon: '◇',
-    color: '#9B8AA8',
+    color: 'var(--indigo)',
+    tone: 'reflect',
     description: 'תרגול ניסוח בשפת אני / NVC',
   },
   therapy_session: {
     id: 'therapy_session',
     label: 'סשן תרפיה',
     icon: '◈',
-    color: '#7A9B8A',
+    color: 'var(--indigo)',
+    tone: 'reflect',
     description: 'IFS, עבודה על סכמה ספציפית, או דיאלוג כיסאות',
   },
   meta_analysis: {
     id: 'meta_analysis',
     label: 'מטא-ניתוח',
     icon: '◉',
-    color: '#A87A8A',
+    color: 'var(--teal)',
+    tone: 'mind',
     description: 'סינתזה של מספר ניתוחים על פני זמן',
   },
 };

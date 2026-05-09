@@ -7,6 +7,7 @@ import { saveToolSession } from '../../utils/toolsStorage.js';
 import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { getModeById } from '../../data/modes.js';
+import { useBackHandler } from '../../utils/navContext.jsx';
 
 const TOTAL = 5;
 const OTHER_SCHEMA = '__other__';
@@ -31,6 +32,11 @@ export default function TriggerTracker() {
   const [saved, setSaved] = useState(false);
 
   const exit = () => navigate('/tools', { replace: true });
+
+  useBackHandler(() => {
+    if (step > 1) setStep(step - 1);
+    else navigate(-1);
+  });
 
   const toggleSet = (set, setSet, id) => {
     const next = new Set(set);

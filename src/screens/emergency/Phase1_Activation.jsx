@@ -1,50 +1,114 @@
 import { useNavigate } from 'react-router-dom';
-import PhaseHeader from './components/PhaseHeader.jsx';
+import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
 
 const OPTIONS = [
-  { id: 'hyper', label: 'הופעלתי',                   subtitle: 'לב פועם מהר, מחשבות רצות, אי-שקט' },
-  { id: 'hypo',  label: 'מרוקן',                     subtitle: 'כבדות, ניתוק רגשי, אין כוח לזוז' },
-  { id: 'mid',   label: 'עוד טריגר אחד — ואני מופעל', subtitle: 'מוצף אבל מתפקד, על הסף' },
+  {
+    id: 'hyper',
+    label: 'הופעלתי',
+    subtitle: 'לב פועם מהר, מחשבות רצות, אי-שקט',
+    tone: 'coral',
+    glyph: 'spark',
+  },
+  {
+    id: 'mid',
+    label: 'עוד טריגר אחד — ואני מופעל',
+    subtitle: 'מוצף אבל מתפקד, על הסף',
+    tone: 'orange',
+    glyph: 'edge',
+  },
+  {
+    id: 'hypo',
+    label: 'מרוקן',
+    subtitle: 'כבדות, ניתוק רגשי, אין כוח לזוז',
+    tone: 'blue',
+    glyph: 'low',
+  },
 ];
+
+function ActivationGlyph({ kind, color }) {
+  const s = { stroke: color, fill: 'none', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' };
+  if (kind === 'spark') return (
+    <svg width="28" height="28" viewBox="0 0 28 28">
+      <path d="M14 4v6M14 18v6M4 14h6M18 14h6M7 7l4 4M17 17l4 4M21 7l-4 4M11 17l-4 4" {...s}/>
+    </svg>
+  );
+  if (kind === 'edge') return (
+    <svg width="28" height="28" viewBox="0 0 28 28">
+      <path d="M4 18 L10 12 L14 16 L24 6" {...s}/>
+      <circle cx="24" cy="6" r="1.5" fill={color}/>
+    </svg>
+  );
+  return (
+    <svg width="28" height="28" viewBox="0 0 28 28">
+      <path d="M4 14h20" {...s}/>
+      <path d="M8 18h12" {...s} strokeOpacity="0.6"/>
+      <path d="M11 22h6" {...s} strokeOpacity="0.3"/>
+    </svg>
+  );
+}
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
   return (
-    <div className="phase phase-activation">
-      <PhaseHeader
-        phase={1}
-        total={7}
-        stageLabel="שלב 1 — להירגע"
-        onExit={onExit}
-        extra={
-          <button
-            type="button"
-            className="phase-history-link"
-            onClick={() => navigate('/emergency/history')}
-          >
-            להיסטוריה
-          </button>
-        }
-      />
-      <main className="phase-content">
-        <h1 className="phase-title">איפה אני עכשיו?</h1>
-        <div className="activation-options">
+    <div className="ds3-screen">
+      {/* Topbar — back arrow on right (RTL = back). History link on left. */}
+      <div className="ds3-topbar">
+        <button
+          type="button"
+          className="ds3-topbar-skip"
+          onClick={() => navigate('/emergency/history')}
+        >
+          להיסטוריה
+        </button>
+        <span className="ds3-topbar-label">
+          <span className="ds3-topbar-label-icon color-tone-crisis" aria-hidden="true"><Phase1ActivationIcon /></span>
+          שלב 1 · להירגע
+        </span>
+        <button
+          type="button"
+          className="ds3-topbar-back"
+          aria-label="צא"
+          onClick={onExit}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <main className="ds3-screen-content ds3-stack-5">
+        <div className="ds3-stack-3" style={{ marginTop: 12 }}>
+          <h1 className="ds3-h1">איפה אני עכשיו?</h1>
+          <p className="ds3-body ds3-text-muted">
+            תבחר את המצב שהכי קרוב. אין תשובה לא נכונה.
+          </p>
+        </div>
+
+        <div className="ds3-stack-3">
           {OPTIONS.map((opt) => (
             <button
               key={opt.id}
               type="button"
-              className="activation-btn"
+              className="ds3-card-button ds3-activation-card"
               onClick={() => onPick(opt.id)}
             >
-              <span className="activation-label">{opt.label}</span>
-              <span className="activation-sub">{opt.subtitle}</span>
+              <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
+                <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
+              </span>
+              <span className="ds3-activation-card-text">
+                <span className="ds3-activation-card-label">{opt.label}</span>
+                <span className="ds3-activation-card-sub">{opt.subtitle}</span>
+              </span>
+              <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
+                <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </button>
           ))}
         </div>
-        <p className="phase-footnote">אין תשובה לא נכונה</p>
       </main>
-      <footer className="phase-footer">
-        <button type="button" className="link-btn phase-skip" onClick={onSkip}>
+
+      <footer className="ds3-screen-footer">
+        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
           דלג לשלב הבא
         </button>
       </footer>

@@ -1,5 +1,6 @@
 import EmptyState from './EmptyState.jsx';
 import { EMOTIONS as EMOTION_VOCAB, emotionLabelById } from '../../../data/emotionsCorpus.js';
+import { EmotionalLandscapeIcon } from '../../../components/icons/index.jsx';
 
 const VALENCE_BY_ID = Object.fromEntries(
   EMOTION_VOCAB.map((e) => [e.id, e.valences[0]])
@@ -51,7 +52,10 @@ export default function EmotionalLandscape({ data }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">נוף רגשי</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-body" aria-hidden="true"><EmotionalLandscapeIcon /></span>
+          נוף רגשי
+        </h3>
         <p className="review-section-sub">מה הופיע, מה לא הופיע</p>
       </header>
 

@@ -5,6 +5,7 @@ import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { getModeById } from '../../data/modes.js';
+import { useBackHandler } from '../../utils/navContext.jsx';
 
 const TOTAL = 5;
 
@@ -24,6 +25,11 @@ export default function CatastropheCheck() {
   const [saved, setSaved] = useState(false);
 
   const exit = () => navigate('/tools', { replace: true });
+
+  useBackHandler(() => {
+    if (step > 1) setStep(step - 1);
+    else navigate(-1);
+  });
 
   const showAgainstHint = step === 3 && evidenceAgainst.trim() === '';
 

@@ -1,4 +1,5 @@
 import { formatHebrewDate, getIsraelDateString } from '../../../utils/dateHelpers.js';
+import { CoreChildIcon } from '../../../components/icons/index.jsx';
 
 export default function CoreChildSection({ data }) {
   if (!data) return null;
@@ -15,7 +16,10 @@ export default function CoreChildSection({ data }) {
   return (
     <section className="review-section core-child-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">הילד</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-self" aria-hidden="true"><CoreChildIcon /></span>
+          הילד
+        </h3>
         <p className="review-section-sub">מה הוא ביקש, מה הוא קיבל</p>
       </header>
       <div className="core-child-card">

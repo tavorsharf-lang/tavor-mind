@@ -1,12 +1,18 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useNav } from '../../utils/navContext.jsx';
 
 export default function NavRail() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { back } = useNav();
 
   if (location.pathname === '/') return null;
 
   const goBack = () => {
+    if (typeof back === 'function') {
+      back();
+      return;
+    }
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {

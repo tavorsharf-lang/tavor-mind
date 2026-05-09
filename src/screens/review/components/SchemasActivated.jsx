@@ -1,4 +1,5 @@
 import EmptyState from './EmptyState.jsx';
+import { SchemasActivatedIcon } from '../../../components/icons/index.jsx';
 
 export default function SchemasActivated({ data }) {
   const activations = Array.isArray(data?.activations) ? data.activations : [];
@@ -12,7 +13,10 @@ export default function SchemasActivated({ data }) {
   return (
     <section className="review-section">
       <header className="review-section-header">
-        <h3 className="review-section-title">סכמות פעילות</h3>
+        <h3 className="review-section-title">
+          <span className="review-section-icon icon-tone-reflect" aria-hidden="true"><SchemasActivatedIcon /></span>
+          סכמות פעילות
+        </h3>
         <p className="review-section-sub">איזו אמונה ליבתית פעלה הכי הרבה</p>
       </header>
 

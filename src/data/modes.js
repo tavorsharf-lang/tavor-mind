@@ -180,3 +180,36 @@ export function getModeById(id) {
   if (!canonical) return null;
   return modes.find((m) => m.id === canonical) || null;
 }
+
+// Mode order by activation state — used in EmergencyFlow Phase 9.
+// Likelihood-based ordering per the schema-therapy + polyvagal mapping.
+// IMPORTANT: ordering is visual-only, no hiding, no "recommended" badges.
+// Uses short ids (matches MODES array used by Phase 9).
+export const MODE_ORDER_BY_ACTIVATION = {
+  hyper: ['manager',  'approval', 'guardian',   'sacrificer', 'exile'],
+  mid:   ['approval', 'manager',  'guardian',   'sacrificer', 'exile'],
+  hypo:  ['guardian', 'exile',    'sacrificer', 'manager',    'approval'],
+};
+
+// Fallback / structural order (matches the order in the MODES array).
+// Use when activation is missing or user picks "structural" alternative.
+export const MODE_ORDER_STRUCTURAL = ['manager', 'sacrificer', 'guardian', 'approval', 'exile'];
+
+/**
+ * Returns the MODES array re-ordered for the given ordering strategy + activation.
+ * Strategies: 'activation' (default), 'alphabetical', 'structural'.
+ */
+export function orderModes(strategy, activation) {
+  if (strategy === 'alphabetical') {
+    return [...MODES].sort((a, b) => a.label.localeCompare(b.label, 'he'));
+  }
+  if (strategy === 'structural') {
+    return MODE_ORDER_STRUCTURAL
+      .map((id) => MODES.find((m) => m.id === id))
+      .filter(Boolean);
+  }
+  const order = MODE_ORDER_BY_ACTIVATION[activation] || MODE_ORDER_STRUCTURAL;
+  return order
+    .map((id) => MODES.find((m) => m.id === id))
+    .filter(Boolean);
+}

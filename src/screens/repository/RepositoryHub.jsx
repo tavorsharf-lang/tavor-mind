@@ -5,6 +5,7 @@ import AnalysisListItem from './components/AnalysisListItem.jsx';
 import MoodListItem from './components/MoodListItem.jsx';
 import { Loading } from '../../components/ui/Loading.jsx';
 import UndoToast from '../../components/ui/UndoToast.jsx';
+import { ImportIcon, FilterIcon, TrashIcon } from '../../components/icons/index.jsx';
 import { listAnalyses, restoreAnalysis, listDeletedAnalyses } from '../../utils/analysisStorage.js';
 import { listAllMoodCheckins, listDeletedMoodCheckins } from '../../utils/checkinStorage.js';
 import { ANALYSIS_TYPES, ANALYSIS_TYPE_IDS, SCHEMA_LABELS, SCHEMA_IDS, PATTERN_LABELS, PATTERN_IDS } from '../../data/analysisSchemas.js';
@@ -149,7 +150,8 @@ export default function RepositoryHub() {
       <main className="tool-content repo-content">
         <div className="repo-toolbar">
           <button type="button" className="repo-import-btn" onClick={() => navigate('/repository/import')}>
-            + ייבא ניתוח
+            <ImportIcon size={18} />
+            ייבא ניתוח
           </button>
           <button
             type="button"
@@ -157,11 +159,7 @@ export default function RepositoryHub() {
             onClick={() => setFiltersOpen(!filtersOpen)}
             aria-expanded={filtersOpen}
           >
-            <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="4" y1="6" x2="20" y2="6" />
-              <line x1="6" y1="12" x2="18" y2="12" />
-              <line x1="9" y1="18" x2="15" y2="18" />
-            </svg>
+            <FilterIcon size={20} />
             סינון
             {activeFilterCount > 0 && <span className="filter-count-badge">{activeFilterCount}</span>}
           </button>
@@ -171,13 +169,7 @@ export default function RepositoryHub() {
             onClick={() => navigate('/repository/trash')}
             aria-label="סל מחזור"
           >
-            <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-              <path d="M10 11v6" />
-              <path d="M14 11v6" />
-              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
-            </svg>
+            <TrashIcon size={20} />
             סל מחזור
             {deletedCount > 0 && <span className="filter-count-badge">{deletedCount}</span>}
           </button>
