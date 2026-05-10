@@ -14,10 +14,7 @@ import Phase10Closing from './Phase10_Closing.jsx';
 import PhaseEarlyBridge from './PhaseEarlyBridge.jsx';
 import PhaseSchemaModeBridge from './PhaseSchemaModeBridge.jsx';
 import PhaseContainment from './PhaseContainment.jsx';
-import PhaseEmotion from './PhaseEmotion.jsx';
-import PhaseParts from './PhaseParts.jsx';
 import PhaseMoodScale from './PhaseMoodScale.jsx';
-import PhaseSchemaReflection from './PhaseSchemaReflection.jsx';
 import PhaseSummary from './PhaseSummary.jsx';
 import {
   logEmergencySession,
@@ -92,15 +89,8 @@ export default function EmergencyFlow() {
   const [phase9FirstSuggestedMode, setPhase9FirstSuggestedMode] = useState(null);
   // Body-regulation score captured at start of Phase 7 (rate stage).
   const [bodyRegulationScore, setBodyRegulationScore] = useState(null);
-  // Emotion naming + IFS parts (Phase 6.5 + 6.7) — optional steps after somatic.
-  const [selectedEmotions, setSelectedEmotions] = useState([]);
-  const [customEmotion, setCustomEmotion] = useState('');
-  const [selectedPart, setSelectedPart] = useState(null);
-  const [customPart, setCustomPart] = useState('');
-  // Mood scale + schema reflection (Phase 9.5 + 9.7) — after modes, before closing.
+  // Mood scale (Phase 9.5) — after modes, before closing.
   const [moodIndex, setMoodIndex] = useState(null);
-  const [reflectionSelection, setReflectionSelection] = useState([]);
-  const [reflectionText, setReflectionText] = useState('');
   // Containment side-trip state (Phase 8 step 0 → 8.1).
   const [containmentCountThisSession, setContainmentCountThisSession] = useState(0);
   const [savingState, setSavingState] = useState('idle');
@@ -118,12 +108,14 @@ export default function EmergencyFlow() {
 
   // Frozen endedAt — captured once when phase first transitions to 11 so the
   // HR summary's polling effect (which keys on endedAtMs) doesn't restart on
-  // every render. Computing Date.now() inline in JSX caused the polling to
-  // be cancelled before any tick completed.
+  // every render. Set in an effect (not the render body) so back-navigation
+  // into Phase 11 doesn't pick up a stale render-time write.
   const endedAtMsRef = useRef(null);
-  if (phase === 11 && endedAtMsRef.current === null) {
-    endedAtMsRef.current = Date.now();
-  }
+  useEffect(() => {
+    if (phase === 11 && endedAtMsRef.current === null) {
+      endedAtMsRef.current = Date.now();
+    }
+  }, [phase]);
 
   // Phase history stack — each setPhase transition is recorded so the global
   // "previous" button can pop back to the prior phase. skipRecordRef lets
@@ -190,19 +182,7 @@ export default function EmergencyFlow() {
       earlyBridgeChoice,
       bodyRegulationScore: bodyRegulationScore != null ? bodyRegulationScore : null,
       hrTrack: hrSessionId ? { sessionId: hrSessionId } : null,
-      emotionsNamed: selectedEmotions.length > 0 || customEmotion.trim() ? {
-        list: selectedEmotions,
-        custom: customEmotion.trim() || null,
-      } : null,
-      partActive: selectedPart ? {
-        id: selectedPart,
-        custom: selectedPart === '__other__' ? (customPart.trim() || null) : null,
-      } : null,
       moodIndex: moodIndex != null ? moodIndex : null,
-      schemaReflection: (reflectionSelection.length > 0 || reflectionText.trim()) ? {
-        schemas: reflectionSelection,
-        text: reflectionText.trim() || null,
-      } : null,
     };
     if (partial) {
       session.partial = true;
@@ -385,7 +365,7 @@ export default function EmergencyFlow() {
               setTriggerInitialStep(resumeAt);
               setPhase(8);
             } else {
-              setPhase(6.5);
+              setPhase(7);
             }
           }}
           onSkip={() => {
@@ -395,31 +375,9 @@ export default function EmergencyFlow() {
               setTriggerInitialStep(resumeAt);
               setPhase(8);
             } else {
-              setPhase(6.5);
+              setPhase(7);
             }
           }}
-          onExit={handleSaveAndExit}
-        />
-      )}
-      {phase === 6.5 && (
-        <PhaseEmotion
-          selectedEmotions={selectedEmotions}
-          setSelectedEmotions={setSelectedEmotions}
-          customEmotion={customEmotion}
-          setCustomEmotion={setCustomEmotion}
-          onNext={() => setPhase(6.7)}
-          onSkip={() => setPhase(6.7)}
-          onExit={handleSaveAndExit}
-        />
-      )}
-      {phase === 6.7 && (
-        <PhaseParts
-          selectedPart={selectedPart}
-          setSelectedPart={setSelectedPart}
-          customPart={customPart}
-          setCustomPart={setCustomPart}
-          onNext={() => setPhase(7)}
-          onSkip={() => setPhase(7)}
           onExit={handleSaveAndExit}
         />
       )}
@@ -522,18 +480,6 @@ export default function EmergencyFlow() {
         <PhaseMoodScale
           moodIndex={moodIndex}
           setMoodIndex={setMoodIndex}
-          onNext={() => setPhase(9.7)}
-          onSkip={() => setPhase(9.7)}
-          onExit={handleSaveAndExit}
-        />
-      )}
-      {phase === 9.7 && (
-        <PhaseSchemaReflection
-          triggerSchemas={trigger.schemas || []}
-          reflectionSelection={reflectionSelection}
-          setReflectionSelection={setReflectionSelection}
-          reflectionText={reflectionText}
-          setReflectionText={setReflectionText}
           onNext={() => setPhase(10)}
           onSkip={() => setPhase(10)}
           onExit={handleSaveAndExit}

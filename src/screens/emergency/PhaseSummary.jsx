@@ -41,7 +41,7 @@ export default function PhaseSummary({
 }) {
   const cards = [];
 
-  // Mood card — from emotionsNamed if present
+  // Mood card — from moodIndex (Phase 9.5) if present, else closingScore
   if (session.moodIndex != null) {
     cards.push({
       tint: '#1FB6A6',
