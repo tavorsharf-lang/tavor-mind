@@ -124,7 +124,23 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
         </>
       )}
       {state === 'loading' && (
-        <p className="hr-summary-hint">ממתין לדגימות…</p>
+        <>
+          <p className="hr-summary-hint">ממתין לדגימות…</p>
+          <p className="hr-summary-hint" style={{ fontSize: 11, opacity: 0.6 }}>
+            sessionId: <code>{sessionId.slice(-12)}</code> · נתונים בזיכרון: {samples.length}
+          </p>
+          <button
+            type="button"
+            className="ds3-btn-quiet"
+            onClick={async () => {
+              const snap = await getHrSessionSnapshot(sessionId);
+              if (snap?.samples) setSamples(snap.samples);
+            }}
+            style={{ fontSize: 13 }}
+          >
+            רענן ידנית
+          </button>
+        </>
       )}
       {state === 'timeout' && (
         <>
