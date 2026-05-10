@@ -949,10 +949,11 @@ button:focus-visible {
 /* ── Toolbox — shared layout ───────────────────────────────────────── */
 
 .tool-page {
-  min-height: 100dvh;
+  height: 100dvh;
   background: var(--bg);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .toolbox-hub {
@@ -1032,6 +1033,7 @@ button:focus-visible {
 
 .tool-content {
   flex: 1;
+  min-height: 0;
   max-width: 720px;
   width: 100%;
   margin: 0 auto;
@@ -1115,6 +1117,8 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   padding-bottom: max(16px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .hub-list {
@@ -2056,6 +2060,8 @@ button:focus-visible {
   flex-direction: column;
   gap: 10px;
   padding-bottom: max(16px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ck-card {

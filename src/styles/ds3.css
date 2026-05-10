@@ -896,7 +896,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 32px 0 16px;
+  margin: 14px 0 8px;
+  flex-shrink: 0;
 }
 
 .ds3-divider-section-line {
@@ -967,25 +968,29 @@
 /* ===== HOME SCREEN ===================================================== */
 
 .ds3-home {
-  padding: 24px 24px max(28px, env(safe-area-inset-bottom));
-  min-height: 100dvh;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 20px max(16px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 0;
   width: 100%;
   max-width: 720px;
   margin-inline: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ds3-home-greeting {
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  flex-shrink: 0;
   position: relative;
   z-index: 1;
 }
 
 .ds3-home-greeting-text {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--ink);
@@ -1034,14 +1039,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 28px;
-  margin: 28px 0;
+  gap: 16px;
+  margin: 12px 0;
+  flex-shrink: 0;
 }
 
 .ds3-home-hero-btn {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: 180px;
+  height: 180px;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -1062,7 +1068,7 @@
 }
 
 .ds3-home-hero-pulse-2 {
-  inset: 24px;
+  inset: 20px;
   opacity: 0.55;
   animation-direction: reverse;
 }
@@ -1070,8 +1076,8 @@
 .ds3-home-hero-core {
   position: relative;
   z-index: 2;
-  width: 132px;
-  height: 132px;
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   background: var(--terra);
   color: #fff;
@@ -1079,7 +1085,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 1.4;
   box-shadow:
@@ -1139,14 +1145,15 @@
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .ds3-home-tile {
   background: var(--surface);
   border: none;
-  border-radius: 22px;
-  padding: 16px 14px;
+  border-radius: 20px;
+  padding: 12px 12px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
               0 0 0 0.5px rgba(60, 60, 67, 0.10);
   font-family: inherit;
@@ -1155,10 +1162,10 @@
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   align-items: flex-start;
   position: relative;
-  min-height: 110px;
+  min-height: 88px;
   transition: transform var(--duration-fast) var(--ease-out),
               box-shadow var(--duration-fast) var(--ease-out);
 }
@@ -1215,20 +1222,21 @@
 
 .ds3-home-tile-chevron {
   position: absolute;
-  bottom: 14px;
-  left: 14px;
+  bottom: 10px;
+  left: 10px;
   color: var(--ink-soft);
   flex-shrink: 0;
 }
 
 .ds3-home-footer {
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: relative;
   z-index: 1;
+  flex-shrink: 0;
 }
 
 .ds3-home-footer-link {
