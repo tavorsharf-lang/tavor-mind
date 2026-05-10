@@ -116,6 +116,15 @@ export default function EmergencyFlow() {
   }, []);
   const hrEnabled = isHrSetupDone();
 
+  // Frozen endedAt — captured once when phase first transitions to 11 so the
+  // HR summary's polling effect (which keys on endedAtMs) doesn't restart on
+  // every render. Computing Date.now() inline in JSX caused the polling to
+  // be cancelled before any tick completed.
+  const endedAtMsRef = useRef(null);
+  if (phase === 11 && endedAtMsRef.current === null) {
+    endedAtMsRef.current = Date.now();
+  }
+
   // Phase history stack — each setPhase transition is recorded so the global
   // "previous" button can pop back to the prior phase. skipRecordRef lets
   // goBackPhase set the phase without re-recording the back-jump itself.
@@ -556,7 +565,7 @@ export default function EmergencyFlow() {
             somaticRan: activation === 'hypo',
             hrSessionId: ensureHrSessionId(),
             startedAtMs: startedAtRef.current,
-            endedAtMs: Date.now(),
+            endedAtMs: endedAtMsRef.current,
           }}
           onClose={() => navigate('/', { replace: true })}
         />
