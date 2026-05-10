@@ -175,8 +175,15 @@ export function buildTriggerAnalysisPrompt(session) {
     'סיימתי כעת ניתוח טריגר באפליקציה. אני רוצה לעבד מה שלא נסגר.',
   ];
 
+  const heaviness = session.heavinessCheck;
+  const heavinessLine = heaviness === 'heavier'
+    ? 'באמצע הסשן בדקתי איך זה: היה יותר כבד.'
+    : heaviness === 'heavier_continue'
+      ? 'באמצע הסשן בדקתי איך זה: היה יותר כבד, ובחרתי להמשיך.'
+      : null;
+
   const whatHappenedHasContent = event || sensationsLabels.length > 0
-    || thoughts.length > 0 || readBackFeeling;
+    || thoughts.length > 0 || readBackFeeling || heavinessLine;
 
   if (whatHappenedHasContent) {
     lines.push('', '—— מה קרה ——', '');
@@ -193,6 +200,10 @@ export function buildTriggerAnalysisPrompt(session) {
     }
     if (readBackFeeling) {
       lines.push(`קראתי לעצמי את המחשבות האלה, וזה הרגיש: ${readBackFeeling}`);
+    }
+    if (heavinessLine) {
+      if (lines[lines.length - 1] !== '') lines.push('');
+      lines.push(heavinessLine);
     }
     while (lines[lines.length - 1] === '') lines.pop();
   }
@@ -229,10 +240,15 @@ export function buildTriggerAnalysisPrompt(session) {
   metaLines.push(`- תאריך וזמן: ${formatHebrewDateTime(occurredAt)}`);
   metaLines.push(`- משך הסשן: ${formatDuration(session.durationSeconds)}`);
 
-  if (initialActivation && closingScore) {
-    metaLines.push(`- הפעלה ראשונית: ${initialActivation}  ·  סגירה: ${closingScore}`);
-  } else if (initialActivation) {
-    metaLines.push(`- הפעלה ראשונית: ${initialActivation}`);
+  const activationCategory = ACTIVATION_LABELS[session.activation] || null;
+  const initialActivationLine = initialActivation
+    ? (activationCategory ? `${initialActivation} (${activationCategory})` : initialActivation)
+    : (activationCategory || null);
+
+  if (initialActivationLine && closingScore) {
+    metaLines.push(`- הפעלה ראשונית: ${initialActivationLine}  ·  סגירה: ${closingScore}`);
+  } else if (initialActivationLine) {
+    metaLines.push(`- הפעלה ראשונית: ${initialActivationLine}`);
   } else if (closingScore) {
     metaLines.push(`- סגירה: ${closingScore}`);
   }
@@ -248,6 +264,9 @@ export function buildTriggerAnalysisPrompt(session) {
   }
   if (closingNote) {
     metaLines.push(`- הערה אישית: ${closingNote}`);
+  }
+  if (session.schemaModeBridgeResponse === 'rejected_known') {
+    metaLines.push('- דחיתי את הצעת המוד מהסכמה הדומיננטית');
   }
 
   lines.push('', '', '—— מטא-נתונים ——', '');
