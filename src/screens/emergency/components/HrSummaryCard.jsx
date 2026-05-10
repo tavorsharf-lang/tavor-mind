@@ -6,7 +6,10 @@ import {
   summarizeSamples,
 } from '../../../utils/liveHr.js';
 
-const POLL_TIMEOUT_MS = 90000;
+// Generous timeout: even with Limit=30, a full upload plus iOS Safari coming
+// back from background can take a while. Extending past 90s avoids spurious
+// "no samples" errors when data is still trickling in.
+const POLL_TIMEOUT_MS = 180000;
 
 export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
   const [samples, setSamples] = useState([]);

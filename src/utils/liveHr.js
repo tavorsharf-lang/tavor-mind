@@ -67,14 +67,23 @@ export function buildShortcutWriteBase(sessionId) {
   return `${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/${sessionId}`;
 }
 
-// iOS URL scheme that runs the named Shortcut with the sessionId as text input.
-export function buildRunShortcutUrl(sessionId) {
-  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}`;
+// Use x-callback-url so iOS waits for the Shortcut to finish, then opens
+// x-success — auto-returning the user to Safari. Without x-callback, the
+// user has to manually switch back, which can leave the Shortcut throttled
+// in background (slow upload) or land on Safari before all samples arrive.
+function buildSuccessUrl() {
+  if (typeof window === 'undefined') return '';
+  return window.location.href.split('#')[0];
 }
 
-// Trigger the workout-start Shortcut (no input needed).
+export function buildRunShortcutUrl(sessionId) {
+  const success = encodeURIComponent(buildSuccessUrl());
+  return `shortcuts://x-callback-url/run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}&x-success=${success}`;
+}
+
 export function buildStartShortcutUrl() {
-  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME_START)}`;
+  const success = encodeURIComponent(buildSuccessUrl());
+  return `shortcuts://x-callback-url/run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME_START)}&x-success=${success}`;
 }
 
 // Trigger a custom-scheme URL without navigating Safari away from the page.
