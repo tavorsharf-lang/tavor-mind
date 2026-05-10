@@ -290,62 +290,33 @@ export default function Phase10Closing({
           </button>
         )}
 
-        {/* Universal "סיימתי" — anchor to the Read Shortcut. iOS opens Shortcuts
-            (which ends workout, reads HR samples, posts them); onFinish runs
-            in parallel to save the session and advance to PhaseSummary. When
-            the user returns to Safari, the chart auto-loads from polling. */}
-        {hrSessionId ? (
-          <a
-            href={buildRunShortcutUrl(hrSessionId)}
-            className="ds3-btn ds3-btn-cream"
-            onClick={(e) => {
-              if (inFlight) { e.preventDefault(); return; }
-              onFinish();
-            }}
-            style={{
-              marginTop: 10, textDecoration: 'none',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              opacity: inFlight ? 0.6 : 1,
-              pointerEvents: inFlight ? 'none' : 'auto',
-            }}
-          >
-            {saving ? (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 4, background: 'currentColor', animation: 'ds3BreathDot 1.4s ease-in-out infinite' }} />
-                <span>שומר…</span>
-              </span>
-            ) : saved ? (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="5 12 10 17 19 7" />
-                </svg>
-                <span>נשמר</span>
-              </span>
-            ) : 'סיימתי'}
-          </a>
-        ) : (
-          <button
-            type="button"
-            className="ds3-btn ds3-btn-cream"
-            onClick={onFinish}
-            disabled={inFlight}
-            style={{ marginTop: 10 }}
-          >
-            {saving ? (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 4, background: 'currentColor', animation: 'ds3BreathDot 1.4s ease-in-out infinite' }} />
-                <span>שומר…</span>
-              </span>
-            ) : saved ? (
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="5 12 10 17 19 7" />
-                </svg>
-                <span>נשמר</span>
-              </span>
-            ) : 'סיימתי'}
-          </button>
-        )}
+        {/* Universal "סיימתי" — plain button. We deliberately don't combine
+            this with launching the Read Shortcut (anchor href) because iOS
+            backgrounds Safari the moment the URL scheme fires and the await
+            inside handleFinish can be killed before persistAll completes,
+            losing the session. Loading HR is a separate explicit tap on
+            PhaseSummary, after the save is guaranteed. */}
+        <button
+          type="button"
+          className="ds3-btn ds3-btn-cream"
+          onClick={onFinish}
+          disabled={inFlight}
+          style={{ marginTop: 10 }}
+        >
+          {saving ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 4, background: 'currentColor', animation: 'ds3BreathDot 1.4s ease-in-out infinite' }} />
+              <span>שומר…</span>
+            </span>
+          ) : saved ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="5 12 10 17 19 7" />
+              </svg>
+              <span>נשמר</span>
+            </span>
+          ) : 'סיימתי'}
+        </button>
       </footer>
 
       <CallSomeoneModal open={showCallModal} onClose={() => setShowCallModal(false)} />

@@ -1,6 +1,7 @@
 import { ref, push, get, update, query, orderByChild } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { isSoftDeleted } from './softDelete.js';
+import { decorateOnQueue, decorateFailure } from './syncQueue.js';
 
 const COLLECTION = 'something_waiting';
 const PENDING_KEY = 'tavor_mind_pending_waiting_items_v1';
@@ -38,9 +39,10 @@ export async function saveWaitingItem(item) {
     createdAt: Date.now(),
   };
   const uid = getUid();
+  const localId = `local_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   if (!uid || !navigator.onLine) {
     const pending = readPending();
-    pending.push({ ...payload, _localId: `local_${Date.now()}_${Math.random().toString(36).slice(2)}` });
+    pending.push(decorateOnQueue({ ...payload, _localId: localId }));
     writePending(pending);
     return { ok: false, reason: 'offline' };
   }
@@ -50,7 +52,7 @@ export async function saveWaitingItem(item) {
     return { ok: true, id: newRef.key };
   } catch (e) {
     const pending = readPending();
-    pending.push({ ...payload, _localId: `local_${Date.now()}_${Math.random().toString(36).slice(2)}` });
+    pending.push(decorateFailure(decorateOnQueue({ ...payload, _localId: localId }), e));
     writePending(pending);
     return { ok: false, reason: 'error' };
   }
@@ -61,14 +63,19 @@ export async function flushPendingWaitingItems() {
   if (!pending.length) return;
   const uid = getUid();
   if (!uid || !navigator.onLine) return;
-  try {
-    for (const p of pending) {
+  // Per-item try/catch — a failure mid-loop must not re-push items we already
+  // wrote successfully. Remaining items keep their localId for the next attempt.
+  const remaining = [];
+  for (const p of pending) {
+    try {
       const newRef = push(ref(db, pathFor(uid)));
-      const { _localId, ...payload } = p;
+      const { _localId, _attempts, _firstQueuedAt, _lastAttemptAt, _lastError, ...payload } = p;
       await update(newRef, payload);
+    } catch (err) {
+      remaining.push(decorateFailure(p, err));
     }
-    writePending([]);
-  } catch {/* still offline */}
+  }
+  writePending(remaining);
 }
 
 export async function listWaitingItems() {

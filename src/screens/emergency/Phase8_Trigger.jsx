@@ -6,6 +6,7 @@ import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
+import { Modal } from '../../components/ui/Modal.jsx';
 
 const STAGE_TOTAL = 10;
 const STAGE_LABEL = 'שלב 2 — לנתח';
@@ -127,122 +128,51 @@ export default function Phase8Trigger({
     <div className="phase phase-trigger ck-step" style={{ position: 'relative' }}>
       <PhaseHeader phase={8} total={STAGE_TOTAL} stageLabel={STAGE_LABEL} onExit={onExit} icon={Phase8TriggerIcon} tone="crisis" />
 
-      {/* Safety-check rendered as a BOTTOM-SHEET MODAL overlay (per design 2/2b).
-       * The analysis content stays mounted (blurred) so context is preserved. */}
-      {showSafetyCheck && (
-        <div
-          aria-modal="true"
-          role="dialog"
-          style={{
-            position: 'fixed', inset: 0, zIndex: 100,
-            background: 'rgba(20, 18, 16, 0.42)',
-            backdropFilter: 'blur(6px)',
-            WebkitBackdropFilter: 'blur(6px)',
-            display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-            padding: 16,
-            paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
-            animation: 'p8-sheet-fade 200ms ease-out',
-          }}
-        >
-          <style>{`
-            @keyframes p8-sheet-fade { from { opacity: 0; } to { opacity: 1; } }
-            @keyframes p8-sheet-rise {
-              from { transform: translateY(20px); opacity: 0; }
-              to   { transform: translateY(0);    opacity: 1; }
-            }
-          `}</style>
-          {safetyAnswer !== 'heavier' ? (
-            <div style={{
-              width: '100%', maxWidth: 360,
-              background: 'var(--surface)',
-              borderRadius: 22,
-              padding: '20px 18px',
-              boxShadow: '0 14px 40px rgba(0, 0, 0, 0.18)',
-              border: '1px solid var(--line-soft)',
-              animation: 'p8-sheet-rise 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-            }}>
-              <h2 style={{
-                fontSize: 22, fontWeight: 700, color: 'var(--ink)',
-                textAlign: 'center', margin: '0 0 16px',
-                letterSpacing: '-0.01em',
-              }}>איך זה עכשיו?</h2>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button
-                  type="button"
-                  onClick={() => dismissSafetyCheck('clearer')}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 24,
-                    background: 'var(--surface)', color: 'var(--ink)',
-                    border: '1px solid var(--line-soft)',
-                    fontFamily: 'inherit', fontSize: 15, fontWeight: 600, cursor: 'pointer',
-                  }}
-                >יותר ברור</button>
-                <button
-                  type="button"
-                  onClick={() => dismissSafetyCheck('same')}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 24,
-                    background: 'var(--surface)', color: 'var(--ink)',
-                    border: '1px solid var(--line-soft)',
-                    fontFamily: 'inherit', fontSize: 15, fontWeight: 600, cursor: 'pointer',
-                  }}
-                >אותו דבר</button>
-                <button
-                  type="button"
-                  onClick={handleHeavierStay}
-                  style={{
-                    flex: 1, height: 48, borderRadius: 24,
-                    background: 'var(--terra)', color: '#fff',
-                    border: 'none',
-                    fontFamily: 'inherit', fontSize: 15, fontWeight: 700, cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(255, 106, 79, 0.40)',
-                  }}
-                >יותר כבד</button>
-              </div>
-            </div>
-          ) : (
-            <div style={{
-              width: '100%', maxWidth: 340,
-              background: 'var(--surface)',
-              borderRadius: 22,
-              padding: '24px 22px',
-              boxShadow: '0 14px 40px rgba(0, 0, 0, 0.18)',
-              border: '1px solid var(--line-soft)',
-              textAlign: 'center',
-              animation: 'p8-sheet-rise 250ms cubic-bezier(0.4, 0, 0.2, 1)',
-            }}>
-              <p style={{
-                fontSize: 17, color: 'var(--ink)', lineHeight: 1.65, margin: '0 0 18px',
-              }}>
-                בוא נחזור לגוף לרגע.<br/>
-                נסיים את הניתוח אחר כך.
-              </p>
+      {/* Safety-check uses the shared <Modal /> for body-scroll lock + Esc handling.
+       * Esc/backdrop are no-ops here — the user must answer (this is a safety check,
+       * not a UI nicety). The analysis content stays mounted (blurred) so context
+       * is preserved. */}
+      <Modal open={showSafetyCheck} onClose={() => {}} ariaLabel="בדיקת ביטחון">
+        {safetyAnswer !== 'heavier' ? (
+          <div className="p8-safety-card">
+            <h2 className="p8-safety-title">איך זה עכשיו?</h2>
+            <div className="p8-safety-row">
               <button
                 type="button"
-                onClick={() => onGoToRegulation && onGoToRegulation(5)}
-                style={{
-                  width: '100%', height: 52, borderRadius: 26,
-                  background: 'var(--terra)', color: '#fff',
-                  border: 'none',
-                  fontFamily: 'inherit', fontSize: 17, fontWeight: 700, cursor: 'pointer',
-                  boxShadow: '0 6px 18px rgba(255, 106, 79, 0.40)',
-                }}
-              >חזור לוויסות</button>
+                className="p8-safety-btn"
+                onClick={() => dismissSafetyCheck('clearer')}
+              >יותר ברור</button>
               <button
                 type="button"
-                onClick={() => dismissSafetyCheck('heavier_continue')}
-                style={{
-                  background: 'none', border: 'none',
-                  color: 'var(--ink-muted)',
-                  fontFamily: 'inherit', fontSize: 14, fontWeight: 500,
-                  cursor: 'pointer', marginTop: 12,
-                  textDecoration: 'underline', textUnderlineOffset: 4,
-                }}
-              >בכל זאת להמשיך לניתוח</button>
+                className="p8-safety-btn"
+                onClick={() => dismissSafetyCheck('same')}
+              >אותו דבר</button>
+              <button
+                type="button"
+                className="p8-safety-btn p8-safety-btn-heavy"
+                onClick={handleHeavierStay}
+              >יותר כבד</button>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="p8-safety-card p8-safety-card-heavier">
+            <p className="p8-safety-text">
+              בוא נחזור לגוף לרגע.<br/>
+              נסיים את הניתוח אחר כך.
+            </p>
+            <button
+              type="button"
+              className="p8-safety-cta"
+              onClick={() => onGoToRegulation && onGoToRegulation(5)}
+            >חזור לוויסות</button>
+            <button
+              type="button"
+              className="p8-safety-link"
+              onClick={() => dismissSafetyCheck('heavier_continue')}
+            >בכל זאת להמשיך לניתוח</button>
+          </div>
+        )}
+      </Modal>
 
       <main className="phase-content" style={{
         filter: showSafetyCheck ? 'blur(2px)' : 'none',

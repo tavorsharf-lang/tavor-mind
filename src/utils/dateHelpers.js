@@ -80,12 +80,31 @@ export function lastNDateStrings(n) {
 }
 
 export function getNext8amIsraelMs(now = new Date()) {
+  // Coarse delta in wall-clock minutes, then refine via Israel-TZ readback.
+  // The plain `delta * 60000` math assumes 60-minute hours, which is wrong
+  // around Israel DST transitions and skews the next-8am by up to 60 min.
   const il = israelParts(now);
   const minutesNow = il.hour * 60 + il.minute;
   const target = 8 * 60;
   let delta = target - minutesNow;
   if (delta <= 0) delta += 24 * 60;
-  return now.getTime() + delta * 60000;
+  let candidate = new Date(now.getTime() + delta * 60000);
+  for (let i = 0; i < 4; i += 1) {
+    const cp = israelParts(candidate);
+    const off = (8 - cp.hour) * 60 + (0 - cp.minute);
+    if (off === 0) break;
+    candidate = new Date(candidate.getTime() + off * 60000);
+  }
+  if (candidate.getTime() <= now.getTime()) {
+    candidate = new Date(candidate.getTime() + 24 * 60 * 60000);
+    for (let i = 0; i < 4; i += 1) {
+      const cp = israelParts(candidate);
+      const off = (8 - cp.hour) * 60 + (0 - cp.minute);
+      if (off === 0) break;
+      candidate = new Date(candidate.getTime() + off * 60000);
+    }
+  }
+  return candidate.getTime();
 }
 
 export function formatRemaining(ms) {

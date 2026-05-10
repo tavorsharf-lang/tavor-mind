@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
-import { buildStartShortcutUrl } from '../../utils/liveHr.js';
+import { buildStartShortcutUrl, isHrSetupDone } from '../../utils/liveHr.js';
 
 const OPTIONS = [
   {
@@ -50,6 +50,10 @@ function ActivationGlyph({ kind, color }) {
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
+  // Only render the cards as Shortcut-launching <a> when HR is configured.
+  // On non-iOS / not-set-up, falling through to a plain <button> avoids opening
+  // a broken `shortcuts://` URL during a crisis.
+  const hrSetupDone = isHrSetupDone();
   return (
     <div className="ds3-screen">
       {/* Topbar — back arrow on right (RTL = back). History link on left. */}

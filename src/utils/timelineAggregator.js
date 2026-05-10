@@ -37,12 +37,13 @@ export async function aggregateTimeline(scope = 'week') {
   const days = SCOPE_DAYS[scope] || SCOPE_DAYS.week;
   const dateSet = new Set(lastNDateStrings(days));
 
-  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, analysesRaw] = await Promise.all([
+  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, somaticRaw, analysesRaw] = await Promise.all([
     readNode(uid, 'emergency_sessions'),
     readNode(uid, 'checkins'),
     readNode(uid, 'triggers'),
     readNode(uid, 'mode_checks'),
     readNode(uid, 'catastrophe_checks'),
+    readNode(uid, 'somatic_sessions'),
     readNode(uid, 'analyses'),
   ]);
 
@@ -75,6 +76,7 @@ export async function aggregateTimeline(scope = 'week') {
     { raw: triggersRaw, kind: 'trigger', category: 'triggers' },
     { raw: modeChecksRaw, kind: 'mode_check', category: 'mode_checks' },
     { raw: catastropheRaw, kind: 'catastrophe', category: 'catastrophe_checks' },
+    { raw: somaticRaw, kind: 'somatic', category: 'somatic_sessions' },
   ];
   for (const { raw, kind, category } of toolMap) {
     for (const [tsKey, data] of Object.entries(raw || {})) {

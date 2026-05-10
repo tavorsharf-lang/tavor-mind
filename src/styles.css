@@ -7588,6 +7588,85 @@ button:focus-visible {
   line-height: 1.55;
 }
 
+.modal-error {
+  font-size: 14px;
+  color: var(--terra);
+  background: var(--terra-soft);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin: var(--space-3) 0;
+  text-align: center;
+  line-height: 1.55;
+}
+
+/* Phase 8 safety check — content inside the shared <Modal /> */
+.p8-safety-card {
+  text-align: start;
+}
+.p8-safety-card-heavier { text-align: center; }
+.p8-safety-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+.p8-safety-text {
+  font-size: 17px;
+  color: var(--ink);
+  line-height: 1.65;
+  margin: 0 0 18px;
+}
+.p8-safety-row {
+  display: flex;
+  gap: 8px;
+}
+.p8-safety-btn {
+  flex: 1;
+  height: 48px;
+  border-radius: 24px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line-soft);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.p8-safety-btn-heavy {
+  background: var(--terra);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(255, 106, 79, 0.40);
+}
+.p8-safety-cta {
+  width: 100%;
+  height: 52px;
+  border-radius: 26px;
+  background: var(--terra);
+  color: #fff;
+  border: none;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(255, 106, 79, 0.40);
+}
+.p8-safety-link {
+  background: none;
+  border: none;
+  color: var(--ink-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .modal-call-list {
   list-style: none;
   padding: 0;

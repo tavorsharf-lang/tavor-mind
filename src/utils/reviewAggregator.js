@@ -119,12 +119,13 @@ export async function aggregateReview(scope = 'week') {
 
   if (!uid) return empty;
 
-  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, analysesRaw] = await Promise.all([
+  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, somaticRaw, analysesRaw] = await Promise.all([
     readNode(uid, 'emergency_sessions'),
     readNode(uid, 'checkins'),
     readNode(uid, 'triggers'),
     readNode(uid, 'mode_checks'),
     readNode(uid, 'catastrophe_checks'),
+    readNode(uid, 'somatic_sessions'),
     readNode(uid, 'analyses'),
   ]);
 
@@ -152,6 +153,7 @@ export async function aggregateReview(scope = 'week') {
   const triggersInScope = valuesOf(triggersRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
   const modeChecksInScope = valuesOf(modeChecksRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
   const catastropheInScope = valuesOf(catastropheRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
+  const somaticInScope = valuesOf(somaticRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
   const emergencyInScope = valuesOf(emergencyRaw).filter((s) => inScopeByMs(s.clientTs || s.startedAtClient));
 
   // Analyses: prefer occurredAt (in scope) then dedupe by date — count once per day per type if many on same day
@@ -392,6 +394,7 @@ export async function aggregateReview(scope = 'week') {
     triggersInScope.length +
     modeChecksInScope.length +
     catastropheInScope.length +
+    somaticInScope.length +
     emergencyInScope.length +
     analysesInScope.length;
   const hasEnoughData = totalDataPoints >= 3;

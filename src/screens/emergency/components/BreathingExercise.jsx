@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getBreathingHaptic } from '../../../utils/breathingHaptic.js';
 
 const PATTERNS = {
@@ -213,10 +213,25 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
   const auraRef = useRef(null);
   const traceRef = useRef(null);
 
-  // Timestamps — useMemo so reset is synchronous with the deps change (no stale-render frame).
-  // exerciseStartedAt resets when pattern changes so the elapsed counter reflects the active pattern.
-  const exerciseStartedAt = useMemo(() => Date.now(), [pattern]);
-  const stepStartedAt = useMemo(() => Date.now(), [stepIndex, cycle, pace, pattern]);
+  // Timestamps — refs (not memo). React may evict useMemo for memory pressure,
+  // which would reset the timestamp mid-breath and cause the countdown to glitch.
+  // Reset synchronously here so the deps-change frame already reads the new value.
+  const exerciseStartedAtRef = useRef(Date.now());
+  const stepStartedAtRef = useRef(Date.now());
+  const lastPatternRef = useRef(pattern);
+  if (lastPatternRef.current !== pattern) {
+    lastPatternRef.current = pattern;
+    exerciseStartedAtRef.current = Date.now();
+    stepStartedAtRef.current = Date.now();
+  }
+  const lastStepKeyRef = useRef(`${stepIndex}|${cycle}|${pace}|${pattern}`);
+  const stepKey = `${stepIndex}|${cycle}|${pace}|${pattern}`;
+  if (lastStepKeyRef.current !== stepKey) {
+    lastStepKeyRef.current = stepKey;
+    stepStartedAtRef.current = Date.now();
+  }
+  const exerciseStartedAt = exerciseStartedAtRef.current;
+  const stepStartedAt = stepStartedAtRef.current;
 
   // Reset cycle/step when pattern changes mid-exercise (different step counts per pattern).
   useEffect(() => {

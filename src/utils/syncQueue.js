@@ -1,6 +1,6 @@
-// Centralized helpers for inspecting + acting on the four offline queues.
+// Centralized helpers for inspecting + acting on the offline queues.
 // Each storage util keeps its own queue in localStorage; this module reads
-// across all four to surface "stuck" items (failed >= 3 times or sitting
+// across all of them to surface "stuck" items (failed >= 3 times or sitting
 // in the queue for over 24 hours) and exposes retry / discard primitives.
 
 const KEYS = {
@@ -8,6 +8,9 @@ const KEYS = {
   checkins: 'tavor_mind_pending_checkins',
   tools: 'tavor_mind_pending_tools',
   analyses: 'tavor_mind_pending_analyses',
+  trigger_analyses: 'tavor_mind_pending_trigger_analyses',
+  frames: 'tavor_mind_pending_frames',
+  something_waiting: 'tavor_mind_pending_waiting_items_v1',
 };
 
 export const PENDING_KEYS = Object.values(KEYS);
@@ -113,6 +116,28 @@ function describe(type, item) {
       detail: title,
     };
   }
+  if (type === 'trigger_analyses') {
+    return {
+      id: `trigger_analyses:${item.ts}`,
+      label: 'ניתוח טריגר',
+      detail: formatTime(item.ts || item._firstQueuedAt),
+    };
+  }
+  if (type === 'frames') {
+    return {
+      id: `frames:${item.frameId}:${item.ts}`,
+      label: 'הכנה לטיפול',
+      detail: item.frameId || '',
+    };
+  }
+  if (type === 'something_waiting') {
+    const sentence = item.sentence || '';
+    return {
+      id: `something_waiting:${item._localId || item.createdAt}`,
+      label: 'משהו שממתין',
+      detail: sentence.length > 30 ? sentence.slice(0, 30) + '…' : sentence,
+    };
+  }
   return { id: `${type}:?`, label: type, detail: '' };
 }
 
@@ -191,6 +216,24 @@ function matcherFor(id) {
   if (type === 'analyses') {
     const aid = parts.slice(1).join(':');
     return { key: KEYS.analyses, predicate: (it) => it.id === aid };
+  }
+  if (type === 'trigger_analyses') {
+    const ts = Number(parts[1]);
+    return { key: KEYS.trigger_analyses, predicate: (it) => Number(it.ts) === ts };
+  }
+  if (type === 'frames') {
+    const [frameId, ts] = parts.slice(1);
+    return {
+      key: KEYS.frames,
+      predicate: (it) => it.frameId === frameId && String(it.ts) === String(ts),
+    };
+  }
+  if (type === 'something_waiting') {
+    const tail = parts.slice(1).join(':');
+    return {
+      key: KEYS.something_waiting,
+      predicate: (it) => (it._localId || String(it.createdAt)) === tail,
+    };
   }
   return null;
 }

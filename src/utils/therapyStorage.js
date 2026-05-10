@@ -1,5 +1,6 @@
 import { ref, set, get, serverTimestamp } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
+import { decorateOnQueue, decorateFailure } from './syncQueue.js';
 
 const PENDING_KEY = 'tavor_mind_pending_frames';
 
@@ -67,8 +68,12 @@ async function writeFrameUpdate(sessionDate, partial) {
   const uid = getUid();
   if (!uid || !sessionDate) return { ok: false, reason: 'no-uid' };
 
+  // Reference-equality on `payload` after JSON round-trip never matched, so the
+  // pending entry leaked → duplicate writes / overwritten remote on every save.
+  // Tag with a unique _localId and filter by it.
+  const localId = `local_${Date.now()}_${Math.random().toString(36).slice(2)}`;
   const pending = loadPending();
-  pending.push({ uid, frameId: sessionDate, ts: Date.now(), payload: partial });
+  pending.push(decorateOnQueue({ uid, frameId: sessionDate, ts: Date.now(), _localId: localId, payload: partial }));
   savePending(pending);
 
   if (!navigator.onLine) return { ok: false, reason: 'offline' };
@@ -78,7 +83,7 @@ async function writeFrameUpdate(sessionDate, partial) {
     const base = existing || emptyFrame(sessionDate);
     const next = { ...base, ...partial, _savedAt: serverTimestamp() };
     await set(ref(db, pathFor(uid, sessionDate)), next);
-    const after = loadPending().filter((p) => !(p.uid === uid && p.frameId === sessionDate && p.payload === partial));
+    const after = loadPending().filter((p) => p._localId !== localId);
     savePending(after);
     return { ok: true };
   } catch (err) {
@@ -175,8 +180,8 @@ export async function flushPendingFrames() {
       for (const it of items) merged = { ...merged, ...it.payload };
       merged._savedAt = serverTimestamp();
       await set(ref(db, pathFor(uid, frameId)), merged);
-    } catch {
-      remaining.push(...items);
+    } catch (err) {
+      for (const it of items) remaining.push(decorateFailure(it, err));
     }
   }
   savePending(remaining);

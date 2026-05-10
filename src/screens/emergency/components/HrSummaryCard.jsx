@@ -10,7 +10,10 @@ const POLL_TIMEOUT_MS = 90000;
 
 export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
   const [samples, setSamples] = useState([]);
-  const [timedOut, setTimedOut] = useState(false);
+  // 'idle' = waiting for user to tap "טען נתוני דופק"
+  // 'loading' = user tapped, Shortcut launched, polling for samples
+  // 'timeout' = no samples after POLL_TIMEOUT_MS
+  const [state, setState] = useState('idle');
 
   // Real-time subscription — pushes new samples as they arrive.
   useEffect(() => {
@@ -21,13 +24,13 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
     return unsub;
   }, [sessionId]);
 
-  // Idle timeout — if no samples after POLL_TIMEOUT_MS, surface the empty
-  // state instead of leaving the user staring at "waiting" forever.
+  // Idle timeout — if user tapped "load" but no samples arrive in time.
   useEffect(() => {
-    if (!sessionId) return undefined;
-    const id = setTimeout(() => setTimedOut(true), POLL_TIMEOUT_MS);
+    if (state !== 'loading') return undefined;
+    if (samples.length > 0) return undefined;
+    const id = setTimeout(() => setState('timeout'), POLL_TIMEOUT_MS);
     return () => clearTimeout(id);
-  }, [sessionId]);
+  }, [state, samples.length]);
 
   if (!sessionId) return null;
 
@@ -60,15 +63,31 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
     );
   }
 
-  // No samples yet
+  // No samples yet — show explicit "load" button (anchor to launch Shortcut).
   return (
     <div className="hr-summary-card">
       <div className="hr-summary-row">
         <div className="hr-summary-label">דופק</div>
       </div>
-      {!timedOut ? (
+      {state === 'idle' && (
+        <>
+          <p className="hr-summary-hint">
+            ודא שה-workout בשעון הסתיים. ה-Shortcut יקרא דגימות ויעלה אותן לכאן.
+          </p>
+          <a
+            href={buildRunShortcutUrl(sessionId)}
+            className="ds3-btn ds3-btn-blue hr-summary-cta"
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+            onClick={() => setState('loading')}
+          >
+            טען נתוני דופק
+          </a>
+        </>
+      )}
+      {state === 'loading' && (
         <p className="hr-summary-hint">ממתין לדגימות…</p>
-      ) : (
+      )}
+      {state === 'timeout' && (
         <>
           <p className="hr-summary-hint">
             לא הגיעו דגימות. ודא ש-Shortcut "TavorMind HR" רץ (ושיש workout פעיל בשעון בזמן הסשן).
@@ -77,7 +96,7 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
             href={buildRunShortcutUrl(sessionId)}
             className="ds3-btn ds3-btn-blue hr-summary-cta"
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
-            onClick={() => setTimedOut(false)}
+            onClick={() => setState('loading')}
           >
             הרץ שוב
           </a>

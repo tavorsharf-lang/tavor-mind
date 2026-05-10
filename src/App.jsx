@@ -32,11 +32,12 @@ import TherapyDaySettings from './screens/therapy/TherapyDaySettings.jsx';
 import SomethingWaitingScreen from './screens/something-waiting/SomethingWaitingScreen.jsx';
 import NavRail from './components/ui/NavRail.jsx';
 import { NavProvider } from './utils/navContext.jsx';
-import { flushPendingSessions } from './utils/emergencyLog.js';
+import { flushPendingSessions, flushPendingTriggerAnalyses } from './utils/emergencyLog.js';
 import { flushPendingCheckins } from './utils/checkinStorage.js';
 import { flushPendingTools } from './utils/toolsStorage.js';
 import { flushPendingAnalyses } from './utils/analysisStorage.js';
 import { flushPendingFrames } from './utils/therapyStorage.js';
+import { flushPendingWaitingItems } from './utils/somethingWaitingStorage.js';
 
 function computeTimeOfDay() {
   const h = new Date().getHours();
@@ -77,6 +78,8 @@ export default function App() {
       flushPendingTools().catch(() => {});
       flushPendingAnalyses().catch(() => {});
       flushPendingFrames().catch(() => {});
+      flushPendingTriggerAnalyses().catch(() => {});
+      flushPendingWaitingItems().catch(() => {});
     };
     flushAll();
     window.addEventListener('online', flushAll);

@@ -71,9 +71,17 @@ function entriesFromDayObject(dayObj) {
     .map(([key, val]) => ({ ...val, _ts: Number(key) }));
 }
 
+// Throttle: every list/range call would otherwise dispatch dozens of remove()
+// requests in parallel during navigation. Once per hour is plenty for a lazy
+// 30-day purge and keeps the network quiet.
+const PURGE_INTERVAL_MS = 60 * 60 * 1000;
+let lastPurgeAt = 0;
+
 function purgeOldCheckins(uid, all) {
   if (!uid || !navigator.onLine || !all || typeof all !== 'object') return;
   const now = Date.now();
+  if (now - lastPurgeAt < PURGE_INTERVAL_MS) return;
+  lastPurgeAt = now;
   for (const [date, dayObj] of Object.entries(all)) {
     if (!dayObj || typeof dayObj !== 'object') continue;
     for (const [k, v] of Object.entries(dayObj)) {

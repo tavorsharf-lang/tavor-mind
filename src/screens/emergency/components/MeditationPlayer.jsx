@@ -17,6 +17,7 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   // Reset + stop when closed/unmounted, so audio doesn't bleed into Home.
   useEffect(() => {
@@ -26,8 +27,14 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
       setIsPlaying(false);
       setCurrentTime(0);
       setIsDragging(false);
+      setHasError(false);
     }
   }, [open]);
+
+  // Reset error flag when src swaps (user picked a different track).
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
 
   const togglePlay = () => {
     const a = audioRef.current;
@@ -108,7 +115,14 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
           onTimeUpdate={(e) => { if (!isDragging) setCurrentTime(e.currentTarget.currentTime); }}
           onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
           onEnded={() => { setIsPlaying(false); onComplete(); }}
+          onError={() => { setHasError(true); setIsPlaying(false); }}
         />
+
+        {hasError && (
+          <p className="modal-error" role="status">
+            המדיטציה לא זמינה כרגע. אפשר לסגור ולהמשיך.
+          </p>
+        )}
 
         <div className="meditation-controls">
           <button

@@ -19,6 +19,7 @@ const KIND_LABEL = {
   trigger: 'מאתר טריגרים',
   mode_check: 'מצב סכמה',
   catastrophe: 'בדיקת מציאות',
+  somatic: 'תרגיל גוף',
   analysis: 'ניתוח',
 };
 
@@ -35,6 +36,7 @@ const KIND_TO_GROUP = {
   trigger: 'tools',
   mode_check: 'tools',
   catastrophe: 'tools',
+  somatic: 'tools',
   analysis: 'analysis',
 };
 
@@ -93,6 +95,7 @@ export default function Timeline({ scope }) {
       else if (item.kind === 'trigger') res = await deleteToolEntry('triggers', item.ts);
       else if (item.kind === 'mode_check') res = await deleteToolEntry('mode_checks', item.ts);
       else if (item.kind === 'catastrophe') res = await deleteToolEntry('catastrophe_checks', item.ts);
+      else if (item.kind === 'somatic') res = await deleteToolEntry('somatic_sessions', item.ts);
       else if (item.kind === 'analysis') res = await deleteAnalysis(item.refId);
     } finally {
       setPendingDelete(null);
@@ -112,6 +115,7 @@ export default function Timeline({ scope }) {
     else if (kind === 'trigger') await restoreToolEntry('triggers', undoInfo.ts);
     else if (kind === 'mode_check') await restoreToolEntry('mode_checks', undoInfo.ts);
     else if (kind === 'catastrophe') await restoreToolEntry('catastrophe_checks', undoInfo.ts);
+    else if (kind === 'somatic') await restoreToolEntry('somatic_sessions', undoInfo.ts);
     else if (kind === 'analysis') await restoreAnalysis(undoInfo.refId);
     load();
   };
@@ -262,6 +266,11 @@ function summaryFor(item) {
     return (data.modesActive || []).map(modeLabelOf).join(', ') || 'מצב';
   }
   if (kind === 'catastrophe') return data.thought || 'מחשבה';
+  if (kind === 'somatic') {
+    const parts = [data.exerciseTitle || 'תרגיל גוף'];
+    if (typeof data.afterScore === 'number') parts.push(`${data.afterScore}/10`);
+    return parts.join(' · ');
+  }
   if (kind === 'analysis') return data.title || data.summary || typeMeta(data.type)?.label || 'ניתוח';
   return '';
 }
@@ -273,8 +282,23 @@ function DetailFor({ item }) {
   if (kind === 'trigger') return <TriggerDetail data={data} />;
   if (kind === 'mode_check') return <ModeCheckDetail data={data} />;
   if (kind === 'catastrophe') return <CatastropheDetail data={data} />;
+  if (kind === 'somatic') return <SomaticDetail data={data} />;
   if (kind === 'analysis') return <AnalysisDetail item={item} />;
   return null;
+}
+
+function SomaticDetail({ data }) {
+  const minutes = data.durationSec ? Math.max(1, Math.round(data.durationSec / 60)) : null;
+  return (
+    <section className="day-detail-section">
+      {data.exerciseTitle && <p><strong>תרגיל:</strong> {data.exerciseTitle}</p>}
+      {data.variant && <p><strong>וריאנט:</strong> {data.variant}</p>}
+      {typeof data.afterScore === 'number' && (
+        <p><strong>אחרי:</strong> {data.afterScore} / 10</p>
+      )}
+      {minutes && <p><strong>משך:</strong> {minutes} דק׳</p>}
+    </section>
+  );
 }
 
 function EmergencyDetail({ data }) {

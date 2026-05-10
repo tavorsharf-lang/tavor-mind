@@ -1,7 +1,7 @@
 import { ref, set, get, update, remove, serverTimestamp, query, orderByChild, limitToLast } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { decorateOnQueue, decorateFailure, markFailureForType } from './syncQueue.js';
-import { isSoftDeleted } from './softDelete.js';
+import { isSoftDeleted, isPurgeable } from './softDelete.js';
 
 const PENDING_KEY = 'tavor_mind_pending_sessions';
 
@@ -24,6 +24,9 @@ function pathFor(uid, ts) {
 export async function logEmergencySession(session) {
   const uid = auth.currentUser?.uid || localStorage.getItem('tavor_mind_auth_uid');
   const ts = Date.now();
+  // Pending payload uses serverTimestamp sentinels too — the SDK serializes
+  // them to the server-provided value at flush time, so offline-then-online
+  // sessions aren't tagged with skewed client clocks.
   const payload = {
     ...session,
     startedAt: session.startedAt ?? serverTimestamp(),
@@ -32,7 +35,7 @@ export async function logEmergencySession(session) {
   };
 
   const pending = loadPending();
-  pending.push(decorateOnQueue({ ts, uid, payload: { ...payload, startedAt: session.startedAtClient ?? ts, endedAt: ts } }));
+  pending.push(decorateOnQueue({ ts, uid, payload }));
   savePending(pending);
 
   if (!uid || !navigator.onLine) {
@@ -99,8 +102,14 @@ export async function getRecentEmergencySessions(limit = 30) {
     const snap = await get(ref(db, `${ROOM}/${uid}/emergency_sessions`));
     if (!snap.exists()) return [];
     const out = [];
+    const now = Date.now();
     Object.entries(snap.val()).forEach(([sessionId, data]) => {
       if (!data || typeof data !== 'object') return;
+      if (isPurgeable(data, now)) {
+        // Lazy hard-purge for soft-deleted items past the 30-day grace window.
+        remove(ref(db, `${ROOM}/${uid}/emergency_sessions/${sessionId}`)).catch(() => {});
+        return;
+      }
       if (isSoftDeleted(data)) return;
       out.push({ sessionId, ...data });
     });
@@ -165,7 +174,7 @@ export async function logTriggerAnalysis(payload) {
   };
 
   const pending = loadPendingTriggers();
-  pending.push(decorateOnQueue({ ts, uid, payload: { ...body, startedAt: payload.startedAtClient ?? ts, endedAt: ts } }));
+  pending.push(decorateOnQueue({ ts, uid, payload: body }));
   savePendingTriggers(pending);
 
   if (!uid || !navigator.onLine) {
@@ -191,8 +200,13 @@ export async function getRecentTriggerAnalyses(limit = 30) {
     const snap = await get(ref(db, `${ROOM}/${uid}/trigger_analyses`));
     if (!snap.exists()) return [];
     const out = [];
+    const now = Date.now();
     Object.entries(snap.val()).forEach(([sessionId, data]) => {
       if (!data || typeof data !== 'object') return;
+      if (isPurgeable(data, now)) {
+        remove(ref(db, `${ROOM}/${uid}/trigger_analyses/${sessionId}`)).catch(() => {});
+        return;
+      }
       if (isSoftDeleted(data)) return;
       out.push({ sessionId, ...data });
     });
