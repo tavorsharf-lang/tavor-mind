@@ -18,12 +18,12 @@ export default function HrHistoryView({ sessionId }) {
     });
   }, [sessionId]);
 
-  // Belt-and-suspenders refetch on visibility change (websocket may not
-  // reconnect after iOS backgrounded Safari).
+  // Belt-and-suspenders refetch (websocket may not reconnect after Safari
+  // was backgrounded). Listen to visibilitychange + focus + pageshow; one
+  // of them will fire when the user returns.
   useEffect(() => {
     if (!sessionId) return undefined;
     const refetch = async () => {
-      if (document.visibilityState !== 'visible') return;
       const snap = await getHrSessionSnapshot(sessionId);
       if (snap?.samples) {
         setSamples(snap.samples);
@@ -31,8 +31,14 @@ export default function HrHistoryView({ sessionId }) {
       }
     };
     document.addEventListener('visibilitychange', refetch);
+    window.addEventListener('focus', refetch);
+    window.addEventListener('pageshow', refetch);
     refetch();
-    return () => document.removeEventListener('visibilitychange', refetch);
+    return () => {
+      document.removeEventListener('visibilitychange', refetch);
+      window.removeEventListener('focus', refetch);
+      window.removeEventListener('pageshow', refetch);
+    };
   }, [sessionId]);
 
   if (!sessionId) return null;

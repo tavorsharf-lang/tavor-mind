@@ -28,22 +28,40 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
     return unsub;
   }, [sessionId]);
 
-  // iOS Safari closes websockets when backgrounded (e.g., while the user is
-  // in Shortcuts running the upload). The Firebase subscription doesn't
-  // always reconnect promptly when the user returns. Force a one-shot fetch
-  // every time the page becomes visible to make the chart appear immediately
-  // on return without waiting for the websocket to come back.
+  // iOS Safari closes websockets when backgrounded. Multiple recovery paths:
+  // (a) visibilitychange/focus/pageshow listeners refetch when the page
+  //     returns to foreground.
+  // (b) Active polling every 3s while state === 'loading' AND no samples
+  //     yet — guarantees the chart appears once data is in Firebase even
+  //     if the visibility events don't fire reliably on iOS.
   useEffect(() => {
     if (!sessionId) return undefined;
     const refetch = async () => {
-      if (document.visibilityState !== 'visible') return;
       const snap = await getHrSessionSnapshot(sessionId);
       if (snap?.samples) setSamples(snap.samples);
     };
     document.addEventListener('visibilitychange', refetch);
+    window.addEventListener('focus', refetch);
+    window.addEventListener('pageshow', refetch);
     refetch();
-    return () => document.removeEventListener('visibilitychange', refetch);
+    return () => {
+      document.removeEventListener('visibilitychange', refetch);
+      window.removeEventListener('focus', refetch);
+      window.removeEventListener('pageshow', refetch);
+    };
   }, [sessionId]);
+
+  // Active poll: while loading and no samples yet, hit Firebase every 3s.
+  useEffect(() => {
+    if (!sessionId) return undefined;
+    if (state !== 'loading') return undefined;
+    if (samples.length > 0) return undefined;
+    const id = setInterval(async () => {
+      const snap = await getHrSessionSnapshot(sessionId);
+      if (snap?.samples?.length > 0) setSamples(snap.samples);
+    }, 3000);
+    return () => clearInterval(id);
+  }, [sessionId, state, samples.length]);
 
   // Idle timeout — if user tapped "load" but no samples arrive in time.
   useEffect(() => {
