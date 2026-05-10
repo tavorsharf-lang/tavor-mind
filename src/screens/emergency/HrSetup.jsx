@@ -36,6 +36,10 @@ export default function HrSetup() {
       if (cancelled) return;
       if (snap?.samples?.length > 0) {
         setTestStatus('ok');
+        // Auto-mark setup as done so the Phase 1 link surfaces immediately —
+        // saves the user from having to scroll down and tap "סיימתי להגדיר".
+        markHrSetupDone();
+        setDone(true);
         return;
       }
       if (Date.now() - startedAt > TEST_TIMEOUT_MS) {

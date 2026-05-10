@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
-import { buildStartShortcutUrl, isHrSetupDone } from '../../utils/liveHr.js';
+import { buildStartShortcutUrl } from '../../utils/liveHr.js';
 
 const OPTIONS = [
   {
@@ -109,20 +109,22 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
       </main>
 
       <footer className="ds3-screen-footer ds3-stack-3">
-        {isHrSetupDone() && (
-          <a
-            href={buildStartShortcutUrl()}
-            className="ds3-btn-quiet"
-            style={{
-              textDecoration: 'none',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-              color: 'var(--heart)',
-            }}
-          >
-            <span aria-hidden="true">♥</span>
-            התחל מעקב דופק בשעון
-          </a>
-        )}
+        {/* Always render — if the user hasn't set up the Start Shortcut, iOS
+            shows "Shortcut not found" and they can ignore the link. Avoiding
+            the gate prevents the "I set it up but the link isn't showing"
+            failure mode that comes with localStorage-based flags. */}
+        <a
+          href={buildStartShortcutUrl()}
+          className="ds3-btn-quiet"
+          style={{
+            textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            color: 'var(--heart)',
+          }}
+        >
+          <span aria-hidden="true">♥</span>
+          התחל מעקב דופק בשעון
+        </a>
         <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
           דלג לשלב הבא
         </button>
