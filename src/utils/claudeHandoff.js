@@ -2,7 +2,7 @@ import { getModeById } from '../data/modes.js';
 import { dominantSchemas } from '../data/schemas.js';
 import { distortions, BODY_SENSATIONS } from '../data/distortions.js';
 
-const CLAUDE_PROJECT_URL = 'https://claude.ai/new'; // PLACEHOLDER
+const CLAUDE_PROJECT_URL = 'https://claude.ai/project/019e0f55-801c-7678-a509-a30da71d5386';
 
 const ACTIVATION_LABELS = {
   hyper: 'הופעלתי',
