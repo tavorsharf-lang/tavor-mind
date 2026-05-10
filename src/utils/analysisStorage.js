@@ -27,6 +27,18 @@ function pathFor(uid, id) {
   return `${ROOM}/${uid}/analyses/${id}`;
 }
 
+// Defensive parse: malformed `occurredAt` strings produce NaN which makes
+// Array.sort unstable. Fall back to clientTs / _importedAt when invalid.
+function parseAnalysisTimestamp(item) {
+  if (item?.occurredAt) {
+    const t = new Date(item.occurredAt).getTime();
+    if (Number.isFinite(t)) return t;
+  }
+  if (Number.isFinite(item?.clientTs)) return item.clientTs;
+  if (Number.isFinite(item?._importedAt)) return item._importedAt;
+  return 0;
+}
+
 export async function saveAnalysis(normalized) {
   const uid = getUid();
   const id = normalized._id;
@@ -144,8 +156,8 @@ export async function listAnalyses(filters = {}) {
   const visible = out.filter((item) => !isSoftDeleted(item));
   const filtered = visible.filter((item) => passesFilters(item, filters));
   filtered.sort((a, b) => {
-    const ta = a.occurredAt ? new Date(a.occurredAt).getTime() : 0;
-    const tb = b.occurredAt ? new Date(b.occurredAt).getTime() : 0;
+    const ta = parseAnalysisTimestamp(a);
+    const tb = parseAnalysisTimestamp(b);
     return tb - ta;
   });
   return filtered;

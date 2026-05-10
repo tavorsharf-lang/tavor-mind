@@ -90,30 +90,49 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
         </div>
 
         <div className="ds3-stack-3">
-          {OPTIONS.map((opt) => (
-            // Activation cards are <a> elements: tapping picks the activation
-            // AND launches the Start Workout Shortcut (one tap, two actions).
-            // iOS handles the href → opens Shortcuts → workout starts; the
-            // onClick fires → state advances. User returns to Safari at Phase 2.
-            <a
-              key={opt.id}
-              href={buildStartShortcutUrl()}
-              className="ds3-card-button ds3-activation-card"
-              onClick={() => onPick(opt.id)}
-              style={{ textDecoration: 'none' }}
-            >
-              <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
-                <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
-              </span>
-              <span className="ds3-activation-card-text">
-                <span className="ds3-activation-card-label">{opt.label}</span>
-                <span className="ds3-activation-card-sub">{opt.subtitle}</span>
-              </span>
-              <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
-                <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-          ))}
+          {OPTIONS.map((opt) => {
+            // When HR is configured, activation cards are <a> elements: tapping
+            // picks the activation AND launches the Start Workout Shortcut.
+            // Otherwise render a plain <button> so non-iOS / unset-up users
+            // don't get a broken `shortcuts://` navigation mid-crisis.
+            const cardInner = (
+              <>
+                <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
+                  <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
+                </span>
+                <span className="ds3-activation-card-text">
+                  <span className="ds3-activation-card-label">{opt.label}</span>
+                  <span className="ds3-activation-card-sub">{opt.subtitle}</span>
+                </span>
+                <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
+                  <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </>
+            );
+            if (hrSetupDone) {
+              return (
+                <a
+                  key={opt.id}
+                  href={buildStartShortcutUrl()}
+                  className="ds3-card-button ds3-activation-card"
+                  onClick={() => onPick(opt.id)}
+                  style={{ textDecoration: 'none' }}
+                >
+                  {cardInner}
+                </a>
+              );
+            }
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                className="ds3-card-button ds3-activation-card"
+                onClick={() => onPick(opt.id)}
+              >
+                {cardInner}
+              </button>
+            );
+          })}
         </div>
       </main>
 
