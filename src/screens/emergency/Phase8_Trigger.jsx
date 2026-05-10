@@ -49,7 +49,7 @@ export default function Phase8Trigger({
   };
 
   // Schema toggle: also recomputes dominantSchema so it stays in sync.
-  // 0 real selected → null. 1 real → that. 2+ → keep if still selected else null.
+  // 0 real selected → null. 1 real → that. 2+ → keep if still selected else fallback to first.
   const toggleSchema = (id) => {
     const next = new Set(data.schemas || []);
     if (next.has(id)) next.delete(id);
@@ -59,8 +59,10 @@ export default function Phase8Trigger({
     let newDominant = data.dominantSchema || null;
     if (realSchemas.length === 0) newDominant = null;
     else if (realSchemas.length === 1) newDominant = realSchemas[0];
-    else if (newDominant && !realSchemas.includes(newDominant)) newDominant = null;
-    update({ schemas: arr, dominantSchema: newDominant });
+    else if (newDominant && !realSchemas.includes(newDominant)) newDominant = realSchemas[0];
+    const patch = { schemas: arr, dominantSchema: newDominant };
+    if (!arr.includes(OTHER_SCHEMA)) patch.otherSchema = '';
+    update(patch);
   };
 
   const updateThought = (i, val) => {
