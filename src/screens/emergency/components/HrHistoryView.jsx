@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   subscribeLiveHrSamples,
+  getHrSessionSnapshot,
   detectLatestCluster,
   summarizeSamples,
 } from '../../../utils/liveHr.js';
@@ -15,6 +16,23 @@ export default function HrHistoryView({ sessionId }) {
       setSamples(next);
       setLoaded(true);
     });
+  }, [sessionId]);
+
+  // Belt-and-suspenders refetch on visibility change (websocket may not
+  // reconnect after iOS backgrounded Safari).
+  useEffect(() => {
+    if (!sessionId) return undefined;
+    const refetch = async () => {
+      if (document.visibilityState !== 'visible') return;
+      const snap = await getHrSessionSnapshot(sessionId);
+      if (snap?.samples) {
+        setSamples(snap.samples);
+        setLoaded(true);
+      }
+    };
+    document.addEventListener('visibilitychange', refetch);
+    refetch();
+    return () => document.removeEventListener('visibilitychange', refetch);
   }, [sessionId]);
 
   if (!sessionId) return null;

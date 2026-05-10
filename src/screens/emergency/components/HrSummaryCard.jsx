@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   buildRunShortcutUrl,
   subscribeLiveHrSamples,
+  getHrSessionSnapshot,
   detectLatestCluster,
   summarizeSamples,
 } from '../../../utils/liveHr.js';
@@ -25,6 +26,23 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
       setSamples(next);
     });
     return unsub;
+  }, [sessionId]);
+
+  // iOS Safari closes websockets when backgrounded (e.g., while the user is
+  // in Shortcuts running the upload). The Firebase subscription doesn't
+  // always reconnect promptly when the user returns. Force a one-shot fetch
+  // every time the page becomes visible to make the chart appear immediately
+  // on return without waiting for the websocket to come back.
+  useEffect(() => {
+    if (!sessionId) return undefined;
+    const refetch = async () => {
+      if (document.visibilityState !== 'visible') return;
+      const snap = await getHrSessionSnapshot(sessionId);
+      if (snap?.samples) setSamples(snap.samples);
+    };
+    document.addEventListener('visibilitychange', refetch);
+    refetch();
+    return () => document.removeEventListener('visibilitychange', refetch);
   }, [sessionId]);
 
   // Idle timeout — if user tapped "load" but no samples arrive in time.

@@ -67,23 +67,17 @@ export function buildShortcutWriteBase(sessionId) {
   return `${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/${sessionId}`;
 }
 
-// Use x-callback-url so iOS waits for the Shortcut to finish, then opens
-// x-success — auto-returning the user to Safari. Without x-callback, the
-// user has to manually switch back, which can leave the Shortcut throttled
-// in background (slow upload) or land on Safari before all samples arrive.
-function buildSuccessUrl() {
-  if (typeof window === 'undefined') return '';
-  return window.location.href.split('#')[0];
-}
-
+// iOS URL scheme that runs the named Shortcut with the sessionId as text input.
+// We deliberately don't use x-callback-url because returning to Safari via a
+// fresh URL load can reset React state and lose the sessionId we wrote to.
+// The user manually switches back to Safari; HrSummaryCard re-fetches on
+// visibilitychange to catch any samples that landed while in background.
 export function buildRunShortcutUrl(sessionId) {
-  const success = encodeURIComponent(buildSuccessUrl());
-  return `shortcuts://x-callback-url/run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}&x-success=${success}`;
+  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}`;
 }
 
 export function buildStartShortcutUrl() {
-  const success = encodeURIComponent(buildSuccessUrl());
-  return `shortcuts://x-callback-url/run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME_START)}&x-success=${success}`;
+  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME_START)}`;
 }
 
 // Trigger a custom-scheme URL without navigating Safari away from the page.
