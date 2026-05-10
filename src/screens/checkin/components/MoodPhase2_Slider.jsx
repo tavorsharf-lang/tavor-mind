@@ -17,6 +17,7 @@ export default function MoodPhase2Slider({ scope, value, onChange }) {
       <div className="mood-slider-wrap">
         <input
           type="range"
+          dir="ltr"
           min="1"
           max="5"
           step="1"
