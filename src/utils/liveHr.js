@@ -157,6 +157,24 @@ export function clipToWindow(samples, startMs, endMs) {
   });
 }
 
+// Pick the most recent contiguous cluster of samples, defined as a run where
+// no two consecutive samples are more than maxGapMs apart. Workouts produce
+// dense (~1Hz) sampling, so any gap longer than ~1 minute marks a session
+// boundary. Walks backward from the latest sample until it hits a gap.
+export function detectLatestCluster(samples, maxGapMs = 60000) {
+  if (!samples || samples.length === 0) return [];
+  const sorted = [...samples].sort((a, b) => a.ts - b.ts);
+  let startIdx = 0;
+  for (let i = sorted.length - 1; i > 0; i--) {
+    const gap = sorted[i].ts - sorted[i - 1].ts;
+    if (gap > maxGapMs) {
+      startIdx = i;
+      break;
+    }
+  }
+  return sorted.slice(startIdx);
+}
+
 export function summarizeSamples(samples) {
   if (!samples || samples.length === 0) return null;
   let min = Infinity, max = -Infinity, sum = 0;

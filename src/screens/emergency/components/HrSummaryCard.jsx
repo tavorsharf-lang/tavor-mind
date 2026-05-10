@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   buildRunShortcutUrl,
   subscribeLiveHrSamples,
-  clipToWindow,
+  detectLatestCluster,
   summarizeSamples,
 } from '../../../utils/liveHr.js';
 
@@ -31,18 +31,15 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
 
   if (!sessionId) return null;
 
-  // Try clipped first; fall back to all samples if the window filter loses
-  // everything (e.g., samples come from BEFORE the user mounted EmergencyFlow
-  // because the watch was already in workout mode and HealthKit had recent
-  // history). Better to show *something* than nothing when data exists.
-  const clipped = clipToWindow(samples, startedAtMs, endedAtMs);
-  const displaySamples = clipped.length > 0 ? clipped : samples;
+  // Pick the most recent contiguous cluster. Workouts sample HR densely
+  // (~1Hz); any gap >60s marks a session boundary. This auto-detects the
+  // current session without depending on tavor-mind's own startedAt/endedAt
+  // (which can be off if the workout started before the user opened the app).
+  const displaySamples = detectLatestCluster(samples);
 
   if (displaySamples.length > 0) {
     const summary = summarizeSamples(displaySamples);
-    const sourceLabel = clipped.length > 0
-      ? `${summary.count} דגימות · ${Math.max(1, Math.round(summary.durationMs / 60000))} דק'`
-      : `${summary.count} דגימות (מחוץ לחלון הסשן)`;
+    const sourceLabel = `${summary.count} דגימות · ${Math.max(1, Math.round(summary.durationMs / 60000))} דק'`;
     return (
       <div className="hr-summary-card hr-summary-card--ok">
         <div className="hr-summary-row">
