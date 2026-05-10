@@ -2,6 +2,7 @@ import { ref, get } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { getIsraelDateString, lastNDateStrings } from './dateHelpers.js';
 import { EMOTIONS as EMOTION_VOCAB, emotionLabelById } from '../data/emotionsCorpus.js';
+import { LIFE_FACTORS, factorLabelById, factorColorById } from '../data/lifeFactors.js';
 import { resolveModeId, modes as ALL_MODES } from '../data/modes.js';
 import { SCHEMA_LABELS } from '../data/analysisSchemas.js';
 import { isSoftDeleted } from './softDelete.js';
@@ -104,6 +105,7 @@ export async function aggregateReview(scope = 'week') {
     scope, startDate, endDate,
     moodRhythm: { totalDays: days, daysWithEntries: 0, perDay: [], streakLength: 0, valence_trend: [] },
     emotions: { fromCheckins: [], fromAnalyses: [], absent: EMOTION_VOCAB.map((e) => e.id) },
+    factors: { top: [], totalWithFactors: 0, totalEntries: 0, absent: LIFE_FACTORS.map((f) => f.id) },
     triggers: [],
     patterns: {
       not_enough_appeared: { count: 0, total: 0, sources: [] },
@@ -267,6 +269,38 @@ export async function aggregateReview(scope = 'week') {
   ]);
   const absent = EMOTION_VOCAB.filter((e) => !seenEmotionNames.has(e.id)).map((e) => e.id);
 
+  // ── Factors (life domains influencing mood) ──────────────────────
+  const factorMap = new Map(); // id → { count, valenceSum, valenceN }
+  let totalWithFactors = 0;
+  let totalCheckinsForFactors = 0;
+  for (const ci of checkinsInScope) {
+    for (const entry of ci.entries) {
+      totalCheckinsForFactors += 1;
+      if (!Array.isArray(entry.factors) || entry.factors.length === 0) continue;
+      totalWithFactors += 1;
+      for (const fid of entry.factors) {
+        if (!factorMap.has(fid)) factorMap.set(fid, { count: 0, valenceSum: 0, valenceN: 0 });
+        const slot = factorMap.get(fid);
+        slot.count += 1;
+        if (typeof entry.valence === 'number') {
+          slot.valenceSum += entry.valence;
+          slot.valenceN += 1;
+        }
+      }
+    }
+  }
+  const factorsTop = Array.from(factorMap.entries())
+    .map(([id, slot]) => ({
+      id,
+      label: factorLabelById(id),
+      color: factorColorById(id),
+      count: slot.count,
+      ratio: totalWithFactors > 0 ? slot.count / totalWithFactors : 0,
+      avgValence: slot.valenceN > 0 ? slot.valenceSum / slot.valenceN : null,
+    }))
+    .sort((a, b) => b.count - a.count);
+  const factorsAbsent = LIFE_FACTORS.filter((f) => !factorMap.has(f.id)).map((f) => f.id);
+
   // ── Triggers ─────────────────────────────────────────────────────
   const triggerMap = new Map(); // normalized name → { count, contexts:Set, schemas:Set, raw:[] }
   for (const t of triggersInScope) {
@@ -403,6 +437,12 @@ export async function aggregateReview(scope = 'week') {
     scope, startDate, endDate,
     moodRhythm,
     emotions: { fromCheckins: fromCheckinsList, fromAnalyses: fromAnalysesList, absent },
+    factors: {
+      top: factorsTop,
+      totalWithFactors,
+      totalEntries: totalCheckinsForFactors,
+      absent: factorsAbsent,
+    },
     triggers,
     patterns,
     modes: modesList,

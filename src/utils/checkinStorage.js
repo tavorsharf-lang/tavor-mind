@@ -26,7 +26,7 @@ function pathFor(uid, date, timestamp) {
   return `${ROOM}/${uid}/checkins/${date}/${timestamp}`;
 }
 
-export async function saveMoodCheckin({ scope, valence, emotions }) {
+export async function saveMoodCheckin({ scope, valence, emotions, factors }) {
   const uid = getUid();
   const date = getIsraelDateString();
   const timestamp = Date.now();
@@ -34,6 +34,7 @@ export async function saveMoodCheckin({ scope, valence, emotions }) {
     scope,
     valence,
     emotions: Array.isArray(emotions) ? emotions : [],
+    factors: Array.isArray(factors) ? factors : [],
     createdAt: timestamp,
   };
   const remotePayload = { ...localPayload, savedAt: serverTimestamp() };

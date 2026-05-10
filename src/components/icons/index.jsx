@@ -754,6 +754,24 @@ export function OpenQuestionIcon({ size }) {
   );
 }
 
+/** Reflect / Influencing-factors — hub with rays out (domains of influence) */
+export function InfluencingFactorsIcon({ size }) {
+  return (
+    <Svg size={size}>
+      <circle {...DUOTONE} cx="12" cy="12" r="3.5" />
+      <circle {...STROKE} cx="12" cy="12" r="3.5" />
+      <path {...STROKE} d="M12 5V3" />
+      <path {...STROKE} d="M12 21v-2" />
+      <path {...STROKE} d="M5 12H3" />
+      <path {...STROKE} d="M21 12h-2" />
+      <path {...STROKE} d="M7 7L5.5 5.5" />
+      <path {...STROKE} d="M18.5 18.5L17 17" />
+      <path {...STROKE} d="M17 7l1.5-1.5" />
+      <path {...STROKE} d="M5.5 18.5L7 17" />
+    </Svg>
+  );
+}
+
 /** Reflect / Schemas-activated — 3 stacked layers */
 export function SchemasActivatedIcon({ size }) {
   return (

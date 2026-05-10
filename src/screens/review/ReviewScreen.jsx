@@ -6,6 +6,7 @@ import EmptyState from './components/EmptyState.jsx';
 import ReviewSkeleton from './components/ReviewSkeleton.jsx';
 import MoodRhythm from './components/MoodRhythm.jsx';
 import EmotionalLandscape from './components/EmotionalLandscape.jsx';
+import InfluencingFactors from './components/InfluencingFactors.jsx';
 import TriggersList from './components/TriggersList.jsx';
 import PatternsPresence from './components/PatternsPresence.jsx';
 import ModesActive from './components/ModesActive.jsx';
@@ -57,6 +58,7 @@ export default function ReviewScreen() {
           <>
             <MoodRhythm data={data.moodRhythm} />
             <EmotionalLandscape data={data.emotions} />
+            <InfluencingFactors data={data.factors} />
             <TriggersList data={data.triggers} scope={data.scope} />
             <PatternsPresence data={data.patterns} />
             <ModesActive data={data.modes} />

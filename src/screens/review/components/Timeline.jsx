@@ -8,6 +8,7 @@ import { deleteAnalysis, restoreAnalysis } from '../../../utils/analysisStorage.
 import UndoToast from '../../../components/ui/UndoToast.jsx';
 import { formatHebrewDate, relativeDay, formatTimeOfDay, getIsraelDateString } from '../../../utils/dateHelpers.js';
 import { emotionLabelById, VALENCE_LABELS, VALENCE_COLORS } from '../../../data/emotionsCorpus.js';
+import { factorLabelById } from '../../../data/lifeFactors.js';
 import { getModeById } from '../../../data/modes.js';
 import { dominantSchemas } from '../../../data/schemas.js';
 import { distortionLabel, sensationLabel } from '../../../data/distortions.js';
@@ -259,6 +260,9 @@ function summaryFor(item) {
     if (Array.isArray(data.emotions) && data.emotions.length) {
       parts.push(data.emotions.slice(0, 3).map(emotionLabelById).join(', '));
     }
+    if (Array.isArray(data.factors) && data.factors.length) {
+      parts.push(data.factors.slice(0, 2).map(factorLabelById).join(', '));
+    }
     return parts.join(' · ') || 'רישום';
   }
   if (kind === 'trigger') return data.event || 'טריגר';
@@ -336,6 +340,9 @@ function MoodDetail({ data }) {
       )}
       {Array.isArray(data.emotions) && data.emotions.length > 0 && (
         <p><strong>רגשות:</strong> {data.emotions.map((id) => emotionLabelById(id)).join(', ')}</p>
+      )}
+      {Array.isArray(data.factors) && data.factors.length > 0 && (
+        <p><strong>השפיע:</strong> {data.factors.map((id) => factorLabelById(id)).join(', ')}</p>
       )}
     </section>
   );

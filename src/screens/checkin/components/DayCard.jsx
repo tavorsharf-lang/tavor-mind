@@ -1,5 +1,6 @@
 import { formatHebrewDate, relativeDay, formatTimeOfDay } from '../../../utils/dateHelpers.js';
 import { emotionLabelById, VALENCE_COLORS, VALENCE_LABELS } from '../../../data/emotionsCorpus.js';
+import { factorLabelById, factorColorById } from '../../../data/lifeFactors.js';
 
 const SCOPE_LABELS = {
   moment: 'כרגע',
@@ -64,6 +65,19 @@ function EntryRow({ entry }) {
         <span className="entry-emotions">
           {entry.emotions.map((id) => (
             <span key={id} className="entry-emotion-chip">{emotionLabelById(id)}</span>
+          ))}
+        </span>
+      )}
+      {Array.isArray(entry.factors) && entry.factors.length > 0 && (
+        <span className="entry-factors">
+          {entry.factors.map((id) => (
+            <span
+              key={id}
+              className="entry-factor-tag"
+              style={{ '--factor-color': factorColorById(id) }}
+            >
+              {factorLabelById(id)}
+            </span>
           ))}
         </span>
       )}

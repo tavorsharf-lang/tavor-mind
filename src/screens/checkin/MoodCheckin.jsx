@@ -4,12 +4,13 @@ import CheckinHeader from './components/CheckinHeader.jsx';
 import MoodPhase1Scope from './components/MoodPhase1_Scope.jsx';
 import MoodPhase2Slider from './components/MoodPhase2_Slider.jsx';
 import MoodPhase3Emotions from './components/MoodPhase3_Emotions.jsx';
+import MoodPhase4Factors from './components/MoodPhase4_Factors.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
 import { saveMoodCheckin } from '../../utils/checkinStorage.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 
-const TOTAL = 3;
+const TOTAL = 4;
 
 export default function MoodCheckin() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function MoodCheckin() {
   const [scope, setScope] = useState(null);
   const [valence, setValence] = useState(3);
   const [selectedEmotions, setSelectedEmotions] = useState(() => new Set());
+  const [selectedFactors, setSelectedFactors] = useState(() => new Set());
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -33,6 +35,7 @@ export default function MoodCheckin() {
       scope,
       valence,
       emotions: Array.from(selectedEmotions),
+      factors: Array.from(selectedFactors),
     });
     setSaving(false);
     setSaved(true);
@@ -51,6 +54,12 @@ export default function MoodCheckin() {
             valence={valence}
             value={selectedEmotions}
             onChange={setSelectedEmotions}
+          />
+        )}
+        {phase === 4 && (
+          <MoodPhase4Factors
+            value={selectedFactors}
+            onChange={setSelectedFactors}
           />
         )}
       </main>

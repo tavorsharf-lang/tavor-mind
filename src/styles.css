@@ -4260,6 +4260,81 @@ button:focus-visible {
   line-height: 1.7;
 }
 
+/* Review — Influencing factors section */
+
+.review-factors-list {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.review-factor-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  border-inline-start: 4px solid var(--factor-color, var(--line));
+  font-size: 14px;
+}
+
+.review-factor-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--factor-color, var(--ink-muted));
+  flex-shrink: 0;
+}
+
+.review-factor-label {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.review-factor-meta {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.review-factor-count {
+  background: var(--canvas);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.review-factor-ratio {
+  background: var(--canvas);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+}
+
+.review-factor-valence {
+  font-style: italic;
+}
+
+.review-factor-row.is-warm .review-factor-valence { color: var(--terra); }
+.review-factor-row.is-cool .review-factor-valence { color: var(--lichen-deep); }
+
+.review-section-empty-line {
+  margin: 4px 0 0;
+  padding: 10px 14px;
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.6;
+}
+
 /* Triggers list */
 .trigger-list {
   list-style: none;
@@ -9624,6 +9699,54 @@ button:focus-visible {
   border-color: var(--ink-muted);
 }
 
+/* Phase 4 — life-factor chips (Apple-Health-style domain selection) */
+
+.mood-factor-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.mood-factor-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  min-height: 36px;
+  transition: background 180ms var(--ease-out), border-color 180ms var(--ease-out);
+}
+
+.mood-factor-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--factor-color, var(--ink-muted));
+  flex-shrink: 0;
+}
+
+.mood-factor-chip:hover {
+  border-color: var(--factor-color, var(--lichen));
+}
+
+.mood-factor-chip.is-selected {
+  background: var(--surface-alt);
+  border-color: var(--factor-color, var(--lichen));
+  box-shadow: inset 0 0 0 1px var(--factor-color, var(--lichen));
+  color: var(--ink);
+}
+
+.mood-factor-chip.is-selected .mood-factor-dot {
+  transform: scale(1.25);
+}
+
 /* History — multi-entry day cards */
 
 .day-count {
@@ -9698,6 +9821,25 @@ button:focus-visible {
   background: var(--canvas);
   padding: 3px 10px;
   border-radius: var(--radius-pill);
+}
+
+.entry-factors {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.entry-factor-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--canvas);
+  padding: 3px 10px 3px 8px;
+  border-radius: var(--radius-pill);
+  border-inline-start: 3px solid var(--factor-color, var(--line));
 }
 
 /* Review — mood ribbon */
