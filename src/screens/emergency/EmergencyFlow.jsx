@@ -14,7 +14,6 @@ import Phase10Closing from './Phase10_Closing.jsx';
 import PhaseEarlyBridge from './PhaseEarlyBridge.jsx';
 import PhaseSchemaModeBridge from './PhaseSchemaModeBridge.jsx';
 import PhaseContainment from './PhaseContainment.jsx';
-import PhaseMoodScale from './PhaseMoodScale.jsx';
 import PhaseSummary from './PhaseSummary.jsx';
 import {
   logEmergencySession,
@@ -89,8 +88,6 @@ export default function EmergencyFlow() {
   const [phase9FirstSuggestedMode, setPhase9FirstSuggestedMode] = useState(null);
   // Body-regulation score captured at start of Phase 7 (rate stage).
   const [bodyRegulationScore, setBodyRegulationScore] = useState(null);
-  // Mood scale (Phase 9.5) — after modes, before closing.
-  const [moodIndex, setMoodIndex] = useState(null);
   // Containment side-trip state (Phase 8 step 0 → 8.1).
   const [containmentCountThisSession, setContainmentCountThisSession] = useState(0);
   const [savingState, setSavingState] = useState('idle');
@@ -182,7 +179,6 @@ export default function EmergencyFlow() {
       earlyBridgeChoice,
       bodyRegulationScore: bodyRegulationScore != null ? bodyRegulationScore : null,
       hrTrack: hrSessionId ? { sessionId: hrSessionId } : null,
-      moodIndex: moodIndex != null ? moodIndex : null,
     };
     if (partial) {
       session.partial = true;
@@ -471,15 +467,6 @@ export default function EmergencyFlow() {
           modeOrderingUsed={phase9OrderingUsed}
           setModeOrderingUsed={setPhase9OrderingUsed}
           setFirstSuggestedMode={setPhase9FirstSuggestedMode}
-          onNext={() => setPhase(9.5)}
-          onSkip={() => setPhase(9.5)}
-          onExit={handleSaveAndExit}
-        />
-      )}
-      {phase === 9.5 && (
-        <PhaseMoodScale
-          moodIndex={moodIndex}
-          setMoodIndex={setMoodIndex}
           onNext={() => setPhase(10)}
           onSkip={() => setPhase(10)}
           onExit={handleSaveAndExit}
@@ -507,7 +494,6 @@ export default function EmergencyFlow() {
             modesIdentified: Array.from(selectedModes).map(resolveModeId).filter(Boolean),
             dominantSchema: trigger.dominantSchema,
             closingScore: score,
-            moodIndex,
             somaticRan: activation === 'hypo',
             hrSessionId: ensureHrSessionId(),
             startedAtMs: startedAtRef.current,

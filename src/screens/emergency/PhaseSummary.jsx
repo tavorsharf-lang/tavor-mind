@@ -1,8 +1,6 @@
 import { dominantSchemas } from '../../data/schemas.js';
 import HrSummaryCard from './components/HrSummaryCard.jsx';
 
-const MOOD_LABELS = ['מאוד לא נעים', 'לא נעים', 'מעט לא נעים', 'ניטרלי', 'ניטרלי', 'מעט נעים', 'נעים', 'מאוד נעים', 'נפלא'];
-
 function formatTimeNow() {
   const d = new Date();
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
@@ -41,17 +39,8 @@ export default function PhaseSummary({
 }) {
   const cards = [];
 
-  // Mood card — from moodIndex (Phase 9.5) if present, else closingScore
-  if (session.moodIndex != null) {
-    cards.push({
-      tint: '#1FB6A6',
-      label: 'מצב רוח',
-      title: MOOD_LABELS[session.moodIndex] || 'נעים',
-      meta: `עכשיו · ${formatTimeNow()}`,
-      icon: 'mind',
-      big: true,
-    });
-  } else if (session.closingScore != null) {
+  // Mood card — derived from Phase 10 closingScore
+  if (session.closingScore != null) {
     const score = session.closingScore;
     const moodTitle = score >= 7 ? 'יותר טוב' : score >= 4 ? 'באמצע' : 'עדיין כבד';
     cards.push({
