@@ -26,6 +26,11 @@ const OPTIONS = [
   },
 ];
 
+// Defer the React state change so iOS Safari has time to process the
+// custom-scheme href on the anchor. Without this, setPhase(2) commits
+// almost instantly, the anchor unmounts, and iOS cancels the navigation.
+const SHORTCUT_LAUNCH_DELAY_MS = 150;
+
 function ActivationGlyph({ kind, color }) {
   const s = { stroke: color, fill: 'none', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' };
   if (kind === 'spark') return (
@@ -50,6 +55,11 @@ function ActivationGlyph({ kind, color }) {
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
+
+  const handlePick = (id) => {
+    setTimeout(() => onPick(id), SHORTCUT_LAUNCH_DELAY_MS);
+  };
+
   return (
     <div className="ds3-screen">
       {/* Topbar — back arrow on right (RTL = back). History link on left. */}
@@ -87,11 +97,15 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
 
         <div className="ds3-stack-3">
           {OPTIONS.map((opt) => (
-            <button
+            // Anchor with href to the Start Shortcut + delayed state change
+            // on click. iOS handles the URL scheme first; React advances to
+            // Phase 2 ~150ms later (after iOS already opened Shortcuts).
+            <a
               key={opt.id}
-              type="button"
+              href={buildStartShortcutUrl()}
               className="ds3-card-button ds3-activation-card"
-              onClick={() => onPick(opt.id)}
+              onClick={() => handlePick(opt.id)}
+              style={{ textDecoration: 'none' }}
             >
               <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
                 <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
@@ -103,27 +117,12 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
               <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
                 <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </button>
+            </a>
           ))}
         </div>
       </main>
 
-      <footer className="ds3-screen-footer ds3-stack-3">
-        {/* Pure anchor — clicking does NOT change React state, so the page
-            stays on Phase 1 long enough for iOS to handle the URL scheme.
-            User taps once at the start of a session if they want HR. */}
-        <a
-          href={buildStartShortcutUrl()}
-          className="ds3-btn-quiet"
-          style={{
-            textDecoration: 'none',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            color: 'var(--heart)',
-          }}
-        >
-          <span aria-hidden="true">♥</span>
-          התחל workout בשעון
-        </a>
+      <footer className="ds3-screen-footer">
         <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
           דלג לשלב הבא
         </button>
