@@ -30,9 +30,13 @@ function formatDuration(seconds) {
   if (!seconds || seconds < 0) return 'ללא';
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
-  if (mins === 0) return `${secs} שניות`;
-  if (secs === 0) return `${mins} דקות`;
-  return `${mins} דקות ו-${secs} שניות`;
+
+  const minsLabel = mins === 1 ? 'דקה אחת' : `${mins} דקות`;
+  const secsLabel = secs === 1 ? 'שנייה אחת' : `${secs} שניות`;
+
+  if (mins === 0) return secsLabel;
+  if (secs === 0) return minsLabel;
+  return `${minsLabel} ו-${secsLabel}`;
 }
 
 function modeLabel(modeId) {
@@ -186,7 +190,7 @@ export function buildTriggerAnalysisPrompt(session) {
     || thoughts.length > 0 || readBackFeeling || heavinessLine;
 
   if (whatHappenedHasContent) {
-    lines.push('', '—— מה קרה ——', '');
+    lines.push('', '', '—— מה קרה ——', '');
     if (event) {
       lines.push(`האירוע: ${event}`, '');
     }
@@ -221,6 +225,7 @@ export function buildTriggerAnalysisPrompt(session) {
         lines.push(`תיארתי אותו במילים שלי: ${customModeDescription}`);
       }
     }
+    while (lines[lines.length - 1] === '') lines.pop();
   }
 
   const childSectionHasContent = childNeeds || healthyAdultMessage;
