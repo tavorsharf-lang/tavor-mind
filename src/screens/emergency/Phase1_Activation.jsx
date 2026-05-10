@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
-import { buildStartShortcutUrl, isHrSetupDone } from '../../utils/liveHr.js';
+import { buildStartShortcutUrl } from '../../utils/liveHr.js';
 
 const OPTIONS = [
   {
@@ -50,10 +50,6 @@ function ActivationGlyph({ kind, color }) {
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
-  // Only render the cards as Shortcut-launching <a> when HR is configured.
-  // On non-iOS / not-set-up, falling through to a plain <button> avoids opening
-  // a broken `shortcuts://` URL during a crisis.
-  const hrSetupDone = isHrSetupDone();
   return (
     <div className="ds3-screen">
       {/* Topbar — back arrow on right (RTL = back). History link on left. */}
@@ -90,53 +86,44 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
         </div>
 
         <div className="ds3-stack-3">
-          {OPTIONS.map((opt) => {
-            // When HR is configured, activation cards are <a> elements: tapping
-            // picks the activation AND launches the Start Workout Shortcut.
-            // Otherwise render a plain <button> so non-iOS / unset-up users
-            // don't get a broken `shortcuts://` navigation mid-crisis.
-            const cardInner = (
-              <>
-                <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
-                  <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
-                </span>
-                <span className="ds3-activation-card-text">
-                  <span className="ds3-activation-card-label">{opt.label}</span>
-                  <span className="ds3-activation-card-sub">{opt.subtitle}</span>
-                </span>
-                <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
-                  <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </>
-            );
-            if (hrSetupDone) {
-              return (
-                <a
-                  key={opt.id}
-                  href={buildStartShortcutUrl()}
-                  className="ds3-card-button ds3-activation-card"
-                  onClick={() => onPick(opt.id)}
-                  style={{ textDecoration: 'none' }}
-                >
-                  {cardInner}
-                </a>
-              );
-            }
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                className="ds3-card-button ds3-activation-card"
-                onClick={() => onPick(opt.id)}
-              >
-                {cardInner}
-              </button>
-            );
-          })}
+          {OPTIONS.map((opt) => (
+            <button
+              key={opt.id}
+              type="button"
+              className="ds3-card-button ds3-activation-card"
+              onClick={() => onPick(opt.id)}
+            >
+              <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
+                <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
+              </span>
+              <span className="ds3-activation-card-text">
+                <span className="ds3-activation-card-label">{opt.label}</span>
+                <span className="ds3-activation-card-sub">{opt.subtitle}</span>
+              </span>
+              <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
+                <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          ))}
         </div>
       </main>
 
-      <footer className="ds3-screen-footer">
+      <footer className="ds3-screen-footer ds3-stack-3">
+        {/* Pure anchor — clicking does NOT change React state, so the page
+            stays on Phase 1 long enough for iOS to handle the URL scheme.
+            User taps once at the start of a session if they want HR. */}
+        <a
+          href={buildStartShortcutUrl()}
+          className="ds3-btn-quiet"
+          style={{
+            textDecoration: 'none',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            color: 'var(--heart)',
+          }}
+        >
+          <span aria-hidden="true">♥</span>
+          התחל workout בשעון
+        </a>
         <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
           דלג לשלב הבא
         </button>
