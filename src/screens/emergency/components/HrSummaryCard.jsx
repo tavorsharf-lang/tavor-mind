@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  launchShortcut,
+  buildRunShortcutUrl,
   getHrSessionSnapshot,
   clipToWindow,
   summarizeSamples,
@@ -42,13 +42,11 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
     return () => { cancelled = true; };
   }, [status, sessionId, startedAtMs, endedAtMs]);
 
-  const handleLoad = () => {
-    if (!sessionId) return;
-    setStatus('launching');
-    setTimeout(() => {
-      setStatus('waiting');
-      launchShortcut(sessionId);
-    }, 200);
+  // Anchor-href approach: iOS Safari blocks JS-initiated custom-scheme URLs
+  // (iframe / window.location). A real user-tap on <a href={shortcuts://...}>
+  // works. onClick just flips state to start the polling.
+  const handleLoadClick = () => {
+    setStatus('waiting');
   };
 
   if (!sessionId) return null;
@@ -87,24 +85,32 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
           <p className="hr-summary-hint">
             ודא שה-workout בשעון הסתיים. ה-Shortcut יקרא את הדגימות מ-HealthKit ויעלה לכאן.
           </p>
-          <button type="button" className="ds3-btn ds3-btn-blue hr-summary-cta" onClick={handleLoad}>
+          <a
+            href={buildRunShortcutUrl(sessionId)}
+            className="ds3-btn ds3-btn-blue hr-summary-cta"
+            onClick={handleLoadClick}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+          >
             טען נתוני דופק
-          </button>
+          </a>
         </>
       )}
-      {(status === 'launching' || status === 'waiting') && (
-        <p className="hr-summary-hint">
-          {status === 'launching' ? 'פותח Shortcuts…' : 'ממתין לדגימות…'}
-        </p>
+      {status === 'waiting' && (
+        <p className="hr-summary-hint">ממתין לדגימות…</p>
       )}
       {status === 'fail' && (
         <>
           <p className="hr-summary-hint">
             לא הגיעו דגימות תוך {POLL_TIMEOUT_MS/1000} שניות. ודא שה-workout בשעון הסתיים ונסה שוב.
           </p>
-          <button type="button" className="ds3-btn ds3-btn-blue hr-summary-cta" onClick={handleLoad}>
+          <a
+            href={buildRunShortcutUrl(sessionId)}
+            className="ds3-btn ds3-btn-blue hr-summary-cta"
+            onClick={handleLoadClick}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+          >
             נסה שוב
-          </button>
+          </a>
         </>
       )}
       {status === 'empty' && (
@@ -112,9 +118,14 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
           <p className="hr-summary-hint">
             הדגימות הגיעו אבל אף אחת מהן לא נופלת בחלון הזמן של הסשן. ודא שה-workout היה פעיל לאורך הסשן.
           </p>
-          <button type="button" className="ds3-btn-quiet hr-summary-cta" onClick={handleLoad}>
+          <a
+            href={buildRunShortcutUrl(sessionId)}
+            className="ds3-btn-quiet hr-summary-cta"
+            onClick={handleLoadClick}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+          >
             נסה שוב
-          </button>
+          </a>
         </>
       )}
     </div>

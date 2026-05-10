@@ -4,7 +4,7 @@ import {
   getCurrentUid,
   generateHrSessionId,
   buildShortcutWriteBase,
-  launchShortcut,
+  buildRunShortcutUrl,
   getHrSessionSnapshot,
   isHrSetupDone,
   markHrSetupDone,
@@ -55,14 +55,17 @@ export default function HrSetup() {
     } catch {}
   };
 
-  const handleTest = () => {
-    const fresh = `probe-${generateHrSessionId()}`;
-    setProbeId(fresh);
-    setTestStatus('launching');
-    setTimeout(() => {
-      setTestStatus('waiting');
-      launchShortcut(fresh);
-    }, 200);
+  // The button is an <a href={shortcuts://...}> — iOS Safari refuses to launch
+  // custom URL schemes from JS-triggered iframes, but a real user-initiated
+  // anchor click works reliably. onClick only flips state to start polling;
+  // the href is what actually opens Shortcuts.
+  const handleTestClick = () => {
+    setTestStatus('waiting');
+  };
+
+  const handleRetryReset = () => {
+    setProbeId(`probe-${generateHrSessionId()}`);
+    setTestStatus('idle');
   };
 
   const handleConfirmDone = () => {
@@ -170,19 +173,33 @@ export default function HrSetup() {
           <p className="hr-setup-step-body">
             ודא שיש לך לפחות דגימת Heart Rate אחת ב-HealthKit מהשעה האחרונה (אם לא — שב 5 דקות עם השעון על היד, או הפעל workout קצר ועצור). לחץ "הפעל בדיקה" — ה-Shortcut יקרא את הדגימות וישלח. תוך 15-30 שניות תראה ✓.
           </p>
-          <button
-            type="button"
-            className="ds3-btn ds3-btn-blue"
-            onClick={handleTest}
-            disabled={testStatus === 'launching' || testStatus === 'waiting'}
-            style={{ width: '100%', height: 48, borderRadius: 24, marginTop: 6 }}
-          >
-            {testStatus === 'idle' && 'הפעל בדיקה'}
-            {testStatus === 'launching' && 'פותח את Shortcuts…'}
-            {testStatus === 'waiting' && 'ממתין לדגימה ראשונה…'}
-            {testStatus === 'ok' && 'בדיקה הצליחה ✓'}
-            {testStatus === 'fail' && 'נסה שוב'}
-          </button>
+          {(testStatus === 'idle' || testStatus === 'waiting') && (
+            <a
+              href={buildRunShortcutUrl(probeId)}
+              className="ds3-btn ds3-btn-blue"
+              onClick={handleTestClick}
+              style={{
+                width: '100%', height: 48, borderRadius: 24, marginTop: 6,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                textDecoration: 'none',
+                opacity: testStatus === 'waiting' ? 0.7 : 1,
+                pointerEvents: testStatus === 'waiting' ? 'none' : 'auto',
+              }}
+            >
+              {testStatus === 'idle' && 'הפעל בדיקה'}
+              {testStatus === 'waiting' && 'ממתין לדגימה ראשונה…'}
+            </a>
+          )}
+          {(testStatus === 'ok' || testStatus === 'fail') && (
+            <button
+              type="button"
+              className="ds3-btn ds3-btn-blue"
+              onClick={handleRetryReset}
+              style={{ width: '100%', height: 48, borderRadius: 24, marginTop: 6 }}
+            >
+              {testStatus === 'ok' ? 'בדיקה הצליחה ✓ — בדוק שוב' : 'נסה שוב'}
+            </button>
+          )}
 
           {testStatus === 'ok' && (
             <div className="hr-setup-status is-ok">
