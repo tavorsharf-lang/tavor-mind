@@ -6,7 +6,6 @@ import {
   ToolsIcon,
   RepositoryIcon,
   MirrorIcon,
-  MindfulnessIcon,
   TherapyIcon,
   Phase8TriggerIcon,
 } from '../components/icons/index.jsx';
@@ -171,17 +170,10 @@ export default function HomeScreen({ authError }) {
           />
         )}
         <HomeTile
-          tone="blue"
-          icon={<MindfulnessIcon />}
-          title="מיינדפולנס"
-          subtitle="הקלטות מדיטציה"
-          onClick={() => goTo('/mindfulness')}
-        />
-        <HomeTile
           tone="coral"
           icon={<ToolsIcon />}
-          title="כלים פנימיים"
-          subtitle="זיהוי, עצירה, בחינה"
+          title="כלים"
+          subtitle="זיהוי, עצירה, בחינה, מיינדפולנס"
           onClick={() => goTo('/tools')}
         />
         <HomeTile
@@ -230,20 +222,6 @@ export default function HomeScreen({ authError }) {
           <span className="ds3-micro ds3-text-soft">מחובר ✓</span>
         )}
         <SyncStatusBadge />
-        <button
-          type="button"
-          className="ds3-home-footer-link"
-          onClick={() => navigate('/settings/therapy-day')}
-        >
-          הגדרת יום טיפול
-        </button>
-        <button
-          type="button"
-          className="ds3-home-footer-link"
-          onClick={() => navigate('/emergency/hr-setup')}
-        >
-          מעקב דופק
-        </button>
       </footer>
     </div>
   );
