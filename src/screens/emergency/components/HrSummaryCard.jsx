@@ -1,68 +1,53 @@
 import { useEffect, useState } from 'react';
 import {
   buildRunShortcutUrl,
-  getHrSessionSnapshot,
+  subscribeLiveHrSamples,
   clipToWindow,
   summarizeSamples,
 } from '../../../utils/liveHr.js';
 
-// Polls every 2s for up to 90s after the user taps "load HR data". Bumped past
-// the 60s used during initial setup because reading + posting many HealthKit
-// samples in the Shortcut takes longer than a single live test.
-const POLL_INTERVAL_MS = 2000;
 const POLL_TIMEOUT_MS = 90000;
 
 export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
-  // Auto-start polling on mount: the user reaches PhaseSummary by tapping
-  // "סיימתי", which is wired to launch the Read Shortcut. By the time we
-  // mount, the Shortcut is already posting. We just wait for samples.
-  const [status, setStatus] = useState('waiting');
   const [samples, setSamples] = useState([]);
+  const [timedOut, setTimedOut] = useState(false);
 
+  // Real-time subscription — pushes new samples as they arrive.
   useEffect(() => {
-    if (status !== 'waiting' || !sessionId) return undefined;
-    let cancelled = false;
-    const startedAt = Date.now();
-    const tick = async () => {
-      if (cancelled) return;
-      const snap = await getHrSessionSnapshot(sessionId);
-      if (cancelled) return;
-      const clipped = clipToWindow(snap?.samples || [], startedAtMs, endedAtMs);
-      if (clipped.length > 0) {
-        setSamples(clipped);
-        setStatus('ok');
-        return;
-      }
-      if (Date.now() - startedAt > POLL_TIMEOUT_MS) {
-        // Distinguish "Shortcut ran but no HR samples in window" from "Shortcut never wrote".
-        const anySamples = (snap?.samples || []).length > 0;
-        setStatus(anySamples ? 'empty' : 'fail');
-        return;
-      }
-      setTimeout(tick, POLL_INTERVAL_MS);
-    };
-    tick();
-    return () => { cancelled = true; };
-  }, [status, sessionId, startedAtMs, endedAtMs]);
+    if (!sessionId) return undefined;
+    const unsub = subscribeLiveHrSamples(sessionId, ({ samples: next }) => {
+      setSamples(next);
+    });
+    return unsub;
+  }, [sessionId]);
 
-  // Anchor-href approach: iOS Safari blocks JS-initiated custom-scheme URLs
-  // (iframe / window.location). A real user-tap on <a href={shortcuts://...}>
-  // works. onClick just flips state to start the polling.
-  const handleLoadClick = () => {
-    setStatus('waiting');
-  };
+  // Idle timeout — if no samples after POLL_TIMEOUT_MS, surface the empty
+  // state instead of leaving the user staring at "waiting" forever.
+  useEffect(() => {
+    if (!sessionId) return undefined;
+    const id = setTimeout(() => setTimedOut(true), POLL_TIMEOUT_MS);
+    return () => clearTimeout(id);
+  }, [sessionId]);
 
   if (!sessionId) return null;
 
-  if (status === 'ok') {
-    const summary = summarizeSamples(samples);
+  // Try clipped first; fall back to all samples if the window filter loses
+  // everything (e.g., samples come from BEFORE the user mounted EmergencyFlow
+  // because the watch was already in workout mode and HealthKit had recent
+  // history). Better to show *something* than nothing when data exists.
+  const clipped = clipToWindow(samples, startedAtMs, endedAtMs);
+  const displaySamples = clipped.length > 0 ? clipped : samples;
+
+  if (displaySamples.length > 0) {
+    const summary = summarizeSamples(displaySamples);
+    const sourceLabel = clipped.length > 0
+      ? `${summary.count} דגימות · ${Math.max(1, Math.round(summary.durationMs / 60000))} דק'`
+      : `${summary.count} דגימות (מחוץ לחלון הסשן)`;
     return (
       <div className="hr-summary-card hr-summary-card--ok">
         <div className="hr-summary-row">
           <div className="hr-summary-label">דופק</div>
-          <div className="hr-summary-meta">
-            {summary.count} דגימות · {Math.round(summary.durationMs / 60000)} דק'
-          </div>
+          <div className="hr-summary-meta">{sourceLabel}</div>
         </div>
         <div className="hr-summary-stats">
           <Stat value={summary.start} label="התחלה" />
@@ -70,7 +55,7 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
           <Stat value={summary.max} label="גבוה" tint="var(--orange)" />
           <Stat value={summary.end} label="סיום" />
         </div>
-        <HrChart samples={samples} />
+        <HrChart samples={displaySamples} />
         <div className={`hr-summary-delta ${summary.delta < 0 ? 'is-down' : summary.delta > 0 ? 'is-up' : ''}`}>
           {summary.delta < 0 ? `↓ ירידה של ${Math.abs(summary.delta)} BPM` : summary.delta > 0 ? `↑ עלייה של ${summary.delta} BPM` : 'נשאר יציב'}
         </div>
@@ -78,56 +63,26 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
     );
   }
 
+  // No samples yet
   return (
     <div className="hr-summary-card">
       <div className="hr-summary-row">
         <div className="hr-summary-label">דופק</div>
       </div>
-      {status === 'idle' && (
-        <>
-          <p className="hr-summary-hint">
-            ודא שה-workout בשעון הסתיים. ה-Shortcut יקרא את הדגימות מ-HealthKit ויעלה לכאן.
-          </p>
-          <a
-            href={buildRunShortcutUrl(sessionId)}
-            className="ds3-btn ds3-btn-blue hr-summary-cta"
-            onClick={handleLoadClick}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
-          >
-            טען נתוני דופק
-          </a>
-        </>
-      )}
-      {status === 'waiting' && (
+      {!timedOut ? (
         <p className="hr-summary-hint">ממתין לדגימות…</p>
-      )}
-      {status === 'fail' && (
+      ) : (
         <>
           <p className="hr-summary-hint">
-            לא הגיעו דגימות תוך {POLL_TIMEOUT_MS/1000} שניות. ודא שה-workout בשעון הסתיים ונסה שוב.
+            לא הגיעו דגימות. ודא ש-Shortcut "TavorMind HR" רץ (ושיש workout פעיל בשעון בזמן הסשן).
           </p>
           <a
             href={buildRunShortcutUrl(sessionId)}
             className="ds3-btn ds3-btn-blue hr-summary-cta"
-            onClick={handleLoadClick}
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+            onClick={() => setTimedOut(false)}
           >
-            נסה שוב
-          </a>
-        </>
-      )}
-      {status === 'empty' && (
-        <>
-          <p className="hr-summary-hint">
-            הדגימות הגיעו אבל אף אחת מהן לא נופלת בחלון הזמן של הסשן. ודא שה-workout היה פעיל לאורך הסשן.
-          </p>
-          <a
-            href={buildRunShortcutUrl(sessionId)}
-            className="ds3-btn-quiet hr-summary-cta"
-            onClick={handleLoadClick}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
-          >
-            נסה שוב
+            הרץ שוב
           </a>
         </>
       )}

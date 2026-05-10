@@ -1,4 +1,4 @@
-import { ref, get } from 'firebase/database';
+import { ref, get, onValue, off } from 'firebase/database';
 import { db, auth } from '../firebase.js';
 
 // Heart-rate sessions live under a top-level node so that an iOS Shortcut
@@ -89,6 +89,35 @@ export function launchShortcut(sessionId) {
   frame.src = url;
   document.body.appendChild(frame);
   setTimeout(() => { frame.remove(); }, 400);
+}
+
+// Real-time subscription via Firebase onValue (websocket). Preferred over
+// setTimeout-based polling on iOS Safari, which throttles background timers.
+// Returns an unsubscribe fn. Callback receives { samples: [{ts, hr}] }.
+export function subscribeLiveHrSamples(sessionId, onSnapshot) {
+  const uid = getUid();
+  if (!uid || !sessionId) return () => {};
+  const samplesRef = ref(db, `${LIVE_HR_ROOT}/${uid}/${sessionId}/samples`);
+  const handler = (snap) => {
+    if (!snap.exists()) {
+      onSnapshot({ samples: [] });
+      return;
+    }
+    const val = snap.val() || {};
+    const samples = Object.entries(val)
+      .map(([key, raw]) => {
+        if (raw == null) return null;
+        const isObj = typeof raw === 'object';
+        const hr = isObj ? Number(raw.bpm) : Number(raw);
+        const ts = parseTs(isObj ? raw.ts : null, key);
+        return { ts, hr };
+      })
+      .filter((s) => s && Number.isFinite(s.ts) && Number.isFinite(s.hr) && s.hr > 0)
+      .sort((a, b) => a.ts - b.ts);
+    onSnapshot({ samples });
+  };
+  onValue(samplesRef, handler);
+  return () => off(samplesRef, 'value', handler);
 }
 
 export async function getHrSessionSnapshot(sessionId) {
