@@ -128,22 +128,18 @@ export default function HrSetup() {
 
         <Step num={2} title="הוסף את הפעולות (לפי הסדר)">
           <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-            <li><b>קבלת מלל מ:</b> בחר "קלט של קיצור" — מקבל את ה-sessionId שעובר ב-URL.</li>
-            <li><b>מלל</b> (Text) — הדבק כאן את ה-BaseUrl מצעד 3, ובסוף הוסף את משתנה ה-"מלל" מהפעולה הקודמת.</li>
-            <li><b>הגדרת המשתנה</b> בשם <span style={{fontFamily:'monospace'}}>BaseUrl</span>, הערך = פלט פעולה 2.</li>
-            <li><b>חיפוש דגימות בריאות</b> — Type: <b>Heart Rate</b>, תאריך התחלה בטווח של <b>שעה</b> (או 30 דק' — תלוי באורך הסשנים שלך). <b>הגבלה: כבוי</b> (כדי לקבל הכל). מיון: תאריך התחלה, סדר: אפשר כל אחד.</li>
-            <li><b>חזור עם כל אחד מהפריטים</b> (Repeat with Each) — תוך הלולאה:
+            <li><b>סיום אימון</b> (End Workout) — סוגר את ה-workout בשעון אם פעיל. הופך את הסיום לאוטומטי בלחיצה אחת על "סיימתי" ב-tavor-mind.</li>
+            <li><b>קבלת מלל מהקלט</b>: <b>מקור = קלט של קיצור</b>.</li>
+            <li><b>חיפוש דגימות בריאות</b> — Type: <b>Heart Rate</b>, תאריך התחלה בטווח של <b>1 יום</b>, <b>הגבלה: כבוי</b>, מיון: תאריך התחלה.</li>
+            <li><b>חזור עם כל פריט בתוך</b> פלט "חיפוש דגימות בריאות" — תוך הלולאה:
               <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 16 }}>
-                <li><b>קבלת ערך מתוך דגימת בריאות</b> — Attribute: <b>תאריך התחלה</b>. שם המשתנה: <span style={{fontFamily:'monospace'}}>SampleDate</span>.</li>
-                <li><b>קבלת התוכן של URL</b>: URL = <span style={{fontFamily:'monospace'}}>{'{BaseUrl}/samples.json'}</span>, Method: <b>POST</b>, Request Body: <b>JSON</b>.<br/>שדות:<br/>
-                  • <span style={{fontFamily:'monospace'}}>bpm</span> = משתנה <b>"פריט החזרה"</b> (Repeat Item) — זו הדגימה עצמה (Shortcuts יחלץ את הערך כמספר אוטומטית)<br/>
-                  • <span style={{fontFamily:'monospace'}}>ts</span> = משתנה <span style={{fontFamily:'monospace'}}>SampleDate</span></li>
+                <li><b>קבלת ערך</b> מתוך פריט חוזר — Attribute: <b>ערך</b> (BPM).</li>
+                <li><b>קבלת ערך</b> מתוך פריט חוזר — Attribute: <b>תאריך התחלה</b>.</li>
+                <li><b>מבנה תאריך</b> על "תאריך התחלה" — תבנית: <b>ISO 8601</b>, ❗ <b>הדלק "הכללת זמן"</b>.</li>
+                <li><b>קבלת התוכן של URL</b>: URL = <span style={{fontFamily:'monospace'}}>https://yaniv-game-aeb26-default-rtdb.firebaseio.com/tavormindLiveHr/[ה-UID שלך]/[מלל]/samples.json</span>. Method: <b>POST</b>. Request Body: <b>JSON</b>. שדות: <span style={{fontFamily:'monospace'}}>bpm</span> = ערך, <span style={{fontFamily:'monospace'}}>ts</span> = תאריך מובנה.</li>
               </ol>
             </li>
           </ol>
-          <p className="hr-setup-step-body" style={{ marginTop: 8, fontSize: 13, color: 'var(--ink-muted)' }}>
-            הערה: לא צריך Start/End Workout בתוך ה-Shortcut הזה. את ה-workout אתה תתחיל ידנית בשעון לפני הסשן ותסיים אחריו.
-          </p>
         </Step>
 
         <Step num={3} title="ה-BaseUrl שלך">

@@ -87,11 +87,16 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
 
         <div className="ds3-stack-3">
           {OPTIONS.map((opt) => (
-            <button
+            // Activation cards are <a> elements: tapping picks the activation
+            // AND launches the Start Workout Shortcut (one tap, two actions).
+            // iOS handles the href → opens Shortcuts → workout starts; the
+            // onClick fires → state advances. User returns to Safari at Phase 2.
+            <a
               key={opt.id}
-              type="button"
+              href={buildStartShortcutUrl()}
               className="ds3-card-button ds3-activation-card"
               onClick={() => onPick(opt.id)}
+              style={{ textDecoration: 'none' }}
             >
               <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
                 <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
@@ -103,28 +108,12 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
               <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
                 <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-            </button>
+            </a>
           ))}
         </div>
       </main>
 
-      <footer className="ds3-screen-footer ds3-stack-3">
-        {/* Always render — if the user hasn't set up the Start Shortcut, iOS
-            shows "Shortcut not found" and they can ignore the link. Avoiding
-            the gate prevents the "I set it up but the link isn't showing"
-            failure mode that comes with localStorage-based flags. */}
-        <a
-          href={buildStartShortcutUrl()}
-          className="ds3-btn-quiet"
-          style={{
-            textDecoration: 'none',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-            color: 'var(--heart)',
-          }}
-        >
-          <span aria-hidden="true">♥</span>
-          התחל מעקב דופק בשעון
-        </a>
+      <footer className="ds3-screen-footer">
         <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
           דלג לשלב הבא
         </button>

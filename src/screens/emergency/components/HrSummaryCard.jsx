@@ -13,7 +13,10 @@ const POLL_INTERVAL_MS = 2000;
 const POLL_TIMEOUT_MS = 90000;
 
 export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
-  const [status, setStatus] = useState('idle'); // idle | launching | waiting | ok | fail | empty
+  // Auto-start polling on mount: the user reaches PhaseSummary by tapping
+  // "סיימתי", which is wired to launch the Read Shortcut. By the time we
+  // mount, the Shortcut is already posting. We just wait for samples.
+  const [status, setStatus] = useState('waiting');
   const [samples, setSamples] = useState([]);
 
   useEffect(() => {

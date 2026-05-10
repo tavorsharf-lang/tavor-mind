@@ -237,9 +237,11 @@ export default function EmergencyFlow() {
   };
 
   const persistAll = async () => {
-    // hrSessionId is set if user opted into HR tracking. Summary is fetched
-    // lazily in PhaseSummary after the iOS Shortcut posts the samples.
-    const hrSessionId = hrEnabled ? ensureHrSessionId() : null;
+    // Always tag sessions with an hrSessionId so the chart in PhaseSummary
+    // can poll for samples. If the user never tapped the start-workout link
+    // / never set up the Shortcut, polling will simply time out and show the
+    // empty state — non-blocking.
+    const hrSessionId = ensureHrSessionId();
     const ops = [logEmergencySession(buildSession({ hrSessionId }))];
     if (analyzed) ops.push(logTriggerAnalysis(buildTriggerPayload()));
     const results = await Promise.all(ops);
@@ -269,7 +271,7 @@ export default function EmergencyFlow() {
   const handleSaveAndExit = async () => {
     if (savingState === 'saving') return;
     setSavingState('saving');
-    const hrSessionId = hrEnabled ? ensureHrSessionId() : null;
+    const hrSessionId = ensureHrSessionId();
     const result = await logEmergencySession(buildSession({ partial: true, hrSessionId }));
     // Partial trigger-analysis is also saved when applicable, so the rich state isn't lost.
     if (analyzed) {
@@ -539,6 +541,7 @@ export default function EmergencyFlow() {
           onContinueWithClaude={analyzed ? handleContinueWithClaude : null}
           onExit={handleSaveAndExit}
           savingState={savingState}
+          hrSessionId={ensureHrSessionId()}
         />
       )}
       {phase === 11 && (
@@ -551,7 +554,7 @@ export default function EmergencyFlow() {
             closingScore: score,
             moodIndex,
             somaticRan: activation === 'hypo',
-            hrSessionId: hrEnabled ? ensureHrSessionId() : null,
+            hrSessionId: ensureHrSessionId(),
             startedAtMs: startedAtRef.current,
             endedAtMs: Date.now(),
           }}
