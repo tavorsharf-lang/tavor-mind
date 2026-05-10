@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CheckinIcon,
-  ProfileIcon,
   ToolsIcon,
-  RepositoryIcon,
   MirrorIcon,
   TherapyIcon,
   Phase8TriggerIcon,
@@ -110,6 +108,13 @@ export default function HomeScreen({ authError }) {
           {greeting}, <span className="ds3-home-greeting-name">תבור</span>
         </h1>
         {continuity && <p className="ds3-home-continuity">{continuity}</p>}
+        <button
+          type="button"
+          className="ds3-home-profile-link"
+          onClick={() => goTo('/toolbox')}
+        >
+          הפרופיל שלי ←
+        </button>
       </div>
 
       {/* Big breathing button — design's signature home moment */}
@@ -193,24 +198,10 @@ export default function HomeScreen({ authError }) {
 
       <div className="ds3-home-grid">
         <HomeTile
-          tone="purple"
-          icon={<ProfileIcon />}
-          title="הפרופיל שלי"
-          subtitle="הידע שצברת"
-          onClick={() => goTo('/toolbox')}
-        />
-        <HomeTile
-          tone="teal"
-          icon={<RepositoryIcon />}
-          title="מאגר ניתוחים"
-          subtitle="סשנים מובנים"
-          onClick={() => goTo('/repository')}
-        />
-        <HomeTile
           tone="indigo"
           icon={<MirrorIcon />}
           title="המראה"
-          subtitle="סקירת השבוע"
+          subtitle="סקירה ומאגר ניתוחים"
           onClick={() => goTo('/review')}
         />
       </div>

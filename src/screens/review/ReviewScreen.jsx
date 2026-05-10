@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import ScopeSelector from './components/ScopeSelector.jsx';
 import ExportPrompterModal from '../../components/therapy/ExportPrompterModal.jsx';
@@ -17,6 +18,7 @@ import Timeline from './components/Timeline.jsx';
 import { aggregateReview } from '../../utils/reviewAggregator.js';
 
 export default function ReviewScreen() {
+  const navigate = useNavigate();
   const [scope, setScope] = useState('week');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,6 +44,13 @@ export default function ReviewScreen() {
         backTo="/"
       />
       <div className="review-scope-bar">
+        <button
+          type="button"
+          className="link-btn review-repo-btn"
+          onClick={() => navigate('/repository')}
+        >
+          מאגר ניתוחים ←
+        </button>
         <ScopeSelector value={scope} onChange={setScope} />
         <button
           type="button"

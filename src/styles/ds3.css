@@ -1004,6 +1004,27 @@
   animation: ds3FadeIn 480ms var(--ease-out);
 }
 
+.ds3-home-profile-link {
+  display: inline-block;
+  margin-top: 10px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 4px 0;
+  letter-spacing: 0.01em;
+  transition: color 150ms ease;
+}
+
+.ds3-home-profile-link:hover { color: var(--ink-soft); }
+.ds3-home-profile-link:focus-visible {
+  outline: 2px solid var(--lichen);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 .ds3-home-hero {
   position: relative;
   z-index: 1;
