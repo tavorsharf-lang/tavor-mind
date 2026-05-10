@@ -15,6 +15,10 @@ import { db, auth } from '../firebase.js';
 export const LIVE_HR_ROOT = 'tavormindLiveHr';
 export const FIREBASE_DB_URL = 'https://yaniv-game-aeb26-default-rtdb.firebaseio.com';
 export const SHORTCUT_NAME = 'TavorMind HR';
+// A second tiny Shortcut whose only job is to start a workout on the watch.
+// Triggered at the start of an emergency session so HealthKit gets dense HR
+// samples (workouts sample at ~1Hz vs passive ~5-10min).
+export const SHORTCUT_NAME_START = 'TavorMind HR Start';
 export const HR_SETUP_KEY = 'tavor_mind_hr_setup_done';
 
 function getUid() {
@@ -66,6 +70,11 @@ export function buildShortcutWriteBase(sessionId) {
 // iOS URL scheme that runs the named Shortcut with the sessionId as text input.
 export function buildRunShortcutUrl(sessionId) {
   return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}`;
+}
+
+// Trigger the workout-start Shortcut (no input needed).
+export function buildStartShortcutUrl() {
+  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME_START)}`;
 }
 
 // Trigger a custom-scheme URL without navigating Safari away from the page.

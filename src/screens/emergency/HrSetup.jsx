@@ -12,6 +12,7 @@ import {
   FIREBASE_DB_URL,
   LIVE_HR_ROOT,
   SHORTCUT_NAME,
+  SHORTCUT_NAME_START,
 } from '../../utils/liveHr.js';
 
 const TEST_TIMEOUT_MS = 90000;
@@ -213,9 +214,30 @@ export default function HrSetup() {
           )}
         </Step>
 
-        <Step num={6} title="זרימת השימוש בפועל">
+        <Step num={6} title='Shortcut נוסף — "TavorMind HR Start" (אופציונלי)'>
+          <p className="hr-setup-step-body">
+            כדי לחסוך לך התעסקות עם השעון בכל סשן, אפשר ליצור Shortcut קטן שמתחיל workout בלחיצה אחת מ-tavor-mind.
+          </p>
+          <p className="hr-setup-step-body" style={{ marginTop: 4 }}>
+            <b>שם:</b>
+          </p>
+          <CopyRow
+            label="copy-start-name"
+            value={SHORTCUT_NAME_START}
+            copied={copied === 'copy-start-name'}
+            onCopy={() => copyText('copy-start-name', SHORTCUT_NAME_START)}
+          />
+          <p className="hr-setup-step-body" style={{ marginTop: 8 }}>
+            <b>פעולה יחידה:</b> "התחלת אימון" (Start Workout) — Type: <b>Other</b>, Goal: <b>Open</b>.
+          </p>
+          <p className="hr-setup-step-body" style={{ marginTop: 4, fontSize: 13, color: 'var(--ink-muted)' }}>
+            ברגע שתיצור אותו, ב-Phase 1 של "עכשיו קשה לי" יופיע לינק "התחל מעקב דופק בשעון" שמפעיל אותו.
+          </p>
+        </Step>
+
+        <Step num={7} title="זרימת השימוש בפועל">
           <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-            <li>לפני סשן חירום: <b>התחל workout בשעון</b> (אפליקציית Workout → Other → Start). זה יגרום לשעון לדגום HR בתדירות גבוהה.</li>
+            <li>לפני/בתחילת סשן: <b>התחל workout בשעון</b>. או דרך אפליקציית Workout בשעון, או מ-tavor-mind ב-Phase 1 (אם הגדרת את ה-Shortcut השני).</li>
             <li>פתח tavor-mind, רוץ דרך כל הסשן רגיל.</li>
             <li>בסוף הסשן (לפני "סיימתי"): <b>עצור את ה-workout בשעון</b>.</li>
             <li>במסך הסיכום של tavor-mind, לחץ "טען נתוני דופק". ה-Shortcut יקרא הכל ויציג גרף.</li>
