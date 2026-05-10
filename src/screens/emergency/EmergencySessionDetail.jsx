@@ -5,6 +5,7 @@ import { Loading } from '../../components/ui/Loading.jsx';
 import { getEmergencySession } from '../../utils/emergencyLog.js';
 import { getModeById } from '../../data/modes.js';
 import { buildEmergencyPrompt, getClaudeProjectUrl } from '../../utils/claudeHandoff.js';
+import HrHistoryView from './components/HrHistoryView.jsx';
 
 const ACTIVATION_LABELS = {
   hyper: 'הופעלתי',
@@ -105,6 +106,9 @@ export default function EmergencySessionDetail() {
                 <Field label="הערה אישית" value={session.note} />
               )}
             </div>
+            {session.hrTrack?.sessionId && (
+              <HrHistoryView sessionId={session.hrTrack.sessionId} />
+            )}
             <button
               type="button"
               className="emergency-detail-reprocess"
