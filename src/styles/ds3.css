@@ -575,8 +575,17 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 14px;
+  font-size: 19px;
+  font-weight: 700;
   color: var(--ink-muted);
+}
+
+.ds3-slider-label-calm {
+  color: var(--green);
+}
+
+.ds3-slider-label-overwhelmed {
+  color: var(--heart);
 }
 
 .ds3-slider-value {

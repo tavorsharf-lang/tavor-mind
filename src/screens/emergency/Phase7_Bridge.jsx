@@ -111,8 +111,8 @@ export default function Phase7Bridge({
           </div>
 
           <div className="ds3-slider-labels">
-            <span>רגוע יחסית</span>
-            <span>עדיין מוצף</span>
+            <span className="ds3-slider-label-calm">רגוע יחסית</span>
+            <span className="ds3-slider-label-overwhelmed">עדיין מוצף</span>
           </div>
 
           {scoreTouched && (
