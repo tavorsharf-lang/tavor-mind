@@ -152,19 +152,9 @@ export default function Phase9Mode({
             />
           </div>
         </main>
-        <footer className="ds3-screen-footer ds3-stack-3">
+        <footer className="ds3-screen-footer">
           <button type="button" className="ds3-btn ds3-btn-primary" onClick={() => setStage('list')}>
-            המשך לרשימה
-          </button>
-          <button
-            type="button"
-            className="ds3-btn-quiet"
-            onClick={() => {
-              if (setCustomModeDescription) setCustomModeDescription('');
-              setStage('list');
-            }}
-          >
-            דלג
+            הלאה
           </button>
         </footer>
       </div>
@@ -246,17 +236,13 @@ export default function Phase9Mode({
         </div>
       </main>
 
-      <footer className="ds3-screen-footer ds3-stack-2">
+      <footer className="ds3-screen-footer">
         <button
           type="button"
-          className={`ds3-btn ${enabled ? 'ds3-btn-primary' : 'ds3-btn-cream'}`}
-          disabled={!enabled}
-          onClick={onNext}
+          className="ds3-btn ds3-btn-primary"
+          onClick={enabled ? onNext : onSkip}
         >
-          המשך{enabled ? ` · ${selected.size}` : ''}
-        </button>
-        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
-          דלג לשלב הבא
+          הלאה{enabled ? ` · ${selected.size}` : ''}
         </button>
       </footer>
     </div>

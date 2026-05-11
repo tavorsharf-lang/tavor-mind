@@ -249,14 +249,7 @@ export default function PhaseContainment({
     return (
       <div className="ds3-screen">
         <div className="ds3-topbar" style={{ justifyContent: 'flex-end' }}>
-          <button
-            type="button"
-            className="ds3-btn-quiet"
-            style={{ height: 'auto', width: 'auto', padding: '6px 8px', fontSize: 14 }}
-            onClick={() => setStage('return')}
-          >
-            דלג
-          </button>
+          <span className="ds3-topbar-spacer" />
         </div>
 
         {/* Soft floating container icon */}
@@ -289,17 +282,16 @@ export default function PhaseContainment({
           </p>
         </main>
 
-        <footer className="ds3-screen-footer ds3-text-center">
-          <div style={{ width: 80, height: 2, background: 'var(--line-soft)', borderRadius: 99, margin: '0 auto 10px', overflow: 'hidden' }}>
+        <footer className="ds3-screen-footer">
+          <div style={{ width: 80, height: 2, background: 'var(--line-soft)', borderRadius: 99, margin: '0 auto 12px', overflow: 'hidden' }}>
             <div style={{ height: '100%', background: 'var(--terra)', animation: 'cnTimer 30s linear forwards' }} />
           </div>
           <button
             type="button"
-            className="ds3-btn-quiet"
-            style={{ height: 'auto', fontSize: 13, opacity: 0.85 }}
+            className="ds3-btn ds3-btn-primary"
             onClick={() => setStage('return')}
           >
-            סיימתי לפני
+            הלאה
           </button>
         </footer>
       </div>

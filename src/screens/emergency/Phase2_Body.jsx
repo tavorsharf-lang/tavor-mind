@@ -105,10 +105,10 @@ function NoteField({ note, setNote }) {
   );
 }
 
-function SkipLink({ onSkip }) {
+function NextButton({ onNext }) {
   return (
-    <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
-      דלג לשלב הבא
+    <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
+      הלאה
     </button>
   );
 }
@@ -160,7 +160,7 @@ function HyperBranch({ onNext, onSkip, onExit }) {
         )}
       </main>
       <footer className="ds3-screen-footer">
-        <SkipLink onSkip={onSkip} />
+        <NextButton onNext={onSkip} />
       </footer>
     </div>
   );
@@ -195,7 +195,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
             <p className="ds3-body" style={{ margin: 0, lineHeight: 1.55 }}>{HYPO_STEPS[stepIdx]}</p>
           </div>
         </main>
-        <footer className="ds3-screen-footer ds3-stack-3">
+        <footer className="ds3-screen-footer">
           <button
             type="button"
             className="ds3-btn ds3-btn-primary"
@@ -204,9 +204,8 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
               else setStepIdx(stepIdx + 1);
             }}
           >
-            הבא
+            הלאה
           </button>
-          <SkipLink onSkip={onSkip} />
         </footer>
       </div>
     );
@@ -516,7 +515,7 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
         )}
       </main>
       <footer className="ds3-screen-footer">
-        <SkipLink onSkip={onSkip} />
+        <NextButton onNext={onSkip} />
       </footer>
     </div>
   );

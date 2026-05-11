@@ -123,8 +123,8 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
       </main>
 
       <footer className="ds3-screen-footer">
-        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>
-          דלג לשלב הבא
+        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onSkip}>
+          הלאה
         </button>
       </footer>
     </div>

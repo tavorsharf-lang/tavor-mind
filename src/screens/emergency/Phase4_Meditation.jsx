@@ -99,9 +99,8 @@ export default function Phase4Meditation({ activation, onNext, onSkip, onExit })
           <LengthCard length="long"  meditation={pair.long}  onPlay={() => setActive('long')} />
         </div>
       </main>
-      <footer className="ds3-screen-footer ds3-stack-3">
+      <footer className="ds3-screen-footer">
         <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
-        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>דלג לשלב הבא</button>
       </footer>
 
       <MeditationPlayer

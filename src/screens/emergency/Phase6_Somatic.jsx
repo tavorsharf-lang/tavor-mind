@@ -56,7 +56,7 @@ export default function Phase6Somatic({ activation, onNext, onSkip, onExit }) {
       <main className="ds3-screen-content">
         <div className="ds3-stack-2" style={{ marginTop: 8 }}>
           <h1 className="ds3-h1">רוצה עוד רגע אחד בגוף?</h1>
-          <p className="ds3-body ds3-text-muted">בחר תרגיל קצר — או דלג</p>
+          <p className="ds3-body ds3-text-muted">בחר תרגיל קצר — או הלאה</p>
         </div>
 
         <div className="ds3-stack-3" style={{ marginTop: 22 }}>
@@ -114,9 +114,8 @@ export default function Phase6Somatic({ activation, onNext, onSkip, onExit }) {
           </div>
         )}
       </main>
-      <footer className="ds3-screen-footer ds3-stack-3">
+      <footer className="ds3-screen-footer">
         <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
-        <button type="button" className="ds3-btn-quiet" onClick={onSkip}>דלג לשלב הבא</button>
       </footer>
     </div>
   );
