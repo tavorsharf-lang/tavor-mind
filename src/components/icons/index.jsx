@@ -68,13 +68,19 @@ export function EmergencyIcon({ size }) {
 export function CheckinIcon({ size }) {
   return (
     <Svg size={size}>
-      <path {...DUOTONE} d="M12 4a8 8 0 0 0 0 16V4z" />
-      <circle {...STROKE} cx="12" cy="12" r="8" />
-      <path {...STROKE} d="M12 4v16" />
-      {/* sun rays on left half */}
-      <path {...STROKE} d="M5 8l-1.2-.7" />
-      <path {...STROKE} d="M5 16l-1.2.7" />
-      <path {...STROKE} d="M3.5 12H2" />
+      {/* RTL checklist — checkbox squares on the right, line to the left */}
+      <rect {...DUOTONE} x="15" y="3.5" width="5.5" height="5.5" rx="1.2" />
+      <rect {...STROKE} x="15" y="3.5" width="5.5" height="5.5" rx="1.2" />
+      <path {...STROKE} d="M16.1 6.4l1.3 1.3 2.1-2.4" />
+      <path {...STROKE} d="M12 6.25H3.5" />
+
+      <rect {...DUOTONE} x="15" y="11.25" width="5.5" height="5.5" rx="1.2" />
+      <rect {...STROKE} x="15" y="11.25" width="5.5" height="5.5" rx="1.2" />
+      <path {...STROKE} d="M16.1 14.15l1.3 1.3 2.1-2.4" />
+      <path {...STROKE} d="M12 14H3.5" />
+
+      <rect {...STROKE} x="15" y="19" width="5.5" height="5.5" rx="1.2" />
+      <path {...STROKE} d="M12 21.75H3.5" />
     </Svg>
   );
 }

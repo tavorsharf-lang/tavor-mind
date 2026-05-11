@@ -941,6 +941,23 @@
   50%      { transform: scale(1.12); opacity: 0.65; }
 }
 
+/* Heartbeat — "lub-dub" double beat then rest. ~43bpm visual rhythm. */
+@keyframes ds3HeartBeat {
+  0%, 100% { transform: scale(1); }
+  10%      { transform: scale(1.06); }
+  20%      { transform: scale(1); }
+  30%      { transform: scale(1.04); }
+  40%      { transform: scale(1); }
+}
+
+@keyframes ds3HeartBeatPulse {
+  0%, 100% { transform: scale(1);    opacity: 0.30; }
+  10%      { transform: scale(1.18); opacity: 0.55; }
+  20%      { transform: scale(1.05); opacity: 0.40; }
+  30%      { transform: scale(1.14); opacity: 0.50; }
+  40%      { transform: scale(1);    opacity: 0.30; }
+}
+
 @keyframes ds3BreathDot {
   0%, 100% { transform: scale(0.8); opacity: 0.6; }
   50%      { transform: scale(1.4); opacity: 1; }
@@ -970,27 +987,27 @@
 .ds3-home {
   flex: 1;
   min-height: 0;
-  padding: 12px 20px max(16px, env(safe-area-inset-bottom));
+  padding: max(12px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 0;
   width: 100%;
   max-width: 720px;
   margin-inline: auto;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
+  justify-content: space-between;
 }
 
 .ds3-home-greeting {
   margin-top: 4px;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
 }
 
 .ds3-home-greeting-text {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--ink);
@@ -1039,15 +1056,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0;
-  margin: 8px 0 12px;
-  flex-shrink: 0;
+  margin: 0;
+  flex: 1;
+  min-height: 0;
 }
 
 .ds3-home-hero-btn {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: min(78vw, 320px);
+  aspect-ratio: 1 / 1;
   border: none;
   background: transparent;
   cursor: pointer;
@@ -1055,6 +1074,7 @@
   place-items: center;
   padding: 0;
   font-family: inherit;
+  animation: ds3HeartBeat 1.4s ease-in-out infinite;
 }
 
 .ds3-home-hero-pulse {
@@ -1063,21 +1083,21 @@
   border-radius: 50%;
   background: var(--terra-soft);
   opacity: 0.35;
-  animation: ds3BreathPulse 6s ease-in-out infinite;
+  animation: ds3HeartBeatPulse 1.4s ease-in-out infinite;
   pointer-events: none;
 }
 
 .ds3-home-hero-pulse-2 {
-  inset: 20px;
+  inset: 12%;
   opacity: 0.55;
-  animation-direction: reverse;
+  animation-delay: 0.05s;
 }
 
 .ds3-home-hero-core {
   position: relative;
   z-index: 2;
-  width: 120px;
-  height: 120px;
+  width: 62%;
+  height: 62%;
   border-radius: 50%;
   background: var(--terra);
   color: #fff;
@@ -1085,12 +1105,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.4;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.35;
   box-shadow:
-    0 8px 24px rgba(255, 106, 79, 0.40),
-    0 2px 6px rgba(255, 106, 79, 0.28);
+    0 12px 40px rgba(255, 106, 79, 0.45),
+    0 4px 10px rgba(255, 106, 79, 0.32);
   transition: transform 200ms var(--ease-out);
 }
 
@@ -1112,6 +1132,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ds3-home-hero-btn { animation: none; }
   .ds3-home-hero-pulse { animation: none; }
 }
 
@@ -1145,15 +1166,15 @@
   z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
   flex-shrink: 0;
 }
 
 .ds3-home-tile {
   background: var(--surface);
   border: none;
-  border-radius: 18px;
-  padding: 14px 14px;
+  border-radius: 20px;
+  padding: 18px 16px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
               0 0 0 0.5px rgba(60, 60, 67, 0.10);
   font-family: inherit;
@@ -1162,10 +1183,10 @@
   cursor: pointer;
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   position: relative;
-  min-height: 64px;
+  min-height: 78px;
   transition: transform var(--duration-fast) var(--ease-out),
               box-shadow var(--duration-fast) var(--ease-out);
 }
@@ -1189,7 +1210,7 @@
 }
 
 .ds3-home-tile-title {
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--ink);
   display: inline-flex;
