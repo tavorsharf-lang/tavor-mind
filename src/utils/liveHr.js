@@ -67,13 +67,21 @@ export function buildShortcutWriteBase(sessionId) {
   return `${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/${sessionId}`;
 }
 
-// iOS URL scheme that runs the named Shortcut with the sessionId as text input.
-// We deliberately don't use x-callback-url because returning to Safari via a
-// fresh URL load can reset React state and lose the sessionId we wrote to.
-// The user manually switches back to Safari; HrSummaryCard re-fetches on
-// visibilitychange to catch any samples that landed while in background.
-export function buildRunShortcutUrl(sessionId) {
-  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(sessionId)}`;
+// iOS URL scheme that runs the named Shortcut. Input is `sessionId` alone, or
+// `sessionId|<startIso>` when the session start time is known — the Shortcut
+// can then filter HealthKit to exactly the session window (no fixed Limit,
+// upload time scales with session length, first sample = first session sample).
+//
+// Why not x-callback-url: returning via a fresh URL load can reset React state
+// and lose the cached sessionId. User manually switches back; HrSummaryCard
+// re-fetches on visibilitychange.
+export function buildRunShortcutUrl(sessionId, startMs = null) {
+  let text = sessionId || '';
+  if (startMs != null && Number.isFinite(startMs)) {
+    const startIso = new Date(startMs).toISOString();
+    text = `${text}|${startIso}`;
+  }
+  return `shortcuts://run-shortcut?name=${encodeURIComponent(SHORTCUT_NAME)}&input=text&text=${encodeURIComponent(text)}`;
 }
 
 export function buildStartShortcutUrl() {

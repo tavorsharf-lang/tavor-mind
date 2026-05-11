@@ -115,7 +115,7 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
             ודא שה-workout בשעון הסתיים. ה-Shortcut יקרא דגימות ויעלה אותן לכאן.
           </p>
           <a
-            href={buildRunShortcutUrl(sessionId)}
+            href={buildRunShortcutUrl(sessionId, startedAtMs)}
             className="ds3-btn ds3-btn-blue hr-summary-cta"
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
             onClick={() => setState('loading')}
@@ -152,7 +152,7 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
             לא הגיעו דגימות. ודא ש-Shortcut "TavorMind HR" רץ (ושיש workout פעיל בשעון בזמן הסשן).
           </p>
           <a
-            href={buildRunShortcutUrl(sessionId)}
+            href={buildRunShortcutUrl(sessionId, startedAtMs)}
             className="ds3-btn ds3-btn-blue hr-summary-cta"
             style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
             onClick={() => setState('loading')}
