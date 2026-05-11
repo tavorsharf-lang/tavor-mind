@@ -244,21 +244,27 @@ This project deploys to GitHub Pages from the `main` branch via GitHub Actions.
 Local-only changes are invisible to the user, who tests on
 `https://tavorsharf-lang.github.io/tavor-mind/`.
 
-After every successful code change (build clean, no errors), Claude Code
-auto-commits and pushes:
+**זה חוק מוחלט — אל תחכה שהמשתמש יבקש.** המשתמש לא רוצה לעשות deploy
+ידנית. בכל פעם שאתה מסיים שינוי קוד שמתקמפל בלי שגיאות, אתה **חייב**
+מיד לעשות commit + push, גם אם המשתמש לא ביקש זאת. זה לא צעד אופציונלי
+בסוף שיחה — זה חלק אטומי של כל שינוי.
 
-1. `git add` only the files that were modified in this task
-2. `git commit -m "<concise message describing the change>"` using imperative
-   mood and a conventional-commits prefix when appropriate (`fix:`, `feat:`,
-   `refactor:`, `chore:`, `docs:`)
-3. `git push`
+הזרימה (אוטומטית, ללא שאלת אישור):
 
-Skip auto-push only if:
-- Build failed or has errors
-- The change is incomplete / WIP / mid-iteration
-- The user explicitly asked not to commit
+1. `npm run build` — אם נכשל, תקן ואל תפרוס
+2. `git add` רק את הקבצים שעודכנו במשימה הזו
+3. `git commit -m "<conventional-commits prefix>: <תיאור קצר>"` (`fix:`,
+   `feat:`, `refactor:`, `chore:`, `docs:`)
+4. `git push`
+5. דווח שורה אחת: `pushed: <short SHA> · <commit message>`
 
-When skipping, mention it explicitly: "לא commit — [סיבה]".
+דלג על auto-push **רק אם**:
+- ה-build נכשל / יש שגיאות
+- השינוי לא שלם / WIP / באמצע איטרציה (תכננת שלב נוסף באותה שיחה)
+- המשתמש אמר במפורש "אל תעשה commit" / "אל תפרוס"
 
-After pushing, briefly report: `pushed: <short SHA> · <commit message>` so
-the user knows the deploy is on its way (1-2 min via GitHub Actions to be live).
+אם דילגת — אמור זאת מפורשות: "לא commit — [סיבה]". אחרת, ההנחה היא
+שאתה פורס.
+
+GitHub Actions לוקח 1-2 דקות מה-push עד שהאתר חי על
+`https://tavorsharf-lang.github.io/tavor-mind/`.
