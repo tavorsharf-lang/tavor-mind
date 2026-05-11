@@ -125,11 +125,9 @@ export default function Phase7Bridge({
         </main>
 
         <footer className="ds3-screen-footer">
-          {scoreTouched && (
-            <button type="button" className="ds3-btn ds3-btn-blue" onClick={goToOptions}>
-              המשך
-            </button>
-          )}
+          <button type="button" className="ds3-btn ds3-btn-blue" onClick={goToOptions}>
+            המשך
+          </button>
         </footer>
       </div>
     );

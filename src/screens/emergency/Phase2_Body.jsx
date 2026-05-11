@@ -447,7 +447,6 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
         <button
           type="button"
           className="ds3-btn ds3-btn-primary"
-          disabled={!felt62}
           onClick={onNext}
         >
           הלאה

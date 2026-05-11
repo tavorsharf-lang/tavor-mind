@@ -158,8 +158,7 @@ export default function PhaseContainment({
         <footer className="ds3-screen-footer ds3-stack-2">
           <button
             type="button"
-            className={`ds3-btn ${enabled ? 'ds3-btn-primary' : 'ds3-btn-cream'}`}
-            disabled={!enabled}
+            className="ds3-btn ds3-btn-primary"
             onClick={() => setStage('structure')}
           >
             הבא
@@ -230,8 +229,7 @@ export default function PhaseContainment({
         <footer className="ds3-screen-footer">
           <button
             type="button"
-            className={`ds3-btn ${enabled ? 'ds3-btn-primary' : 'ds3-btn-cream'}`}
-            disabled={!enabled}
+            className="ds3-btn ds3-btn-primary"
             onClick={() => setStage('placement')}
           >
             הבא
@@ -341,7 +339,7 @@ export default function PhaseContainment({
           <button
             type="button"
             className="ds3-btn ds3-btn-primary"
-            disabled={!returnCommitment || saving}
+            disabled={saving}
             onClick={async () => {
               if (saving) return;
               setSaving(true);
