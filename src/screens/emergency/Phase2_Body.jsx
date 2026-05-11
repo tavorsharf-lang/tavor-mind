@@ -78,7 +78,7 @@ function SkipLink({ onSkip }) {
 }
 
 function HyperBranch({ onNext, onSkip, onExit }) {
-  const [pattern, setPattern] = useState(PATTERN_BY_ACTIVATION.hyper);
+  const pattern = PATTERN_BY_ACTIVATION.hyper;
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
   const cycles = CYCLES_BY_PATTERN[pattern];
@@ -114,7 +114,7 @@ function HyperBranch({ onNext, onSkip, onExit }) {
           defaultPattern={pattern}
           defaultPace={DEFAULT_PACE_BY_BRANCH.hyper}
           cycles={cycles}
-          onPatternChange={setPattern}
+          lockPattern={true}
           onComplete={() => setDone(true)}
         />
       </main>
@@ -425,7 +425,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
 }
 
 function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
-  const [pattern, setPattern] = useState(PATTERN_BY_ACTIVATION.mid);
+  const pattern = PATTERN_BY_ACTIVATION.mid;
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
   const cycles = CYCLES_BY_PATTERN[pattern];
@@ -465,7 +465,7 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
           defaultPattern={pattern}
           defaultPace={DEFAULT_PACE_BY_BRANCH.mid}
           cycles={cycles}
-          onPatternChange={setPattern}
+          lockPattern={true}
           onComplete={() => setDone(true)}
         />
       </main>
