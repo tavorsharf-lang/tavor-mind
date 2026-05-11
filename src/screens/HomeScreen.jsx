@@ -48,7 +48,7 @@ export default function HomeScreen({ authError }) {
   const [therapyState, setTherapyState] = useState({ show: false, mode: null });
   const [waitingCount, setWaitingCount] = useState(0);
   const [hrReady, setHrReady] = useState(false);
-  const [wearingWatch, setWearingWatchState] = useState(true);
+  const [wearingWatch, setWearingWatchState] = useState(false);
 
   useEffect(() => {
     setHrReady(isHrSetupDone());
