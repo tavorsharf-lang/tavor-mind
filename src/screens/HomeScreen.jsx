@@ -132,10 +132,6 @@ export default function HomeScreen({ authError }) {
             <span>קשה&nbsp;לי</span>
           </span>
         </button>
-        <div className="ds3-home-hero-caption">
-          <p className="ds3-body ds3-text-muted ds3-text-center">כשמתאים, גע במעגל.</p>
-          <p className="ds3-caption ds3-text-soft ds3-text-center">אין כאן לחץ. אפשר גם פשוט לנשום.</p>
-        </div>
       </div>
 
       {waitingCount > 0 && (
@@ -150,18 +146,11 @@ export default function HomeScreen({ authError }) {
         </div>
       )}
 
-      <div className="ds3-divider-section">
-        <span className="ds3-divider-section-line" />
-        <span className="ds3-divider-section-label">היום שלי</span>
-        <span className="ds3-divider-section-line" />
-      </div>
-
       <div className="ds3-home-grid">
         <HomeTile
           tone="orange"
           icon={<CheckinIcon />}
           title="צ'ק-אין יומי"
-          subtitle="בוקר וערב"
           badge={firstRun ? 'התחל כאן' : null}
           onClick={() => goTo('/checkin')}
         />
@@ -170,7 +159,6 @@ export default function HomeScreen({ authError }) {
             tone="indigo"
             icon={<TherapyIcon />}
             title={therapyState.mode === 'prep' ? 'הכנה לטיפול' : 'דיבריף'}
-            subtitle={therapyState.mode === 'prep' ? 'מה אני רוצה להביא?' : 'מה התרחש שם?'}
             onClick={() => goTo('/therapy/frame')}
           />
         )}
@@ -178,30 +166,18 @@ export default function HomeScreen({ authError }) {
           tone="coral"
           icon={<ToolsIcon />}
           title="כלים"
-          subtitle="זיהוי, עצירה, בחינה, מיינדפולנס"
           onClick={() => goTo('/tools')}
         />
         <HomeTile
           tone="green"
           icon={<Phase8TriggerIcon />}
           title="ניתוח מקרה"
-          subtitle="ישר לניתוח, בלי שלב הרגעה"
           onClick={() => goTo('/emergency', { state: { startAtAnalysis: true } })}
         />
-      </div>
-
-      <div className="ds3-divider-section">
-        <span className="ds3-divider-section-line" />
-        <span className="ds3-divider-section-label">לאורך זמן</span>
-        <span className="ds3-divider-section-line" />
-      </div>
-
-      <div className="ds3-home-grid">
         <HomeTile
           tone="indigo"
           icon={<MirrorIcon />}
           title="המראה"
-          subtitle="סקירה ומאגר ניתוחים"
           onClick={() => goTo('/review')}
         />
       </div>
@@ -218,7 +194,7 @@ export default function HomeScreen({ authError }) {
   );
 }
 
-function HomeTile({ tone = 'blue', icon, title, subtitle, badge, onClick }) {
+function HomeTile({ tone = 'blue', icon, title, badge, onClick }) {
   return (
     <button type="button" className="ds3-home-tile" onClick={onClick}>
       <span className={`ds3-icon-tile ds3-icon-tile-${tone}`} aria-hidden="true">
@@ -229,11 +205,7 @@ function HomeTile({ tone = 'blue', icon, title, subtitle, badge, onClick }) {
           <span>{title}</span>
           {badge && <span className="ds3-home-tile-badge">{badge}</span>}
         </div>
-        <span className="ds3-home-tile-sub">{subtitle}</span>
       </div>
-      <svg className="ds3-home-tile-chevron" width="10" height="16" viewBox="0 0 10 16" aria-hidden="true">
-        <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
     </button>
   );
 }
