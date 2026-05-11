@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import PhaseHeader from './components/PhaseHeader.jsx';
 import SoftButton from './components/SoftButton.jsx';
 import { Phase8TriggerIcon } from '../../components/icons/index.jsx';
@@ -69,6 +69,15 @@ export default function Phase8Trigger({
     const next = [...(data.thoughts || ['', '', ''])];
     next[i] = val;
     update({ thoughts: next });
+  };
+
+  const thoughtRefs = useRef([]);
+  const handleThoughtKeyDown = (i, total) => (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const next = thoughtRefs.current[i + 1];
+    if (next) next.focus();
+    else e.currentTarget.blur();
   };
 
   const thoughts = data.thoughts || ['', '', ''];
@@ -268,7 +277,10 @@ export default function Phase8Trigger({
                         type="text"
                         className="thought-input"
                         value={t}
+                        ref={(el) => { thoughtRefs.current[i] = el; }}
                         onChange={(e) => updateThought(i, e.target.value)}
+                        onKeyDown={handleThoughtKeyDown(i, thoughts.length)}
+                        enterKeyHint={i < thoughts.length - 1 ? 'next' : 'done'}
                         placeholder={i === 0 ? '"אף פעם לא..." / "תמיד..." / "אני..."' : ''}
                       />
                     </li>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckinHeader from '../checkin/components/CheckinHeader.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
@@ -49,6 +49,15 @@ export default function TriggerTracker() {
     const next = [...thoughts];
     next[i] = val;
     setThoughts(next);
+  };
+
+  const thoughtRefs = useRef([]);
+  const handleThoughtKeyDown = (i) => (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const next = thoughtRefs.current[i + 1];
+    if (next) next.focus();
+    else e.currentTarget.blur();
   };
 
   const showReminders = () => {
@@ -137,7 +146,10 @@ export default function TriggerTracker() {
                     type="text"
                     className="thought-input"
                     value={t}
+                    ref={(el) => { thoughtRefs.current[i] = el; }}
                     onChange={(e) => updateThought(i, e.target.value)}
+                    onKeyDown={handleThoughtKeyDown(i)}
+                    enterKeyHint={i < thoughts.length - 1 ? 'next' : 'done'}
                     placeholder={i === 0 ? '"אף פעם לא..." / "תמיד..." / "אני..."' : ''}
                   />
                 </li>
