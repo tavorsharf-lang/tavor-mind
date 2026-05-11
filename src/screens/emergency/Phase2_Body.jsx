@@ -8,6 +8,42 @@ import {
   getDefaultCycles,
 } from '../../utils/breathing62Storage.js';
 
+// After Phase 1 picks an activation, iOS opens Shortcuts to start the Watch
+// workout — the user is away from Safari for a few seconds. Without gating,
+// the breathing exercise auto-advances while they're gone and they miss the
+// start of the first breath. Latch on first 'visible' event so the exercise
+// only mounts (and timers only begin) after they return. Stays true forever
+// after that — we don't want to pause/resume mid-session on incidental blurs.
+function useVisibleSinceMount() {
+  const [visible, setVisible] = useState(() =>
+    typeof document === 'undefined' || document.visibilityState === 'visible'
+  );
+  useEffect(() => {
+    if (visible) return;
+    const onVis = () => {
+      if (document.visibilityState === 'visible') setVisible(true);
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [visible]);
+  return visible;
+}
+
+function WaitingForReturn() {
+  return (
+    <div className="ds3-stack-4 ds3-text-center" style={{ marginTop: 24 }}>
+      <div style={{
+        width: 56, height: 56, borderRadius: 28,
+        background: 'radial-gradient(circle at 35% 30%, #FFFFFF, var(--lichen))',
+        boxShadow: '0 8px 28px rgba(10, 132, 255, 0.40)',
+        margin: '0 auto',
+        animation: 'ds3BreathPulse 2.4s ease-in-out infinite',
+      }} />
+      <p className="ds3-body ds3-text-muted">כשתחזור לכאן — נתחיל.</p>
+    </div>
+  );
+}
+
 const HYPO_STEPS = [
   'קום ועמוד אם אתה יושב או שוכב.',
   'נער את הידיים והרגליים בעדינות, 10 שניות.',
@@ -82,6 +118,7 @@ function HyperBranch({ onNext, onSkip, onExit }) {
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
   const cycles = CYCLES_BY_PATTERN[pattern];
+  const ready = useVisibleSinceMount();
 
   if (done) {
     return (
@@ -109,14 +146,18 @@ function HyperBranch({ onNext, onSkip, onExit }) {
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
         <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
-        <BreathingExercise
-          key={`hyper-${round}`}
-          defaultPattern={pattern}
-          defaultPace={DEFAULT_PACE_BY_BRANCH.hyper}
-          cycles={cycles}
-          lockPattern={true}
-          onComplete={() => setDone(true)}
-        />
+        {ready ? (
+          <BreathingExercise
+            key={`hyper-${round}`}
+            defaultPattern={pattern}
+            defaultPace={DEFAULT_PACE_BY_BRANCH.hyper}
+            cycles={cycles}
+            lockPattern={true}
+            onComplete={() => setDone(true)}
+          />
+        ) : (
+          <WaitingForReturn />
+        )}
       </main>
       <footer className="ds3-screen-footer">
         <SkipLink onSkip={onSkip} />
@@ -429,6 +470,7 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
   const cycles = CYCLES_BY_PATTERN[pattern];
+  const ready = useVisibleSinceMount();
 
   if (done) {
     return (
@@ -460,14 +502,18 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
         <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
-        <BreathingExercise
-          key={`mid-${round}`}
-          defaultPattern={pattern}
-          defaultPace={DEFAULT_PACE_BY_BRANCH.mid}
-          cycles={cycles}
-          lockPattern={true}
-          onComplete={() => setDone(true)}
-        />
+        {ready ? (
+          <BreathingExercise
+            key={`mid-${round}`}
+            defaultPattern={pattern}
+            defaultPace={DEFAULT_PACE_BY_BRANCH.mid}
+            cycles={cycles}
+            lockPattern={true}
+            onComplete={() => setDone(true)}
+          />
+        ) : (
+          <WaitingForReturn />
+        )}
       </main>
       <footer className="ds3-screen-footer">
         <SkipLink onSkip={onSkip} />
