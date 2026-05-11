@@ -210,9 +210,9 @@ export default function Phase8Trigger({
                     aria-label="כמה אתה מופעל עכשיו, מ-1 עד 10"
                   />
                   <div className="activation-meter-labels">
-                    <span>1 = רגוע</span>
-                    <span>5 = יש משהו</span>
-                    <span>10 = שורף</span>
+                    <span className="activation-label-calm">1 = רגוע</span>
+                    <span className="activation-label-mid">5 = יש משהו</span>
+                    <span className="activation-label-burning">10 = שורף</span>
                   </div>
                 </div>
                 {initialActivation >= ACTIVATION_HIGH_THRESHOLD && (onGoToGrounding || (activation === 'mid' && onGoToContainment)) && (
