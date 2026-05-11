@@ -995,7 +995,8 @@
 
 .ds3-home {
   flex: 1;
-  min-height: 0;
+  height: 100dvh;
+  min-height: 100dvh;
   padding: max(12px, env(safe-area-inset-top)) 20px max(20px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
@@ -1005,6 +1006,7 @@
   margin-inline: auto;
   overflow: hidden;
   justify-content: space-between;
+  box-sizing: border-box;
 }
 
 .ds3-home-greeting {
