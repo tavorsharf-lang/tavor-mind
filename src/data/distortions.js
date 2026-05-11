@@ -1,12 +1,12 @@
 export const distortions = [
-  { id: 'catastrophizing', label: 'קטסטרופיזציה', cue: 'הקפיצה לתרחיש הגרוע ביותר' },
   { id: 'all_or_nothing', label: 'הכל-או-כלום', cue: 'בלי אזורי אפור — או הצלחה גמורה או כישלון מוחלט' },
+  { id: 'overgeneralization', label: 'הכללת יתר', cue: 'מאירוע אחד למסקנה גורפת ("תמיד", "אף פעם")' },
+  { id: 'mental_filter', label: 'שליליות', cue: 'התמקדות רק במה שלא עבד' },
   { id: 'mind_reading', label: 'קריאת מחשבות', cue: 'הנחה שאתה יודע מה האחר חושב' },
-  { id: 'overgeneralization', label: 'כללית מדי', cue: 'מאירוע אחד למסקנה גורפת ("תמיד", "אף פעם")' },
-  { id: 'personalization', label: 'אישיות (זה עליי)', cue: 'לקיחת אחריות על מה שלא שלך' },
-  { id: 'fortune_telling', label: 'צפייה בעתיד', cue: 'ידיעה כאילו של מה שיקרה בעתיד' },
-  { id: 'mental_filter', label: 'מסנן שלילי', cue: 'התמקדות רק במה שלא עבד' },
+  { id: 'catastrophizing', label: 'קטסטרופיזציה', cue: 'הקפיצה לתרחיש הגרוע ביותר' },
+  { id: 'fortune_telling', label: 'התמקדות בעתיד', cue: 'ידיעה כאילו של מה שיקרה בעתיד' },
   { id: 'should_must', label: 'חייב/אסור', cue: 'דרישות נוקשות מעצמך או מאחרים' },
+  { id: 'personalization', label: 'לוקח על עצמי', cue: 'לקיחת אחריות על מה שלא שלך' },
 ];
 
 export const distortionLabel = (id) => distortions.find((d) => d.id === id)?.label ?? id;
