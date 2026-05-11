@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
 import { Phase2BreathingIcon } from '../../components/icons/index.jsx';
-import { PhysioSighAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import {
   hasSeenOnboarding,
   markOnboardingSeen,
@@ -17,8 +15,8 @@ const HYPO_STEPS = [
 ];
 
 const AFTER_LINE = 'שים לב — הדופק והנשימה שונים עכשיו ממה שהיו לפני שתי דקות.';
-const PATTERN_BY_ACTIVATION = { hyper: '478', hypo: 'coherent', mid: 'box' };
-const CYCLES_BY_PATTERN = { '478': 4, box: 6, coherent: 6 };
+const PATTERN_BY_ACTIVATION = { hyper: 'physio_sigh', hypo: 'coherent', mid: 'box' };
+const CYCLES_BY_PATTERN = { '478': 4, box: 6, coherent: 6, physio_sigh: 4 };
 const DEFAULT_PACE_BY_BRANCH = { hyper: 'normal', hypo: 'slow', mid: 'normal' };
 
 export default function Phase2Body({
@@ -79,29 +77,11 @@ function SkipLink({ onSkip }) {
   );
 }
 
-const HYPER_PRESTEP_DURATION_SEC = 18;
-const HYPER_CYCLES_FIRST_ROUND = 2;
-const HYPER_CYCLES_NEXT_ROUND = 3;
-
 function HyperBranch({ onNext, onSkip, onExit }) {
-  const [stage, setStage] = useState('somatic');
   const [pattern, setPattern] = useState(PATTERN_BY_ACTIVATION.hyper);
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
-  const cycles = round === 1 ? HYPER_CYCLES_FIRST_ROUND : HYPER_CYCLES_NEXT_ROUND;
-
-  const handleSighComplete = () => {
-    saveToolSession('somatic_sessions', {
-      exerciseId: 'physio_sigh',
-      exerciseTitle: 'אנחה פיזיולוגית',
-      variant: 'prestep',
-      completedFully: true,
-      afterScore: null,
-      durationSec: HYPER_PRESTEP_DURATION_SEC,
-      context: 'emergency_prestep',
-    }).catch(() => {});
-    setStage('breathe');
-  };
+  const cycles = CYCLES_BY_PATTERN[pattern];
 
   if (done) {
     return (
@@ -119,28 +99,6 @@ function HyperBranch({ onNext, onSkip, onExit }) {
           >
             המשך לדקה נוספת
           </button>
-        </footer>
-      </div>
-    );
-  }
-
-  if (stage === 'somatic') {
-    return (
-      <div className="ds3-screen">
-        <Topbar onExit={onExit} />
-        <main className="ds3-screen-content ds3-screen-content-center ds3-stack-5 ds3-text-center">
-          <div className="ds3-stack-2">
-            <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
-            <p className="ds3-body ds3-text-muted">
-              קודם אנחה פיזיולוגית — שתי שאיפות ונשיפה ארוכה
-            </p>
-          </div>
-          <div className="ds3-center" style={{ minHeight: 240 }}>
-            <PhysioSighAnim durationSec={HYPER_PRESTEP_DURATION_SEC} onComplete={handleSighComplete} />
-          </div>
-        </main>
-        <footer className="ds3-screen-footer">
-          <SkipLink onSkip={onSkip} />
         </footer>
       </div>
     );

@@ -75,6 +75,25 @@ const PATTERNS = {
       ],
     },
   },
+  physio_sigh: {
+    paces: {
+      slow: [
+        { label: 'שאף',  subtitle: 'שאיפה ראשונה — מלא חצי מהריאות',  from: 0.85, to: 1.30, sec: 2.0 },
+        { label: 'שאף',  subtitle: 'שאיפה שנייה — קצרה על גבי הראשונה', from: 1.30, to: 1.55, sec: 1.0 },
+        { label: 'נשוף', subtitle: 'נשיפה ארוכה דרך הפה',                from: 1.55, to: 0.85, sec: 5.0 },
+      ],
+      normal: [
+        { label: 'שאף',  subtitle: 'שאיפה ראשונה — מלא חצי מהריאות',  from: 0.85, to: 1.30, sec: 1.5 },
+        { label: 'שאף',  subtitle: 'שאיפה שנייה — קצרה על גבי הראשונה', from: 1.30, to: 1.55, sec: 0.7 },
+        { label: 'נשוף', subtitle: 'נשיפה ארוכה דרך הפה',                from: 1.55, to: 0.85, sec: 4.0 },
+      ],
+      fast: [
+        { label: 'שאף',  subtitle: 'שאיפה ראשונה — מלא חצי מהריאות',  from: 0.85, to: 1.30, sec: 1.0 },
+        { label: 'שאף',  subtitle: 'שאיפה שנייה — קצרה על גבי הראשונה', from: 1.30, to: 1.55, sec: 0.5 },
+        { label: 'נשוף', subtitle: 'נשיפה ארוכה דרך הפה',                from: 1.55, to: 0.85, sec: 3.0 },
+      ],
+    },
+  },
 };
 
 // Physiological easing per breath phase.
@@ -98,9 +117,10 @@ function prefersReducedMotion() {
 }
 
 const PATTERN_LABELS = [
-  { id: '478',      label: '4-7-8',   sublabel: 'הרגעה' },
-  { id: 'box',      label: 'קופסה',   sublabel: '4×4' },
-  { id: 'coherent', label: '5-5',     sublabel: 'איזון' },
+  { id: 'physio_sigh', label: 'אנחה',    sublabel: 'פיזיולוגית' },
+  { id: '478',         label: '4-7-8',   sublabel: 'הרגעה' },
+  { id: 'box',         label: 'קופסה',   sublabel: '4×4' },
+  { id: 'coherent',    label: '5-5',     sublabel: 'איזון' },
 ];
 
 const PACE_LABELS = [
