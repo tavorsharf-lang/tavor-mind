@@ -73,29 +73,35 @@ export function PhysioSighAnim({ durationSec, onComplete }) {
 }
 
 // ─── Butterfly Hug ───────────────────────────────────────────────────────────
+// Bilateral stimulation: two large pulse points alternate ~every 900ms.
+// `direction: ltr` on the stage so visual position is unambiguous regardless
+// of RTL ancestors — first child is always visually-left, second is visually-right.
 export function ButterflyAnim({ durationSec, onComplete }) {
   const reduced = useReducedMotion();
-  const [side, setSide] = useState('left');
+  const [side, setSide] = useState('right');
   useTotalTimer(durationSec, onComplete);
 
   useEffect(() => {
     if (reduced) return;
-    const id = setTimeout(() => setSide(side === 'left' ? 'right' : 'left'), 850);
+    const id = setTimeout(() => setSide((s) => (s === 'right' ? 'left' : 'right')), 900);
     return () => clearTimeout(id);
   }, [side, reduced]);
 
   return (
     <div className="somatic-stage">
-      <div className="somatic-bfly-row">
-        <span className={`somatic-bfly-dot ${side === 'right' ? 'is-active' : ''}`} aria-hidden="true" />
-        <span className="somatic-bfly-chest" aria-hidden="true">
-          <svg viewBox="0 0 80 80" width="80" height="80" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M40 18 C 26 8, 12 18, 16 34 C 20 48, 36 56, 40 64 C 44 56, 60 48, 64 34 C 68 18, 54 8, 40 18 Z" />
-          </svg>
-        </span>
-        <span className={`somatic-bfly-dot ${side === 'left' ? 'is-active' : ''}`} aria-hidden="true" />
+      <div className="somatic-bfly-stage" aria-hidden="true">
+        <div className={`somatic-bfly-hand ${side === 'left' ? 'is-tapping' : ''}`}>
+          <span className="somatic-bfly-hand-glow" />
+          <span className="somatic-bfly-hand-circle" />
+        </div>
+        <div className={`somatic-bfly-hand ${side === 'right' ? 'is-tapping' : ''}`}>
+          <span className="somatic-bfly-hand-glow" />
+          <span className="somatic-bfly-hand-circle" />
+        </div>
       </div>
-      <p className="somatic-phase-label">{side === 'left' ? 'שמאל' : 'ימין'}</p>
+      <p className="somatic-phase-label" aria-live="polite">
+        {side === 'right' ? 'ימין' : 'שמאל'}
+      </p>
     </div>
   );
 }
