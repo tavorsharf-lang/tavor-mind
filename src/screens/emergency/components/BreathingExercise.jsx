@@ -5,82 +5,82 @@ const PATTERNS = {
   '478': {
     paces: {
       slow:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',  from: 0.85, to: 1.55, sec: 5 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',       from: 1.55, to: 1.55, sec: 8 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',   from: 1.55, to: 0.85, sec: 9 },
+        { label: 'תכניס', from: 0.55, to: 1.55, sec: 5 },
+        { label: 'תחזיק', from: 1.55, to: 1.55, sec: 8 },
+        { label: 'תוציא', from: 1.55, to: 0.55, sec: 9 },
       ],
       normal: [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',  from: 0.85, to: 1.55, sec: 4 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',       from: 1.55, to: 1.55, sec: 7 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',   from: 1.55, to: 0.85, sec: 8 },
+        { label: 'תכניס', from: 0.55, to: 1.55, sec: 4 },
+        { label: 'תחזיק', from: 1.55, to: 1.55, sec: 7 },
+        { label: 'תוציא', from: 1.55, to: 0.55, sec: 8 },
       ],
       fast:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',  from: 0.85, to: 1.55, sec: 3 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',       from: 1.55, to: 1.55, sec: 5 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',   from: 1.55, to: 0.85, sec: 6 },
+        { label: 'תכניס', from: 0.55, to: 1.55, sec: 3 },
+        { label: 'תחזיק', from: 1.55, to: 1.55, sec: 5 },
+        { label: 'תוציא', from: 1.55, to: 0.55, sec: 6 },
       ],
     },
   },
   box: {
     paces: {
       slow:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',    from: 0.9,  to: 1.45, sec: 5 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',         from: 1.45, to: 1.45, sec: 5 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',     from: 1.45, to: 0.9,  sec: 5 },
-        { label: 'החזק', subtitle: 'תן לרווח להתקיים',       from: 0.9,  to: 0.9,  sec: 5 },
+        { label: 'תכניס', from: 0.6, to: 1.45, sec: 5 },
+        { label: 'תחזיק', from: 1.45, to: 1.45, sec: 5 },
+        { label: 'תוציא', from: 1.45, to: 0.6, sec: 5 },
+        { label: 'תחזיק', from: 0.6, to: 0.6, sec: 5 },
       ],
       normal: [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',    from: 0.9,  to: 1.45, sec: 4 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',         from: 1.45, to: 1.45, sec: 4 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',     from: 1.45, to: 0.9,  sec: 4 },
-        { label: 'החזק', subtitle: 'תן לרווח להתקיים',       from: 0.9,  to: 0.9,  sec: 4 },
+        { label: 'תכניס', from: 0.6, to: 1.45, sec: 4 },
+        { label: 'תחזיק', from: 1.45, to: 1.45, sec: 4 },
+        { label: 'תוציא', from: 1.45, to: 0.6, sec: 4 },
+        { label: 'תחזיק', from: 0.6, to: 0.6, sec: 4 },
       ],
       fast:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות לאט',    from: 0.9,  to: 1.45, sec: 3 },
-        { label: 'החזק', subtitle: 'החזק. אתה כאן.',         from: 1.45, to: 1.45, sec: 3 },
-        { label: 'נשוף', subtitle: 'תן לכל האוויר לצאת',     from: 1.45, to: 0.9,  sec: 3 },
-        { label: 'החזק', subtitle: 'תן לרווח להתקיים',       from: 0.9,  to: 0.9,  sec: 3 },
+        { label: 'תכניס', from: 0.6, to: 1.45, sec: 3 },
+        { label: 'תחזיק', from: 1.45, to: 1.45, sec: 3 },
+        { label: 'תוציא', from: 1.45, to: 0.6, sec: 3 },
+        { label: 'תחזיק', from: 0.6, to: 0.6, sec: 3 },
       ],
     },
   },
   coherent: {
     paces: {
       slow:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות באוויר', from: 0.9, to: 1.5, sec: 6 },
-        { label: 'נשוף', subtitle: 'תן לאוויר לצאת לאט',    from: 1.5, to: 0.9, sec: 6 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 6 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 6 },
       ],
       normal: [
-        { label: 'שאף',  subtitle: 'מלא את הריאות באוויר', from: 0.9, to: 1.5, sec: 5 },
-        { label: 'נשוף', subtitle: 'תן לאוויר לצאת לאט',    from: 1.5, to: 0.9, sec: 5 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 5 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 5 },
       ],
       fast:   [
-        { label: 'שאף',  subtitle: 'מלא את הריאות באוויר', from: 0.9, to: 1.5, sec: 4 },
-        { label: 'נשוף', subtitle: 'תן לאוויר לצאת לאט',    from: 1.5, to: 0.9, sec: 4 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 4 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 4 },
       ],
     },
   },
   '62': {
     paces: {
       slow: [
-        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 7 },
-        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 7 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
       ],
       normal: [
-        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 6 },
-        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 6 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
       ],
       fast: [
-        { label: 'שאף',  subtitle: 'שאיפה רגועה אבל ארוכה — לא גדולה', from: 0.9, to: 1.5, sec: 5 },
-        { label: 'נשוף', subtitle: 'שחרור קצר',                         from: 1.5, to: 0.9, sec: 2 },
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 5 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
       ],
     },
   },
   physio_sigh: {
     paces: {
       normal: [
-        { label: 'שאף',  subtitle: 'שאיפה ראשונה — מלא חצי מהריאות',  from: 0.85, to: 1.30, sec: 1.5 },
-        { label: 'שאף',  subtitle: 'שאיפה שנייה — קצרה על גבי הראשונה', from: 1.30, to: 1.55, sec: 0.7 },
-        { label: 'נשוף', subtitle: 'נשיפה ארוכה דרך הפה',                from: 1.55, to: 0.85, sec: 4.0 },
+        { label: 'תכניס', from: 0.55, to: 1.30, sec: 1.5 },
+        { label: 'תכניס', from: 1.30, to: 1.55, sec: 0.7 },
+        { label: 'תוציא', from: 1.55, to: 0.55, sec: 4.0 },
       ],
     },
   },
@@ -95,8 +95,8 @@ const EASING_EXHALE = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
 const EASING_HOLD = 'linear';
 
 function easingFor(label) {
-  if (label === 'שאף') return EASING_INHALE;
-  if (label === 'נשוף') return EASING_EXHALE;
+  if (label === 'תכניס') return EASING_INHALE;
+  if (label === 'תוציא') return EASING_EXHALE;
   return EASING_HOLD;
 }
 
@@ -128,81 +128,11 @@ function PaceRhythm({ rhythm }) {
   );
 }
 
-const CYCLE_AFFIRMATIONS = [
-  'התחלנו',
-  'הגוף מתחיל להירגע',
-  'אתה כאן עם עצמך',
-  'הקצב מתייצב',
-  'אתה כמעט שם',
-];
-
-function cycleAffirmation(cycle, total) {
-  if (cycle > total) return null;
-  if (cycle === total) return 'נשימה אחרונה — קח אותה איטית';
-  return CYCLE_AFFIRMATIONS[cycle - 1] || null;
-}
-
 function formatElapsed(ms) {
   const totalSec = Math.max(0, Math.floor(ms / 1000));
   const m = Math.floor(totalSec / 60);
   const s = totalSec % 60;
   return `${m}:${String(s).padStart(2, '0')}`;
-}
-
-function DirectionIcon({ step }) {
-  const ref = useRef(null);
-  const isHold = step.label === 'החזק';
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const reduce = typeof window !== 'undefined'
-      && window.matchMedia
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) {
-      el.style.transition = 'none';
-      el.style.transform = 'translateY(0)';
-      return;
-    }
-    if (step.label === 'שאף') {
-      el.style.transition = 'none';
-      el.style.transform = 'translateY(4px)';
-      void el.offsetWidth;
-      el.style.transition = `transform ${step.sec}s ${EASING_INHALE}`;
-      el.style.transform = 'translateY(-4px)';
-    } else if (step.label === 'נשוף') {
-      el.style.transition = 'none';
-      el.style.transform = 'translateY(-4px)';
-      void el.offsetWidth;
-      el.style.transition = `transform ${step.sec}s ${EASING_EXHALE}`;
-      el.style.transform = 'translateY(4px)';
-    } else {
-      el.style.transition = 'transform 200ms ease-out';
-      el.style.transform = 'translateY(0)';
-    }
-  }, [step.label, step.sec]);
-
-  if (step.label === 'שאף') {
-    return (
-      <svg ref={ref} className="breathing-direction" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <line x1="12" y1="19" x2="12" y2="5" />
-        <polyline points="6 11 12 5 18 11" />
-      </svg>
-    );
-  }
-  if (step.label === 'נשוף') {
-    return (
-      <svg ref={ref} className="breathing-direction" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <line x1="12" y1="5" x2="12" y2="19" />
-        <polyline points="6 13 12 19 18 13" />
-      </svg>
-    );
-  }
-  return (
-    <svg ref={ref} className="breathing-direction is-holding" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <rect x="7" y="7" width="10" height="10" rx="1.5" />
-    </svg>
-  );
 }
 
 export default function BreathingExercise({ defaultPattern = '478', defaultPace = 'normal', cycles, onComplete, onPatternChange, lockPattern = false }) {
@@ -270,7 +200,7 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
     // Cancel anything scheduled from the previous step, then schedule taps only for inhale.
     // Same effect that wires the visual transition → audio fires in the same frame as the visual.
     haptic.cancel();
-    if (step.label === 'שאף' && !reduce) {
+    if (step.label === 'תכניס' && !reduce) {
       haptic.scheduleInhale(step.sec);
     }
     const el = circleRef.current;
@@ -350,12 +280,10 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
     };
   }, []);
 
-  const displayCycle = Math.min(cycle, cycles);
   const renderTime = Date.now();
   const remainingMs = Math.max(0, step.sec * 1000 - (renderTime - stepStartedAt));
   const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
   const elapsedTotal = formatElapsed(renderTime - exerciseStartedAt);
-  const affirmation = cycleAffirmation(displayCycle, cycles);
 
   return (
     <div className="breathing">
@@ -427,12 +355,8 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
       </div>
 
       <div className="breathing-label" aria-live="polite">
-        <DirectionIcon step={step} />
         <span>{step.label}</span>
       </div>
-      <p className="breathing-subline">{step.subtitle}</p>
-      <div className="breathing-counter">{displayCycle} / {cycles}</div>
-      {affirmation && <p className="breathing-cycle-affirm">{affirmation}</p>}
     </div>
   );
 }

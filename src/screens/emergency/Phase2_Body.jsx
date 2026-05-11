@@ -145,7 +145,7 @@ function HyperBranch({ onNext, onSkip, onExit }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
+        <h1 className="ds3-h1">נשימה — תכניס ותוציא</h1>
         {ready ? (
           <BreathingExercise
             key={`hyper-${round}`}
@@ -501,7 +501,7 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        <h1 className="ds3-h1">נשימה — שאף ונשוף</h1>
+        <h1 className="ds3-h1">נשימה — תכניס ותוציא</h1>
         {ready ? (
           <BreathingExercise
             key={`mid-${round}`}
