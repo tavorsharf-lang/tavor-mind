@@ -388,6 +388,15 @@ export default function Phase8Trigger({
               <>
                 <h1 className="phase-title">תפנה לחלק שדיבר במשפטים האלה. מה הוא צריך עכשיו?</h1>
                 <p className="phase-subtitle">במילים שלך. בלי לתרגם.</p>
+                {hasAnyThought && (
+                  <div className="thoughts-readback">
+                    {thoughts.map((t, i) => (
+                      t.trim() ? (
+                        <p key={i} className="thoughts-readback-line">{t}</p>
+                      ) : null
+                    ))}
+                  </div>
+                )}
                 <textarea
                   className="ck-textarea"
                   rows={2}
