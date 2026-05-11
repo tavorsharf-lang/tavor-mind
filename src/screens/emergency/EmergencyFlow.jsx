@@ -31,6 +31,7 @@ import {
 } from '../../utils/claudeHandoff.js';
 import {
   isHrSetupDone,
+  isWearingWatch,
   generateHrSessionId,
 } from '../../utils/liveHr.js';
 
@@ -93,15 +94,18 @@ export default function EmergencyFlow() {
   const [savingState, setSavingState] = useState('idle');
   const startedAtRef = useRef(Date.now());
 
-  // HR session id — pre-generated when HR is set up, so PhaseSummary can fetch
-  // post-session samples written by the iOS Shortcut. Lazy: not created until
-  // the session ends (Phase 11) so that flows without HR don't pollute RTDB.
+  // HR session id — pre-generated when HR is set up AND user is wearing the
+  // watch, so PhaseSummary can fetch post-session samples written by the iOS
+  // Shortcut. Lazy: not created until needed so flows without HR don't
+  // pollute RTDB. Captured at mount (per session) so toggling later in the
+  // flow doesn't strand a half-emitted hrTrack reference.
+  const [hrActive] = useState(() => isHrSetupDone() && isWearingWatch());
   const hrSessionIdRef = useRef(null);
   const ensureHrSessionId = useCallback(() => {
+    if (!hrActive) return null;
     if (!hrSessionIdRef.current) hrSessionIdRef.current = generateHrSessionId();
     return hrSessionIdRef.current;
-  }, []);
-  const hrEnabled = isHrSetupDone();
+  }, [hrActive]);
 
   // Frozen endedAt — captured once when phase first transitions to 11 so the
   // HR summary's polling effect (which keys on endedAtMs) doesn't restart on

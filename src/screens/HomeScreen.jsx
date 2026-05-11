@@ -10,6 +10,7 @@ import {
 import { getTherapyDayOfWeek, getRelevantFrameDate } from '../utils/therapyDay.js';
 import { getFrame } from '../utils/therapyStorage.js';
 import { countWaitingItems, flushPendingWaitingItems } from '../utils/somethingWaitingStorage.js';
+import { isHrSetupDone, isWearingWatch, setWearingWatch } from '../utils/liveHr.js';
 import SyncStatusBadge from '../components/ui/SyncStatusBadge.jsx';
 
 const FIRST_RUN_KEY = 'tavor_mind_seen_home_v1';
@@ -46,6 +47,19 @@ export default function HomeScreen({ authError }) {
   const [continuity, setContinuity] = useState(null);
   const [therapyState, setTherapyState] = useState({ show: false, mode: null });
   const [waitingCount, setWaitingCount] = useState(0);
+  const [hrReady, setHrReady] = useState(false);
+  const [wearingWatch, setWearingWatchState] = useState(true);
+
+  useEffect(() => {
+    setHrReady(isHrSetupDone());
+    setWearingWatchState(isWearingWatch());
+  }, []);
+
+  const toggleWearingWatch = () => {
+    const next = !wearingWatch;
+    setWearingWatch(next);
+    setWearingWatchState(next);
+  };
 
   useEffect(() => {
     const id = setInterval(() => setGreeting(getGreeting()), 60_000);
@@ -183,12 +197,25 @@ export default function HomeScreen({ authError }) {
       </div>
 
       <footer className="ds3-home-footer">
-        {authError ? (
-          <span className="ds3-micro ds3-text-coral">לא מחובר</span>
-        ) : (
-          <span className="ds3-micro ds3-text-soft">מחובר ✓</span>
+        {hrReady && (
+          <button
+            type="button"
+            className={`ds3-watch-toggle ${wearingWatch ? 'is-on' : 'is-off'}`}
+            onClick={toggleWearingWatch}
+            aria-pressed={wearingWatch}
+          >
+            <span className="ds3-watch-toggle-label">אני עונד שעון</span>
+            <span className="ds3-watch-toggle-pill">{wearingWatch ? 'כן' : 'לא'}</span>
+          </button>
         )}
-        <SyncStatusBadge />
+        <div className="ds3-home-footer-row">
+          {authError ? (
+            <span className="ds3-micro ds3-text-coral">לא מחובר</span>
+          ) : (
+            <span className="ds3-micro ds3-text-soft">מחובר ✓</span>
+          )}
+          <SyncStatusBadge />
+        </div>
       </footer>
     </div>
   );

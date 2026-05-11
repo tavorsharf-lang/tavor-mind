@@ -217,3 +217,19 @@ export function markHrSetupDone() {
 export function clearHrSetup() {
   try { localStorage.removeItem(HR_SETUP_KEY); } catch {}
 }
+
+// Per-day "I'm wearing my watch" toggle. Default true so existing setups
+// keep working unchanged. Read at mount inside long-lived screens — the
+// HomeScreen toggle isn't expected to change mid-session.
+const WEARING_WATCH_KEY = 'tavor_mind_wearing_watch';
+
+export function isWearingWatch() {
+  try {
+    const v = localStorage.getItem(WEARING_WATCH_KEY);
+    return v === null ? true : v === '1';
+  } catch { return true; }
+}
+
+export function setWearingWatch(on) {
+  try { localStorage.setItem(WEARING_WATCH_KEY, on ? '1' : '0'); } catch {}
+}

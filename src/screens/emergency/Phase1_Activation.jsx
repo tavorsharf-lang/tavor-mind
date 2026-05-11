@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
-import { buildStartShortcutUrl } from '../../utils/liveHr.js';
+import { buildStartShortcutUrl, isWearingWatch } from '../../utils/liveHr.js';
 
 const OPTIONS = [
   {
@@ -55,9 +56,16 @@ function ActivationGlyph({ kind, color }) {
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
+  // Captured at mount: HR start-workout shortcut only fires if user toggled
+  // "אני עונד שעון" on. Skipping it removes the Shortcuts app flash.
+  const [wearingWatch] = useState(() => isWearingWatch());
 
   const handlePick = (id) => {
-    setTimeout(() => onPick(id), SHORTCUT_LAUNCH_DELAY_MS);
+    if (wearingWatch) {
+      setTimeout(() => onPick(id), SHORTCUT_LAUNCH_DELAY_MS);
+    } else {
+      onPick(id);
+    }
   };
 
   return (
@@ -96,29 +104,46 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
         </div>
 
         <div className="ds3-stack-3">
-          {OPTIONS.map((opt) => (
-            // Anchor with href to the Start Shortcut + delayed state change
-            // on click. iOS handles the URL scheme first; React advances to
-            // Phase 2 ~150ms later (after iOS already opened Shortcuts).
-            <a
-              key={opt.id}
-              href={buildStartShortcutUrl()}
-              className="ds3-card-button ds3-activation-card"
-              onClick={() => handlePick(opt.id)}
-              style={{ textDecoration: 'none' }}
-            >
-              <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
-                <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
-              </span>
-              <span className="ds3-activation-card-text">
-                <span className="ds3-activation-card-label">{opt.label}</span>
-                <span className="ds3-activation-card-sub">{opt.subtitle}</span>
-              </span>
-              <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
-                <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </a>
-          ))}
+          {OPTIONS.map((opt) => {
+            const inner = (
+              <>
+                <span className={`ds3-icon-tile ds3-icon-tile-${opt.tone}`} aria-hidden="true">
+                  <ActivationGlyph kind={opt.glyph} color={`var(--${opt.tone === 'blue' ? 'lichen' : opt.tone === 'coral' ? 'heart' : 'orange'})`} />
+                </span>
+                <span className="ds3-activation-card-text">
+                  <span className="ds3-activation-card-label">{opt.label}</span>
+                  <span className="ds3-activation-card-sub">{opt.subtitle}</span>
+                </span>
+                <svg width="10" height="16" viewBox="0 0 10 16" className="ds3-chevron-end" aria-hidden="true">
+                  <path d="M8 1L2 8l6 7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </>
+            );
+            // When wearing the watch we render an <a href="shortcuts://...">
+            // so iOS handles the URL scheme on the user gesture. React then
+            // advances to Phase 2 ~150ms later. Without the watch we render
+            // a plain button — no Shortcut, no app switch.
+            return wearingWatch ? (
+              <a
+                key={opt.id}
+                href={buildStartShortcutUrl()}
+                className="ds3-card-button ds3-activation-card"
+                onClick={() => handlePick(opt.id)}
+                style={{ textDecoration: 'none' }}
+              >
+                {inner}
+              </a>
+            ) : (
+              <button
+                key={opt.id}
+                type="button"
+                className="ds3-card-button ds3-activation-card"
+                onClick={() => handlePick(opt.id)}
+              >
+                {inner}
+              </button>
+            );
+          })}
         </div>
       </main>
 
