@@ -5,6 +5,7 @@ import {
   getHrSessionSnapshot,
   getCurrentUid,
   detectLatestCluster,
+  clipToWindow,
   summarizeSamples,
 } from '../../../utils/liveHr.js';
 
@@ -74,11 +75,17 @@ export default function HrSummaryCard({ sessionId, startedAtMs, endedAtMs }) {
 
   if (!sessionId) return null;
 
-  // Pick the most recent contiguous cluster. Workouts sample HR densely
-  // (~1Hz); any gap >60s marks a session boundary. This auto-detects the
-  // current session without depending on tavor-mind's own startedAt/endedAt
-  // (which can be off if the workout started before the user opened the app).
-  const displaySamples = detectLatestCluster(samples);
+  // Clip to the known session window when available — exact and deterministic.
+  // 60s left-pad catches HR samples from the workout warm-up that happens
+  // just before Phase 1 is recorded. detectLatestCluster fallback handles
+  // edge cases (missing startedAtMs, or stale times that don't match data).
+  let displaySamples;
+  if (startedAtMs) {
+    displaySamples = clipToWindow(samples, startedAtMs - 60000, endedAtMs);
+    if (displaySamples.length === 0) displaySamples = detectLatestCluster(samples);
+  } else {
+    displaySamples = detectLatestCluster(samples);
+  }
 
   if (displaySamples.length > 0) {
     const summary = summarizeSamples(displaySamples);
