@@ -1828,15 +1828,8 @@
   .ds3-home-hero-pulse { animation: none; }
 }
 
-/* ── Heart hologram button (Spline) ─────────────────────────── */
+/* ── Heart hologram button (Spline iframe embed) ─────────────── */
 .ds3-heart-hologram {
-  /* Heart sits in the bottom-left of the Spline frame.
-     The .ds3-heart-hologram-frame inside is 200% larger than the clip
-     and gets translated so the heart lands at the visible center.
-     Tune --heart-shift-x / -y if alignment drifts after a scene update. */
-  --heart-shift-x: 30%;
-  --heart-shift-y: -30%;
-
   position: relative;
   z-index: 1;
   width: min(78vw, 340px);
@@ -1844,86 +1837,32 @@
   cursor: pointer;
   border: none;
   background: transparent;
-  display: grid;
-  place-items: center;
   border-radius: 50%;
   -webkit-tap-highlight-color: transparent;
-  perspective: 1000px;
-}
-
-.ds3-heart-hologram-stage {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
   transition: transform 220ms var(--ease-out);
-  transform-origin: center;
-  will-change: transform;
 }
 
-.ds3-heart-hologram-frame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  transform: translate(
-    calc(-50% + var(--heart-shift-x)),
-    calc(-50% + var(--heart-shift-y))
-  );
-  pointer-events: auto;
-}
-
-.ds3-heart-hologram[data-loaded="true"] .ds3-heart-hologram-stage {
-  animation: ds3HoloFloat 7s ease-in-out infinite;
-}
-
-.ds3-heart-hologram:hover .ds3-heart-hologram-stage { transform: scale(1.04); }
-.ds3-heart-hologram:active .ds3-heart-hologram-stage { transform: scale(0.97); }
+.ds3-heart-hologram:hover { transform: scale(1.04); }
+.ds3-heart-hologram:active { transform: scale(0.97); }
 
 .ds3-heart-hologram:focus-visible {
   outline: 3px solid var(--terra-soft);
   outline-offset: 8px;
 }
 
-.ds3-heart-hologram-frame > div,
-.ds3-heart-hologram canvas {
+.ds3-heart-hologram-iframe {
   display: block;
-  background: transparent !important;
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* Hide Spline free-tier watermark (personal app, not a public product) */
-/* Spline 4.x portals the badge outside the wrapper — must be global */
-a[href*="spline.design" i],
-a[href*="spline.com" i],
-[class*="spline-watermark" i],
-[class*="SplineWatermark" i] {
-  display: none !important;
-}
-
-.ds3-heart-hologram-fallback {
-  position: absolute;
-  inset: 14%;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, var(--terra-soft) 0%, transparent 70%);
-  animation: ds3HeartBeatPulse 1.4s ease-in-out infinite;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  /* Click owned by the parent <div role="button">; the iframe just renders */
   pointer-events: none;
 }
 
-.ds3-heart-hologram[data-loaded="true"] .ds3-heart-hologram-fallback {
-  display: none;
-}
-
-@keyframes ds3HoloFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10px) rotate(0.4deg); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .ds3-heart-hologram-stage { transition: none; animation: none !important; }
-  .ds3-heart-hologram:hover .ds3-heart-hologram-stage { transform: none; }
-  .ds3-heart-hologram-fallback { animation: none; }
+  .ds3-heart-hologram { transition: none; }
+  .ds3-heart-hologram:hover { transform: none; }
 }
 
 @media (max-width: 480px) {
