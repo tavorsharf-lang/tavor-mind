@@ -302,6 +302,12 @@ export default function EmergencyFlow() {
           onNext={() => setPhase(3)}
           onSkip={() => setPhase(3)}
           onExit={handleSaveAndExit}
+          onRestart={() => {
+            setActivation(null);
+            setBreathingNote('');
+            setBreathingFelt62(null);
+            setPhase(1);
+          }}
         />
       )}
       {phase === 3 && (

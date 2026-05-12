@@ -76,6 +76,22 @@ const PATTERNS = {
       ],
     },
   },
+  '42': {
+    paces: {
+      slow: [
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 5 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
+      ],
+      normal: [
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 4 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
+      ],
+      fast: [
+        { label: 'תכניס', from: 0.6, to: 1.5, sec: 3 },
+        { label: 'תוציא', from: 1.5, to: 0.6, sec: 2 },
+      ],
+    },
+  },
   physio_sigh: {
     paces: {
       normal: [

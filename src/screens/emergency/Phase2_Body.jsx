@@ -5,7 +5,6 @@ import {
   hasSeenOnboarding,
   markOnboardingSeen,
   pushResponse,
-  getDefaultCycles,
 } from '../../utils/breathing62Storage.js';
 
 // After Phase 1 picks an activation, iOS opens Shortcuts to start the Watch
@@ -46,7 +45,8 @@ function WaitingForReturn() {
 
 const HYPO_STEPS = [
   'קום ועמוד אם אתה יושב או שוכב.',
-  'נער את הידיים והרגליים בעדינות, 10 שניות.',
+  '10 קפיצות במקום — עכשיו.',
+  'נער ידיים ורגליים בכוח, 10 שניות.',
   'שים יד אחת על הלב, יד אחת על הבטן.',
 ];
 
@@ -64,12 +64,14 @@ export default function Phase2Body({
   onNext,
   onSkip,
   onExit,
+  onRestart,
 }) {
   const noteProps = { note: breathingNote, setNote: setBreathingNote };
   const felt62Props = { felt62: breathingFelt62, setFelt62: setBreathingFelt62 };
-  if (activation === 'hyper') return <HyperBranch onNext={onNext} onSkip={onSkip} onExit={onExit} />;
-  if (activation === 'hypo')  return <HypoBranch onNext={onNext} onSkip={onSkip} onExit={onExit} {...noteProps} {...felt62Props} />;
-  return <MidBranch onNext={onNext} onSkip={onSkip} onExit={onExit} {...noteProps} />;
+  const common = { onNext, onSkip, onExit, onRestart };
+  if (activation === 'hyper') return <HyperBranch {...common} />;
+  if (activation === 'hypo')  return <HypoBranch {...common} {...noteProps} {...felt62Props} />;
+  return <MidBranch {...common} {...noteProps} />;
 }
 
 function Topbar({ onExit }) {
@@ -113,31 +115,59 @@ function NextButton({ onNext }) {
   );
 }
 
-function HyperBranch({ onNext, onSkip, onExit }) {
+function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
   const pattern = PATTERN_BY_ACTIVATION.hyper;
   const [round, setRound] = useState(1);
-  const [done, setDone] = useState(false);
-  const cycles = CYCLES_BY_PATTERN[pattern];
+  const [stage, setStage] = useState('breathe'); // 'breathe' | 'continuation' | 'eof'
+  const [currentCycles, setCurrentCycles] = useState(CYCLES_BY_PATTERN[pattern]);
   const ready = useVisibleSinceMount();
 
-  if (done) {
+  if (stage === 'continuation') {
     return (
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-text-center">
           <h1 className="ds3-h1">נשמת.</h1>
+          <p className="ds3-body ds3-text-muted" style={{ marginTop: 10 }}>
+            לרצות עוד מחזורים, או להתקדם?
+          </p>
         </main>
         <footer className="ds3-screen-footer ds3-stack-3">
-          <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => setStage('eof')}
+          >
+            מספיק
+          </button>
           <button
             type="button"
             className="ds3-btn ds3-btn-outline-terra"
-            onClick={() => { setDone(false); setRound(round + 1); }}
+            onClick={() => { setCurrentCycles(4); setRound(round + 1); setStage('breathe'); }}
           >
-            המשך לדקה נוספת
+            עוד 4 מחזורים
+          </button>
+          <button
+            type="button"
+            className="ds3-btn-quiet"
+            onClick={() => { setCurrentCycles(8); setRound(round + 1); setStage('breathe'); }}
+          >
+            עוד 8 מחזורים
           </button>
         </footer>
       </div>
+    );
+  }
+
+  if (stage === 'eof') {
+    return (
+      <EndOfFlowCheck
+        activation="hyper"
+        onExit={onExit}
+        onNext={onNext}
+        onRepeat={() => { setCurrentCycles(CYCLES_BY_PATTERN[pattern]); setRound(round + 1); setStage('breathe'); }}
+        onSwitch={onRestart}
+      />
     );
   }
 
@@ -151,9 +181,9 @@ function HyperBranch({ onNext, onSkip, onExit }) {
             key={`hyper-${round}`}
             defaultPattern={pattern}
             defaultPace={DEFAULT_PACE_BY_BRANCH.hyper}
-            cycles={cycles}
+            cycles={currentCycles}
             lockPattern={true}
-            onComplete={() => setDone(true)}
+            onComplete={() => setStage('continuation')}
           />
         ) : (
           <WaitingForReturn />
@@ -166,12 +196,12 @@ function HyperBranch({ onNext, onSkip, onExit }) {
   );
 }
 
-function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }) {
+function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, setFelt62 }) {
   const [stepIdx, setStepIdx] = useState(0);
   const [stage, setStage] = useState('activate');
   const [round, setRound] = useState(1);
   const [tooMuch, setTooMuch] = useState(false);
-  const [cycles62] = useState(() => getDefaultCycles());
+  const [moreCycles, setMoreCycles] = useState(0);
 
   useEffect(() => {
     if (stage !== 'transition') return;
@@ -186,7 +216,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-stack-5">
           <div className="ds3-stack-2" style={{ marginTop: 12 }}>
-            <h1 className="ds3-h1">קודם נעיר את הגוף בעדינות, ואז ננשום</h1>
+            <h1 className="ds3-h1">קודם נעיר את הגוף, ואז ננשום</h1>
           </div>
           <div className="ds3-card-loose">
             <div className="ds3-caption ds3-text-soft" style={{ marginBottom: 8 }}>
@@ -200,7 +230,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
             type="button"
             className="ds3-btn ds3-btn-primary"
             onClick={() => {
-              if (isLast) setStage(hasSeenOnboarding() ? 'breathe62' : 'onboard62');
+              if (isLast) setStage(hasSeenOnboarding() ? 'breathe42_initial' : 'onboard42');
               else setStepIdx(stepIdx + 1);
             }}
           >
@@ -211,14 +241,11 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
     );
   }
 
-  // Onboarding rendered as a MODAL OVERLAY on top of the breathe62 screen
-  // (matches design 0 — backdrop blur, dimmed page behind, centered card).
-  // Falls through into breathe62 below; modal renders via showIntro flag.
-  const showOnboardingModal = stage === 'onboard62';
+  // Onboarding rendered as a MODAL OVERLAY on top of the breathe42 screen.
+  const showOnboardingModal = stage === 'onboard42';
   if (showOnboardingModal) {
     return (
       <div className="ds3-screen" style={{ position: 'relative' }}>
-        {/* Faux background — the breathe62 chip + title visible behind blur */}
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center" aria-hidden="true" style={{ filter: 'blur(2px)', opacity: 0.5 }}>
           <div className="ds3-stack-2">
@@ -226,11 +253,10 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
               שלב 1 מתוך 2
             </div>
             <h1 className="ds3-h1">נשימה מעוררת</h1>
-            <p className="ds3-body ds3-text-muted">שאיפה ארוכה — נשיפה קצרה</p>
+            <p className="ds3-body ds3-text-muted">שאיפה — נשיפה קצרה</p>
           </div>
         </main>
 
-        {/* Modal overlay */}
         <div className="modal-overlay" style={{ position: 'absolute' }}>
           <div
             className="modal-card modal-card-center"
@@ -241,17 +267,17 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
             <div className="modal-accent modal-accent-lichen">
               נשימה לתת-עוררות
             </div>
-            <h3 id="hypo-onboard-title" className="modal-title">שאיפה ארוכה — נשיפה קצרה</h3>
+            <h3 id="hypo-onboard-title" className="modal-title">שאיפה — נשיפה קצרה</h3>
             <p className="modal-body">
               במצב מרוקן, הנשימה הזו עובדת בכיוון שונה ממה שאתה רגיל.
-              זו הדרך להעיר את המערכת בצורה רכה.
+              ננסה 2 מחזורים — ואז נבדוק איך זה הרגיש.
               אחר כך נעבור לנשימה מאזנת.
             </p>
             <div className="modal-actions">
               <button
                 type="button"
                 className="ds3-btn ds3-btn-blue"
-                onClick={() => { markOnboardingSeen(); setStage('breathe62'); }}
+                onClick={() => { markOnboardingSeen(); setStage('breathe42_initial'); }}
               >
                 הבנתי, נתחיל
               </button>
@@ -262,7 +288,7 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
     );
   }
 
-  if (stage === 'breathe62') {
+  if (stage === 'breathe42_initial') {
     return (
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
@@ -282,13 +308,109 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
               שלב 1 מתוך 2
             </div>
             <h1 className="ds3-h1">נשימה מעוררת</h1>
-            <p className="ds3-body ds3-text-muted">שאיפה ארוכה — נשיפה קצרה</p>
+            <p className="ds3-body ds3-text-muted">2 מחזורי בדיקה — שאיפה 4, נשיפה 2</p>
           </div>
           <BreathingExercise
-            key={`hypo-62-${round}`}
-            defaultPattern="62"
+            key={`hypo-42-init-${round}`}
+            defaultPattern="42"
             defaultPace="normal"
-            cycles={cycles62}
+            cycles={2}
+            lockPattern={true}
+            onComplete={() => setStage('breathe42_check')}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  if (stage === 'breathe42_check') {
+    const checkItems = [
+      { id: 'right',    label: 'מעורר נכון',       tint: 'var(--lichen)', sub: 'עוד 4 מחזורים' },
+      { id: 'almost',   label: 'כמעט יותר מדי',     tint: 'var(--orange)', sub: 'עוד 6 מחזורים, יותר רכים' },
+      { id: 'too_much', label: 'יותר מדי',           tint: 'var(--heart)',  sub: 'דלג לנשימה המאזנת' },
+      { id: 'stop',     label: 'עצור — צריך משהו אחר', tint: 'var(--ink-muted)', sub: 'צא משלב הנשימה' },
+    ];
+    return (
+      <div className="ds3-screen">
+        <Topbar onExit={onExit} />
+        <main className="ds3-screen-content">
+          <div className="ds3-stack-3" style={{ marginTop: 12, padding: '8px 4px' }}>
+            <p className="ds3-caption" style={{ color: 'var(--lichen)', fontWeight: 700, margin: 0 }}>
+              בדיקה אחרי 2 מחזורים
+            </p>
+            <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>
+              איך הרגיש?
+            </h1>
+          </div>
+          <div className="ds3-grow" />
+          <div className="ds3-stack-3" style={{ padding: '0 4px 4px' }}>
+            {checkItems.map((opt) => (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => {
+                  if (opt.id === 'stop') {
+                    onSkip();
+                    return;
+                  }
+                  setFelt62(opt.id);
+                  pushResponse(opt.id === 'right' || opt.id === 'almost' || opt.id === 'too_much' ? opt.id : 'right');
+                  if (opt.id === 'too_much') {
+                    setTooMuch(true);
+                    setStage('transition');
+                  } else {
+                    setMoreCycles(opt.id === 'right' ? 4 : 6);
+                    setStage('breathe42_more');
+                  }
+                }}
+                style={{
+                  width: '100%', minHeight: 64, borderRadius: 24,
+                  background: 'var(--surface)', color: 'var(--ink)',
+                  border: `1.5px solid ${opt.tint}`,
+                  display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+                  padding: '10px 22px', gap: 2,
+                  fontFamily: 'inherit', cursor: 'pointer',
+                  transition: 'all 150ms cubic-bezier(0.4,0,0.2,1)',
+                  textAlign: 'right',
+                }}
+              >
+                <span style={{ fontSize: 17, fontWeight: 600 }}>{opt.label}</span>
+                <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>{opt.sub}</span>
+              </button>
+            ))}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (stage === 'breathe42_more') {
+    return (
+      <div className="ds3-screen">
+        <Topbar onExit={onExit} />
+        <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
+          <div className="ds3-stack-2">
+            <div style={{
+              display: 'inline-flex',
+              padding: '6px 14px',
+              borderRadius: 999,
+              background: 'rgba(10, 132, 255, 0.10)',
+              color: 'var(--lichen)',
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.04em',
+              alignSelf: 'center',
+            }}>
+              שלב 1 מתוך 2 — ממשיכים
+            </div>
+            <h1 className="ds3-h1">נשימה מעוררת</h1>
+            <p className="ds3-body ds3-text-muted">עוד {moreCycles} מחזורים</p>
+          </div>
+          <BreathingExercise
+            key={`hypo-42-more-${round}`}
+            defaultPattern="42"
+            defaultPace="normal"
+            cycles={moreCycles}
             lockPattern={true}
             onComplete={() => setStage('transition')}
           />
@@ -383,79 +505,27 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
     );
   }
 
-  // feedback — after-score (3 pills) per design screen 4
-  const items = [
-    { id: 'right',    label: 'מעורר נכון',     tint: 'var(--lichen)' },
-    { id: 'almost',   label: 'כמעט יותר מדי',  tint: 'var(--orange)' },
-    { id: 'too_much', label: 'יותר מדי',        tint: 'var(--heart)' },
-  ];
+  // After breathe55 completes → end-of-flow check (3 buttons).
   return (
-    <div className="ds3-screen">
-      <Topbar onExit={onExit} />
-      <main className="ds3-screen-content">
-        <div className="ds3-stack-3" style={{ marginTop: 12, padding: '8px 4px' }}>
-          <p className="ds3-caption" style={{ color: 'var(--lichen)', fontWeight: 700, margin: 0 }}>
-            איך הרגיש השלב הראשון
-          </p>
-          <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>
-            ה-6-2 הרגיש מעורר נכון,<br/>או יותר מדי?
-          </h1>
-        </div>
-
-        <div className="ds3-grow" />
-
-        <div className="ds3-stack-3" style={{ padding: '0 4px 4px' }}>
-          {items.map((opt) => {
-            const isSel = felt62 === opt.id;
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                onClick={() => { setFelt62(opt.id); pushResponse(opt.id); }}
-                style={{
-                  width: '100%', height: 60, borderRadius: 30,
-                  background: isSel ? opt.tint : 'var(--surface)',
-                  color: isSel ? '#fff' : 'var(--ink)',
-                  border: `1.5px solid ${opt.tint}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: '0 22px',
-                  fontFamily: 'inherit', fontSize: 17, fontWeight: 600,
-                  cursor: 'pointer',
-                  boxShadow: isSel ? `0 8px 22px ${opt.tint}40` : 'none',
-                  transition: 'all 150ms cubic-bezier(0.4,0,0.2,1)',
-                }}
-                aria-pressed={isSel}
-              >
-                <span style={{ width: 10, height: 10, borderRadius: 5, background: isSel ? '#fff' : opt.tint }} />
-                <span>{opt.label}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <NoteField note={note} setNote={setNote} />
-      </main>
-      <footer className="ds3-screen-footer ds3-stack-3">
-        <button
-          type="button"
-          className="ds3-btn ds3-btn-primary"
-          onClick={onNext}
-        >
-          הלאה
-        </button>
-        <button
-          type="button"
-          className="ds3-btn-quiet"
-          onClick={() => { setRound(round + 1); setStage('breathe55'); }}
-        >
-          עוד 6 נשימות מאזנות
-        </button>
-      </footer>
-    </div>
+    <EndOfFlowCheck
+      activation="hypo"
+      onExit={onExit}
+      note={note}
+      setNote={setNote}
+      onNext={onNext}
+      onRepeat={() => {
+        setStepIdx(0);
+        setTooMuch(false);
+        setMoreCycles(0);
+        setRound(round + 1);
+        setStage('activate');
+      }}
+      onSwitch={onRestart}
+    />
   );
 }
 
-function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
+function MidBranch({ onNext, onSkip, onExit, onRestart, note, setNote }) {
   const pattern = PATTERN_BY_ACTIVATION.mid;
   const [round, setRound] = useState(1);
   const [done, setDone] = useState(false);
@@ -464,26 +534,16 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
 
   if (done) {
     return (
-      <div className="ds3-screen">
-        <Topbar onExit={onExit} />
-        <main className="ds3-screen-content">
-          <div className="ds3-stack-3" style={{ marginTop: 12 }}>
-            <h1 className="ds3-h1">נשמת.</h1>
-            <p className="ds3-body ds3-text-muted">{AFTER_LINE}</p>
-          </div>
-          <NoteField note={note} setNote={setNote} />
-        </main>
-        <footer className="ds3-screen-footer ds3-stack-3">
-          <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>הלאה</button>
-          <button
-            type="button"
-            className="ds3-btn ds3-btn-outline-terra"
-            onClick={() => { setDone(false); setRound(round + 1); }}
-          >
-            עוד {cycles} נשימות
-          </button>
-        </footer>
-      </div>
+      <EndOfFlowCheck
+        activation="mid"
+        onExit={onExit}
+        note={note}
+        setNote={setNote}
+        afterLine={AFTER_LINE}
+        onNext={onNext}
+        onRepeat={() => { setDone(false); setRound(round + 1); }}
+        onSwitch={onRestart}
+      />
     );
   }
 
@@ -508,6 +568,90 @@ function MidBranch({ onNext, onSkip, onExit, note, setNote }) {
       <footer className="ds3-screen-footer">
         <NextButton onNext={onSkip} />
       </footer>
+    </div>
+  );
+}
+
+// End-of-flow check (3 buttons) — shown after every branch completes.
+// "אני שם" → advance to next phase
+// "כמעט — עוד פעם" → re-run same branch
+// "צריך משהו אחר" → back to Phase 1 to re-pick activation
+const SWITCH_HINT = {
+  hyper: 'הצעה: לעבור ל-"עוד טריגר אחד" (קופסה 4×4)',
+  mid:   'הצעה: לעבור ל-"הופעלתי" (אנחה פיזיולוגית) או "מרוקן" (נשימה מעוררת)',
+  hypo:  'הצעה: לעבור ל-"עוד טריגר אחד" (קופסה 4×4)',
+};
+
+function EndOfFlowCheck({ activation, onExit, note, setNote, afterLine, onNext, onRepeat, onSwitch }) {
+  return (
+    <div className="ds3-screen">
+      <Topbar onExit={onExit} />
+      <main className="ds3-screen-content">
+        <div className="ds3-stack-3" style={{ marginTop: 12, padding: '8px 4px' }}>
+          <p className="ds3-caption" style={{ color: 'var(--lichen)', fontWeight: 700, margin: 0 }}>
+            איך אתה עכשיו
+          </p>
+          <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>הנשימה הספיקה?</h1>
+          {afterLine && (
+            <p className="ds3-body ds3-text-muted" style={{ marginTop: 4 }}>{afterLine}</p>
+          )}
+        </div>
+
+        <div className="ds3-grow" />
+
+        <div className="ds3-stack-3" style={{ padding: '0 4px 4px' }}>
+          <button
+            type="button"
+            onClick={onNext}
+            style={{
+              width: '100%', minHeight: 64, borderRadius: 24,
+              background: 'var(--lichen)', color: '#fff',
+              border: 'none',
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+              padding: '10px 22px', gap: 2,
+              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
+              boxShadow: '0 8px 22px rgba(10, 132, 255, 0.30)',
+            }}
+          >
+            <span style={{ fontSize: 17, fontWeight: 700 }}>אני שם</span>
+            <span style={{ fontSize: 13, fontWeight: 500, opacity: 0.85 }}>להמשיך לשלב הבא</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onRepeat}
+            style={{
+              width: '100%', minHeight: 64, borderRadius: 24,
+              background: 'var(--surface)', color: 'var(--ink)',
+              border: '1.5px solid var(--orange)',
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+              padding: '10px 22px', gap: 2,
+              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
+            }}
+          >
+            <span style={{ fontSize: 17, fontWeight: 600 }}>כמעט — עוד פעם</span>
+            <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>לחזור על אותו זרם נשימה</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={onSwitch}
+            style={{
+              width: '100%', minHeight: 64, borderRadius: 24,
+              background: 'var(--surface)', color: 'var(--ink)',
+              border: '1.5px solid var(--line)',
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
+              padding: '10px 22px', gap: 2,
+              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
+            }}
+          >
+            <span style={{ fontSize: 17, fontWeight: 600 }}>צריך משהו אחר</span>
+            <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>{SWITCH_HINT[activation]}</span>
+          </button>
+        </div>
+
+        {setNote && <NoteField note={note} setNote={setNote} />}
+      </main>
     </div>
   );
 }
