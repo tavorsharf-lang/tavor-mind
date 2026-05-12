@@ -11,7 +11,6 @@ import { getTherapyDayOfWeek, getRelevantFrameDate } from '../utils/therapyDay.j
 import { getFrame } from '../utils/therapyStorage.js';
 import { countWaitingItems, flushPendingWaitingItems } from '../utils/somethingWaitingStorage.js';
 import SyncStatusBadge from '../components/ui/SyncStatusBadge.jsx';
-import HeartHologramButton from '../components/HeartHologramButton.jsx';
 
 const FIRST_RUN_KEY = 'tavor_mind_seen_home_v1';
 const LAST_VISIT_KEY = 'tavor_mind_last_visit_v1';
@@ -118,12 +117,21 @@ export default function HomeScreen({ authError }) {
         </button>
       </div>
 
-      {/* Holographic heart — signature crisis CTA */}
+      {/* Big breathing button — design's signature home moment */}
       <div className="ds3-home-hero">
-        <HeartHologramButton onClick={() => goTo('/emergency')} ariaLabel="עכשיו קשה לי" />
-        <div className="ds3-home-hero-caption">
-          <span className="ds3-micro ds3-text-soft">עכשיו קשה לי</span>
-        </div>
+        <button
+          type="button"
+          className="ds3-home-hero-btn"
+          onClick={() => goTo('/emergency')}
+          aria-label="עכשיו קשה לי"
+        >
+          <span className="ds3-home-hero-pulse" aria-hidden="true" />
+          <span className="ds3-home-hero-pulse ds3-home-hero-pulse-2" aria-hidden="true" />
+          <span className="ds3-home-hero-core">
+            <span>עכשיו</span>
+            <span>קשה&nbsp;לי</span>
+          </span>
+        </button>
       </div>
 
       {waitingCount > 0 && (
