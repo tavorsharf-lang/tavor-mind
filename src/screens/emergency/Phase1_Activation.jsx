@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
-import { buildStartShortcutUrl, isWearingWatch } from '../../utils/liveHr.js';
+import { buildStartShortcutUrl, isWearingWatch, setWearingWatch } from '../../utils/liveHr.js';
 
 const OPTIONS = [
   {
@@ -56,9 +56,16 @@ function ActivationGlyph({ kind, color }) {
 
 export default function Phase1Activation({ onPick, onSkip, onExit }) {
   const navigate = useNavigate();
-  // Captured at mount: HR start-workout shortcut only fires if user toggled
-  // "אני עונד שעון" on. Skipping it removes the Shortcuts app flash.
-  const [wearingWatch] = useState(() => isWearingWatch());
+  // Local toggle for "אני עונד שעון" — controls whether the activation
+  // cards launch the start-workout Shortcut or behave as plain buttons.
+  // Persisted to localStorage; visible regardless of HR-setup status.
+  const [wearingWatch, setWearingWatchState] = useState(() => isWearingWatch());
+
+  const toggleWearingWatch = () => {
+    const next = !wearingWatch;
+    setWearingWatch(next);
+    setWearingWatchState(next);
+  };
 
   const handlePick = (id) => {
     if (wearingWatch) {
@@ -145,6 +152,17 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
             );
           })}
         </div>
+
+        <button
+          type="button"
+          role="switch"
+          aria-checked={wearingWatch}
+          className={`ds3-watch-toggle ${wearingWatch ? 'is-on' : 'is-off'}`}
+          onClick={toggleWearingWatch}
+        >
+          <span className="ds3-watch-toggle-label">אני עונד שעון</span>
+          <span className="ds3-watch-toggle-pill" aria-hidden="true">{wearingWatch ? 'כן' : 'לא'}</span>
+        </button>
       </main>
 
       <footer className="ds3-screen-footer">

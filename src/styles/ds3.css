@@ -1945,17 +1945,11 @@
   margin-top: auto;
   padding-top: 12px;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
   z-index: 1;
   flex-shrink: 0;
-}
-
-.ds3-home-footer-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .ds3-watch-toggle {
