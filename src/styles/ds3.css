@@ -1830,6 +1830,12 @@
 
 /* ── Heart hologram button (Spline) ─────────────────────────── */
 .ds3-heart-hologram {
+  /* Heart is rendered in the bottom-left of the Spline frame.
+     Shift the canvas right + up to bring it to the visible center.
+     Tune these two values if alignment drifts. */
+  --heart-shift-x: 25%;
+  --heart-shift-y: -25%;
+
   position: relative;
   z-index: 1;
   width: min(78vw, 340px);
@@ -1871,6 +1877,8 @@
   background: transparent !important;
   width: 100% !important;
   height: 100% !important;
+  transform: translate(var(--heart-shift-x), var(--heart-shift-y));
+  transform-origin: center;
 }
 
 /* Hide Spline free-tier watermark (personal app, not a public product) */

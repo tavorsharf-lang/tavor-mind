@@ -39,8 +39,6 @@ export default function HeartHologramButton({ onClick, ariaLabel = 'עכשיו �
     }
 
     if (target) {
-      try { spline.setZoom?.(0.5); } catch {}
-
       const baseRotX = target.rotation?.x ?? 0;
       const start = performance.now();
       const tick = (t) => {
