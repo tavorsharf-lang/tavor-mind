@@ -28,6 +28,18 @@ html, body {
   position: fixed;
   inset: 0;
   touch-action: pan-x pan-y;
+  /* disable long-press copy/paste callout + text selection globally (single-user PWA) */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* keep typing fields fully functional — selection + native callout */
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
 }
 
 #root {
