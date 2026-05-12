@@ -1,19 +1,22 @@
 import { useId, useMemo } from 'react';
-import { useBreathingAnimation, SCALE_MIN } from './useBreathingAnimation.js';
+import { useBreathingAnimation, SCALE_MIN, SCALE_MAX } from './useBreathingAnimation.js';
 import { getPattern } from './breathingPatterns.js';
 import './BreathingVisualization.css';
 
-const PETAL_COUNT = 5;
-const RINGS = [
-  { radius: 0,  count: 1  },
-  { radius: 30, count: 6  },
-  { radius: 60, count: 12 },
-];
-const CIRCLE_RADIUS = 14;
-const RENDER_SCALE = 2.5;
+const RIPPLE_COUNT = 5;
+const RIPPLE_LIFETIME_MS = 8000;
+const RIPPLE_MIN_RADIUS = 16;
+const RIPPLE_MAX_RADIUS = 175;
+const CORE_RADIUS = 18;
 
-const SCALE_OUTER_FULL = 0.30;
-const SCALE_MID_FULL   = 0.20;
+/* Hook exposes elapsed time indirectly via rotation =
+ * (elapsed / 30000ms) * 360deg, so multiply rotation by this to recover ms.
+ * Avoids a second rAF loop in this component. */
+const ROTATION_TO_MS = 30000 / 360;
+
+function bell(x) {
+  return Math.sin(Math.PI * x);
+}
 
 function clamp01(x) {
   return Math.max(0, Math.min(1, x));
@@ -25,17 +28,14 @@ function prefersReducedMotion() {
 }
 
 export default function BreathingVisualization({
-  // autonomous mode
   pattern = 'simple',
   inhaleDuration = 4000,
   holdDuration = 0,
   exhaleDuration = 6000,
   restDuration = 0,
-  // synced mode (drop-in for external phase/progress control)
   phase: syncedPhase,
   duration: _syncedDuration,
   progress: syncedProgress,
-  // shared
   isActive = true,
   onPhaseChange,
   onCycleComplete,
@@ -74,29 +74,26 @@ export default function BreathingVisualization({
     reduceMotion,
   });
 
-  const circles = useMemo(() => {
-    const result = [];
-    for (let p = 0; p < PETAL_COUNT; p++) {
-      const petalAngle = (360 / PETAL_COUNT) * p;
-      RINGS.forEach((ring, ringIdx) => {
-        for (let c = 0; c < ring.count; c++) {
-          const angleOffset = ring.count > 1 ? (360 / ring.count) * c : 0;
-          const angle = petalAngle + angleOffset;
-          const rad = (angle * Math.PI) / 180;
-          result.push({
-            id: `${p}-${ringIdx}-${c}`,
-            x: ring.radius * Math.cos(rad),
-            y: ring.radius * Math.sin(rad),
-            ringIdx,
-          });
-        }
-      });
-    }
-    return result;
-  }, []);
+  const elapsedMs = rotation * ROTATION_TO_MS;
 
-  const outerOpacity = clamp01((scale - SCALE_MIN) / (SCALE_OUTER_FULL - SCALE_MIN));
-  const midOpacity   = clamp01((scale - SCALE_MIN) / (SCALE_MID_FULL   - SCALE_MIN));
+  const normScale = clamp01((scale - SCALE_MIN) / (SCALE_MAX - SCALE_MIN));
+  const breathBrightness = 0.4 + 0.6 * normScale;
+  const groupScale = 0.85 + 0.20 * normScale;
+  const coreOpacity = 0.55 + 0.45 * normScale;
+
+  const ripples = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < RIPPLE_COUNT; i++) {
+      const lifecyclePos =
+        ((elapsedMs / RIPPLE_LIFETIME_MS) + i / RIPPLE_COUNT) % 1;
+      const radius =
+        RIPPLE_MIN_RADIUS +
+        lifecyclePos * (RIPPLE_MAX_RADIUS - RIPPLE_MIN_RADIUS);
+      const opacity = bell(lifecyclePos) * breathBrightness * 0.85;
+      list.push({ id: i, radius, opacity });
+    }
+    return list;
+  }, [elapsedMs, breathBrightness]);
 
   const rawId = useId();
   const safeId = rawId.replace(/[^a-z0-9]/gi, '');
@@ -126,38 +123,42 @@ export default function BreathingVisualization({
       >
         <defs>
           <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feGaussianBlur stdDeviation="5" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
           <radialGradient id={gradId}>
-            <stop offset="0%"   stopColor={gradStart} />
-            <stop offset="100%" stopColor={gradEnd} />
+            <stop offset="0%"   stopColor={gradStart} stopOpacity="1" />
+            <stop offset="70%"  stopColor={gradEnd}   stopOpacity="0.6" />
+            <stop offset="100%" stopColor={gradEnd}   stopOpacity="0" />
           </radialGradient>
         </defs>
 
         <g
-          transform={`scale(${(scale * RENDER_SCALE).toFixed(4)}) rotate(${rotation.toFixed(2)})`}
+          transform={`scale(${groupScale.toFixed(4)})`}
           filter={`url(#${glowId})`}
         >
-          {circles.map((c) => {
-            const opacity =
-              c.ringIdx === 2 ? outerOpacity :
-              c.ringIdx === 1 ? midOpacity   : 1;
-            if (opacity <= 0) return null;
-            return (
-              <circle
-                key={c.id}
-                cx={c.x}
-                cy={c.y}
-                r={CIRCLE_RADIUS}
-                fill={`url(#${gradId})`}
-                opacity={opacity}
-              />
-            );
-          })}
+          {ripples.map((r) => (
+            <circle
+              key={r.id}
+              cx={0}
+              cy={0}
+              r={r.radius.toFixed(2)}
+              fill="none"
+              stroke={gradEnd}
+              strokeWidth={2.5}
+              opacity={r.opacity.toFixed(3)}
+            />
+          ))}
+          <circle
+            cx={0}
+            cy={0}
+            r={CORE_RADIUS}
+            fill={`url(#${gradId})`}
+            opacity={coreOpacity.toFixed(3)}
+          />
         </g>
       </svg>
     </div>
