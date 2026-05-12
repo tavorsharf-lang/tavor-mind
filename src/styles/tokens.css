@@ -88,6 +88,18 @@
   --space-12: 48px;
   --space-16: 64px;
 
+  /* === CANONICAL SCREEN SPACING ===
+   * Source of truth for screen-level rhythm. Every screen edge, header,
+   * footer and section gap should derive from these — not ad-hoc px.
+   *   --pad-x          horizontal edge (left/right of any screen content)
+   *   --pad-header-y   top padding for headers / topbars
+   *   --pad-bottom     bottom padding for footers + content tails
+   *   --gap-section    default vertical gap between stacked sections */
+  --pad-x: 20px;
+  --pad-header-y: 16px;
+  --pad-bottom: 22px;
+  --gap-section: 12px;
+
   /* === RADII (vivid system uses much larger pills) === */
   --radius-sm: 12px;            /* chips, inputs */
   --radius-md: 16px;             /* standard cards */
