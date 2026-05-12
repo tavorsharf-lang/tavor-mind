@@ -1828,6 +1828,60 @@
   .ds3-home-hero-pulse { animation: none; }
 }
 
+/* ── Heart hologram button (Spline) ─────────────────────────── */
+.ds3-heart-hologram {
+  position: relative;
+  z-index: 1;
+  width: min(78vw, 340px);
+  aspect-ratio: 1 / 1;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: transform 220ms var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ds3-heart-hologram:hover { transform: scale(1.04); }
+.ds3-heart-hologram:active { transform: scale(0.97); }
+
+.ds3-heart-hologram:focus-visible {
+  outline: 3px solid var(--terra-soft);
+  outline-offset: 8px;
+}
+
+.ds3-heart-hologram canvas {
+  display: block;
+  background: transparent !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.ds3-heart-hologram-fallback {
+  position: absolute;
+  inset: 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, var(--terra-soft) 0%, transparent 70%);
+  animation: ds3HeartBeatPulse 1.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ds3-heart-hologram[data-loaded="true"] .ds3-heart-hologram-fallback {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-heart-hologram { transition: none; }
+  .ds3-heart-hologram:hover { transform: none; }
+  .ds3-heart-hologram-fallback { animation: none; }
+}
+
+@media (max-width: 480px) {
+  .ds3-heart-hologram { width: min(84vw, 300px); }
+}
+
 .ds3-home-waiting {
   position: relative;
   z-index: 1;
