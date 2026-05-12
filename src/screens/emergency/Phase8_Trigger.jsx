@@ -145,9 +145,9 @@ export default function Phase8Trigger({
        * is preserved. */}
       <Modal open={showSafetyCheck} onClose={() => {}} ariaLabel="בדיקת ביטחון">
         {safetyAnswer !== 'heavier' ? (
-          <div className="p8-safety-card">
-            <h2 className="p8-safety-title">איך זה עכשיו?</h2>
-            <div className="p8-safety-row">
+          <div className="p8-safety-card modal-card-center" aria-labelledby="p8-safety-title">
+            <h2 id="p8-safety-title" className="modal-title p8-safety-title">איך זה עכשיו?</h2>
+            <div className="modal-actions modal-actions-row p8-safety-row">
               <button
                 type="button"
                 className="p8-safety-btn"
@@ -166,21 +166,23 @@ export default function Phase8Trigger({
             </div>
           </div>
         ) : (
-          <div className="p8-safety-card p8-safety-card-heavier">
-            <p className="p8-safety-text">
+          <div className="p8-safety-card p8-safety-card-heavier modal-card-center" aria-labelledby="p8-safety-heavier-title">
+            <p id="p8-safety-heavier-title" className="modal-body p8-safety-text">
               בוא נחזור לגוף לרגע.<br/>
               נסיים את הניתוח אחר כך.
             </p>
-            <button
-              type="button"
-              className="p8-safety-cta"
-              onClick={() => onGoToRegulation && onGoToRegulation(5)}
-            >חזור לוויסות</button>
-            <button
-              type="button"
-              className="p8-safety-link"
-              onClick={() => dismissSafetyCheck('heavier_continue')}
-            >בכל זאת להמשיך לניתוח</button>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="p8-safety-cta"
+                onClick={() => onGoToRegulation && onGoToRegulation(5)}
+              >חזור לוויסות</button>
+              <button
+                type="button"
+                className="p8-safety-link"
+                onClick={() => dismissSafetyCheck('heavier_continue')}
+              >בכל זאת להמשיך לניתוח</button>
+            </div>
           </div>
         )}
       </Modal>

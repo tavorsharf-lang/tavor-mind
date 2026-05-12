@@ -78,21 +78,28 @@ export default function PhaseContainment({
 
   // ── Onboarding modal ────────────────────────────────────────────────
   if (stage === 'onboard') {
+    const titleId = 'containment-onboard-title';
     return (
       <div className="ds3-screen">
-        <div className="ds3-modal-overlay">
-          <div className="ds3-modal-card">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <CNIcon kind="box" color="var(--terra)" size={22} />
-              <span className="ds3-caption" style={{ color: 'var(--terra)', fontWeight: 700 }}>
-                Containment — להניח רגע
-              </span>
+        <div className="modal-overlay">
+          <div
+            className="modal-card modal-card-center"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+          >
+            <div className="modal-icon modal-icon-terra">
+              <CNIcon kind="box" color="currentColor" size={22} />
             </div>
-            <p className="ds3-body" style={{ lineHeight: 1.65, marginBottom: 20 }}>
-              לא כל מה שעולה צריך להיפתח עכשיו. זה לא דחיקה — זו דרך מובנית לשים משהו במקום בטוח, עם הבטחה לחזור.
+            <div className="modal-accent modal-accent-terra">
+              Containment — להניח רגע
+            </div>
+            <h3 id={titleId} className="modal-title">לא כל מה שעולה צריך להיפתח עכשיו</h3>
+            <p className="modal-body">
+              זה לא דחיקה — זו דרך מובנית לשים משהו במקום בטוח, עם הבטחה לחזור.
               זה בא מטיפול בטראומה. עובד לרוב כשמשהו מסיט את הניתוח — זיכרון רחוק, רגש לא צפוי, מחשבה שלא קשורה ישירות.
             </p>
-            <div className="ds3-stack-3">
+            <div className="modal-actions">
               <button
                 type="button"
                 className="ds3-btn ds3-btn-primary"

@@ -54,11 +54,13 @@ export default function ExportPrompterModal({ open, onClose }) {
     }
   };
 
+  const titleId = 'export-modal-title';
+
   return (
     <Modal open={open} onClose={onClose} ariaLabel="ייצוא לטיפול">
-      <div className="export-modal">
+      <div className="export-modal" aria-labelledby={titleId}>
         <header className="export-modal-head">
-          <h2 className="export-modal-title">דוח גולמי לקלוד AI</h2>
+          <h2 id={titleId} className="modal-title export-modal-title">דוח גולמי לקלוד AI</h2>
           <button
             type="button"
             className="link-btn export-modal-close"
@@ -93,7 +95,7 @@ export default function ExportPrompterModal({ open, onClose }) {
 
             {result.isEmpty ? (
               <div className="export-empty">
-                <p>אין נתונים חדשים מאז הייצוא הקודם.</p>
+                <p className="modal-body">אין נתונים חדשים מאז הייצוא הקודם.</p>
                 {!fullExport && (
                   <button
                     type="button"
@@ -114,7 +116,7 @@ export default function ExportPrompterModal({ open, onClose }) {
                   spellCheck={false}
                 />
 
-                <div className="export-actions">
+                <div className="modal-actions export-actions">
                   <SoftButton onClick={handleCopyAndAdvance}>
                     העתק והעבר תאריך אחרון
                   </SoftButton>

@@ -12,10 +12,11 @@ function formatPhone(p) {
 }
 
 export default function CallSomeoneModal({ open, onClose }) {
+  const titleId = 'call-someone-title';
   return (
     <Modal open={open} onClose={onClose} ariaLabel="רשימת אנשים לקריאה">
-      <div className="modal-call">
-        <h3 className="modal-title">אנשים שיענו לך</h3>
+      <div className="modal-call modal-card-center" aria-labelledby={titleId}>
+        <h3 id={titleId} className="modal-title">אנשים שיענו לך</h3>
         <ul className="modal-call-list">
           {CONTACTS.map((c) => (
             <li key={c.phone}>
@@ -26,15 +27,17 @@ export default function CallSomeoneModal({ open, onClose }) {
             </li>
           ))}
         </ul>
-        <p className="modal-hint">אחד מהם יענה. תתקשר.</p>
-        <button
-          type="button"
-          className="modal-close-btn"
-          onClick={onClose}
-          aria-label="סגור"
-        >
-          סגור
-        </button>
+        <p className="modal-body modal-hint">אחד מהם יענה. תתקשר.</p>
+        <div className="modal-actions">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-cream"
+            onClick={onClose}
+            aria-label="סגור"
+          >
+            סגור
+          </button>
+        </div>
       </div>
     </Modal>
   );

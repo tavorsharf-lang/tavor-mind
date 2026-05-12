@@ -100,10 +100,12 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
   const pct = duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
   const canSeek = duration > 0;
 
+  const titleId = 'meditation-player-title';
+
   return (
     <Modal open={open} onClose={onClose} ariaLabel="נגן מדיטציה">
-      <div className="modal-meditation">
-        <h3 className="modal-title">{title}</h3>
+      <div className="modal-meditation modal-card-center" aria-labelledby={titleId}>
+        <h3 id={titleId} className="modal-title">{title}</h3>
         {subtitle && <p className="modal-body">{subtitle}</p>}
 
         <audio
@@ -124,10 +126,10 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
           </p>
         )}
 
-        <div className="meditation-controls">
+        <div className="modal-player-controls">
           <button
             type="button"
-            className="meditation-skip"
+            className="modal-player-btn"
             onClick={() => seekBy(-SKIP_SECONDS)}
             aria-label="אחורה 15 שניות"
             disabled={!canSeek}
@@ -137,7 +139,7 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
 
           <button
             type="button"
-            className="meditation-play"
+            className="modal-player-btn modal-player-btn-primary"
             onClick={togglePlay}
             aria-label={isPlaying ? 'השהה' : 'נגן'}
           >
@@ -148,7 +150,7 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
 
           <button
             type="button"
-            className="meditation-skip"
+            className="modal-player-btn"
             onClick={() => seekBy(SKIP_SECONDS)}
             aria-label="קדימה 15 שניות"
             disabled={!canSeek}
@@ -184,14 +186,16 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
           <span>{formatTime(duration)}</span>
         </div>
 
-        <button
-          type="button"
-          className="modal-close-btn"
-          onClick={onClose}
-          aria-label="סגור"
-        >
-          סגור
-        </button>
+        <div className="modal-actions">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-cream"
+            onClick={onClose}
+            aria-label="סגור"
+          >
+            סגור
+          </button>
+        </div>
       </div>
     </Modal>
   );

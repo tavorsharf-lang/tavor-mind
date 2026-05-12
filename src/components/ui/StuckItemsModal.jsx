@@ -66,12 +66,14 @@ export default function StuckItemsModal({ open, onClose }) {
     refresh();
   };
 
+  const titleId = 'stuck-items-title';
+
   return (
     <Modal open={open} onClose={onClose} ariaLabel="פריטים שלא הועלו">
-      <div className="stuck-modal">
+      <div className="stuck-modal" aria-labelledby={titleId}>
         <div className="stuck-modal-header">
-          <h2 className="stuck-modal-title">פריטים שלא הצליחו לעלות</h2>
-          <p className="stuck-modal-sub">
+          <h2 id={titleId} className="modal-title stuck-modal-title">פריטים שלא הצליחו לעלות</h2>
+          <p className="modal-body stuck-modal-sub">
             {items.length === 0
               ? 'הכל סגור. שום פריט לא תקוע.'
               : 'הפריטים שמורים אצלך במכשיר אבל לא הועלו לענן. אפשר לנסות שוב או להשליך.'}
@@ -115,7 +117,7 @@ export default function StuckItemsModal({ open, onClose }) {
           </ul>
         )}
 
-        <div className="stuck-modal-footer">
+        <div className="modal-actions stuck-modal-footer">
           {items.length > 1 && (
             <>
               <button type="button" className="stuck-btn stuck-btn-retry" onClick={retryAll} disabled={busy}>

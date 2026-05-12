@@ -231,39 +231,31 @@ function HypoBranch({ onNext, onSkip, onExit, note, setNote, felt62, setFelt62 }
         </main>
 
         {/* Modal overlay */}
-        <div style={{
-          position: 'absolute', inset: 0, zIndex: 100,
-          background: 'rgba(20, 18, 16, 0.42)',
-          backdropFilter: 'blur(6px)',
-          WebkitBackdropFilter: 'blur(6px)',
-          display: 'grid', placeItems: 'center', padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--surface)',
-            borderRadius: 22, padding: '24px 22px',
-            maxWidth: 340, width: '100%',
-            boxShadow: '0 14px 40px rgba(0, 0, 0, 0.18)',
-            border: '1px solid var(--line-soft)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <div style={{ width: 8, height: 8, borderRadius: 4, background: 'var(--lichen)' }} />
-              <span className="ds3-caption" style={{ color: 'var(--lichen)', fontWeight: 700 }}>
-                נשימה לתת-עוררות
-              </span>
+        <div className="modal-overlay" style={{ position: 'absolute' }}>
+          <div
+            className="modal-card modal-card-center"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="hypo-onboard-title"
+          >
+            <div className="modal-accent modal-accent-lichen">
+              נשימה לתת-עוררות
             </div>
-            <p className="ds3-body" style={{ lineHeight: 1.65, marginBottom: 20, marginTop: 0 }}>
+            <h3 id="hypo-onboard-title" className="modal-title">שאיפה ארוכה — נשיפה קצרה</h3>
+            <p className="modal-body">
               במצב מרוקן, הנשימה הזו עובדת בכיוון שונה ממה שאתה רגיל.
-              שאיפה ארוכה — נשיפה קצרה. זו הדרך להעיר את המערכת בצורה רכה.
+              זו הדרך להעיר את המערכת בצורה רכה.
               אחר כך נעבור לנשימה מאזנת.
             </p>
-            <button
-              type="button"
-              className="ds3-btn ds3-btn-blue"
-              onClick={() => { markOnboardingSeen(); setStage('breathe62'); }}
-              style={{ height: 52, borderRadius: 26 }}
-            >
-              הבנתי, נתחיל
-            </button>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="ds3-btn ds3-btn-blue"
+                onClick={() => { markOnboardingSeen(); setStage('breathe62'); }}
+              >
+                הבנתי, נתחיל
+              </button>
+            </div>
           </div>
         </div>
       </div>
