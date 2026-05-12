@@ -17,7 +17,7 @@ const PRIMARY_OPTIONS_BY_ACTIVATION = {
     { id: 'cold',      name: 'עיגון קר',    sub: 'מים קרים על פרקי הידיים, או קוביית קרח על הצוואר', tone: 'blue' },
   ],
   hypo: [
-    { id: 'vagal',     name: 'רטט קולי',    sub: 'המהום נמוך וארוך — הוויברציה מפעילה את הוואגוס', tone: 'blue' },
+    { id: 'vagal',     name: 'רטט קולי',    sub: 'המהום נמוך וארוך — הוויברציה מפעילה את הוואגוס', tone: 'body' },
     { id: 'butterfly', name: 'חיבוק פרפר', sub: 'הצלבת ידיים על החזה, טפיחות סירוגין', tone: 'orange' },
   ],
 };

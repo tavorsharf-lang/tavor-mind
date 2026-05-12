@@ -162,7 +162,7 @@ export default function HomeScreen({ authError }) {
 
       <div className="ds3-home-grid">
         <HomeTile
-          tone="orange"
+          tone="warmth"
           icon={<CheckinIcon />}
           title="צ'ק-אין יומי"
           badge={firstRun ? 'התחל כאן' : null}
@@ -170,26 +170,26 @@ export default function HomeScreen({ authError }) {
         />
         {therapyState.show && (
           <HomeTile
-            tone="indigo"
+            tone="reflect"
             icon={<TherapyIcon />}
             title={therapyState.mode === 'prep' ? 'הכנה לטיפול' : 'דיבריף'}
             onClick={() => goTo('/therapy/frame')}
           />
         )}
         <HomeTile
-          tone="coral"
+          tone="brand"
           icon={<ToolsIcon />}
           title="כלים"
           onClick={() => goTo('/tools')}
         />
         <HomeTile
-          tone="green"
+          tone="reflect"
           icon={<Phase8TriggerIcon />}
           title="ניתוח מקרה"
           onClick={() => goTo('/emergency', { state: { startAtAnalysis: true } })}
         />
         <HomeTile
-          tone="indigo"
+          tone="reflect"
           icon={<MirrorIcon />}
           title="המראה"
           onClick={() => goTo('/review')}
@@ -221,10 +221,10 @@ export default function HomeScreen({ authError }) {
   );
 }
 
-function HomeTile({ tone = 'blue', icon, title, badge, onClick }) {
+function HomeTile({ tone = 'calm', icon, title, badge, onClick }) {
   return (
     <button type="button" className="ds3-home-tile" onClick={onClick}>
-      <span className={`ds3-icon-tile ds3-icon-tile-${tone}`} aria-hidden="true">
+      <span className={`ds3-icon-tile icon-tone-${tone}`} aria-hidden="true">
         {icon}
       </span>
       <div className="ds3-home-tile-text">

@@ -49,7 +49,7 @@ export default function CheckinHub() {
           className="ck-card ck-card-tertiary"
           onClick={() => navigate('/checkin/history')}
         >
-          <span className="ck-card-icon icon-tone-mind" aria-hidden="true"><HistoryIcon /></span>
+          <span className="ck-card-icon icon-tone-reflect" aria-hidden="true"><HistoryIcon /></span>
           <span className="ck-card-text">
             <span className="ck-card-title">היסטוריה</span>
             <span className="ck-card-sub">7 הימים האחרונים</span>
