@@ -633,23 +633,6 @@ function EndOfFlowCheck({ activation, onExit, note, setNote, afterLine, onNext, 
         <div className="ds3-stack-3" style={{ padding: '0 4px 4px' }}>
           <button
             type="button"
-            onClick={onNext}
-            style={{
-              width: '100%', minHeight: 64, borderRadius: 24,
-              background: 'var(--lichen)', color: '#fff',
-              border: 'none',
-              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
-              padding: '10px 22px', gap: 2,
-              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
-              boxShadow: '0 8px 22px rgba(10, 132, 255, 0.30)',
-            }}
-          >
-            <span style={{ fontSize: 17, fontWeight: 700 }}>אני שם</span>
-            <span style={{ fontSize: 13, fontWeight: 500, opacity: 0.85 }}>להמשיך לשלב הבא</span>
-          </button>
-
-          <button
-            type="button"
             onClick={onRepeat}
             style={{
               width: '100%', minHeight: 64, borderRadius: 24,
@@ -683,6 +666,11 @@ function EndOfFlowCheck({ activation, onExit, note, setNote, afterLine, onNext, 
 
         {setNote && <NoteField note={note} setNote={setNote} />}
       </main>
+      <footer className="ds3-screen-footer">
+        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
+          הלאה
+        </button>
+      </footer>
     </div>
   );
 }
