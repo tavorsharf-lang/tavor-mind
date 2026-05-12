@@ -2579,3 +2579,136 @@
   outline: 2px solid var(--lichen);
   outline-offset: 4px;
 }
+
+/* ===========================================================================
+ * WAVE 7 · UNIFIED MICRO-INTERACTIONS
+ * ===========================================================================
+ * One coherent motion vocabulary across every interactive surface — cards,
+ * chips, pills, toggles, modals. Settle on --ease-soft, enter with
+ * --ease-spring, press feedback with a subtle scale-down. CSS-only; the
+ * focus-trap behaviour from <Modal /> still runs as before.
+ */
+
+/* Unified state transitions. Layered durations: transform is the fastest
+ * so press feedback feels immediate, color/background settle slightly
+ * slower so theme changes don't jitter. */
+.ds3-card,
+.ds3-card-button,
+.ds3-list-card,
+.ds3-hub-card,
+.ds3-tools-card,
+.ds3-ck-card,
+.ds3-home-tile,
+.ds3-activation-card,
+.ds3-chip,
+.ds3-chip-sm,
+.ds3-chip-xs,
+.ds3-pill,
+.ds3-watch-toggle,
+.ds3-watch-toggle-pill {
+  transition:
+    transform var(--dur-fast) var(--ease-soft),
+    box-shadow var(--dur-base) var(--ease-soft),
+    background-color var(--dur-fast) var(--ease-soft),
+    border-color var(--dur-fast) var(--ease-soft),
+    color var(--dur-fast) var(--ease-soft);
+}
+
+/* Hover lift — desktop pointing devices only. Touch screens (no hover
+ * capability) skip this entirely to avoid the "stuck hover" state. */
+@media (hover: hover) {
+  .ds3-card:hover,
+  .ds3-card-button:hover,
+  .ds3-list-card:hover,
+  .ds3-hub-card:hover,
+  .ds3-tools-card:hover,
+  .ds3-ck-card:hover,
+  .ds3-home-tile:hover,
+  .ds3-activation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+  }
+}
+
+/* Press feedback — every interactive surface dips slightly on tap. */
+.ds3-card:active,
+.ds3-card-button:active,
+.ds3-list-card:active,
+.ds3-hub-card:active,
+.ds3-tools-card:active,
+.ds3-ck-card:active,
+.ds3-home-tile:active,
+.ds3-activation-card:active {
+  transform: scale(0.985);
+}
+
+.ds3-chip:active,
+.ds3-chip-sm:active,
+.ds3-chip-xs:active,
+.ds3-pill:active,
+.ds3-watch-toggle:active {
+  transform: scale(0.96);
+}
+
+/* Modal entry — gentle scale-up with overshoot via --ease-spring. */
+@keyframes ds3ModalIn {
+  0%   { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+.modal-card {
+  animation: ds3ModalIn var(--dur-slow) var(--ease-spring);
+}
+
+/* Sheet upgrade — slide-up with springier easing. */
+.modal-sheet {
+  animation: ds3SheetUp var(--dur-slow) var(--ease-spring);
+}
+
+/* Reduced-motion guard — disables every Wave 7 effect. Keeps states
+ * visually distinct via shadow only (no transform, no animation). */
+@media (prefers-reduced-motion: reduce) {
+  .ds3-card,
+  .ds3-card-button,
+  .ds3-list-card,
+  .ds3-hub-card,
+  .ds3-tools-card,
+  .ds3-ck-card,
+  .ds3-home-tile,
+  .ds3-activation-card,
+  .ds3-chip,
+  .ds3-chip-sm,
+  .ds3-chip-xs,
+  .ds3-pill,
+  .ds3-watch-toggle,
+  .ds3-watch-toggle-pill {
+    transition: none;
+  }
+  .ds3-card:hover,
+  .ds3-card-button:hover,
+  .ds3-list-card:hover,
+  .ds3-hub-card:hover,
+  .ds3-tools-card:hover,
+  .ds3-ck-card:hover,
+  .ds3-home-tile:hover,
+  .ds3-activation-card:hover,
+  .ds3-card:active,
+  .ds3-card-button:active,
+  .ds3-list-card:active,
+  .ds3-hub-card:active,
+  .ds3-tools-card:active,
+  .ds3-ck-card:active,
+  .ds3-home-tile:active,
+  .ds3-activation-card:active,
+  .ds3-chip:active,
+  .ds3-chip-sm:active,
+  .ds3-chip-xs:active,
+  .ds3-pill:active,
+  .ds3-watch-toggle:active {
+    transform: none;
+  }
+  .modal-card,
+  .modal-sheet {
+    animation: none;
+  }
+}
