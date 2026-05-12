@@ -557,8 +557,8 @@ button:focus-visible {
 
 .breathing-stage {
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: 320px;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -952,7 +952,7 @@ button:focus-visible {
 
 @media (max-height: 640px) {
   .phase-title { font-size: 22px; margin-bottom: 10px; }
-  .breathing-stage { width: 220px; height: 220px; }
+  .breathing-stage { width: 280px; height: 280px; }
   .breathing-circle { width: 150px; height: 150px; }
   .breathing { gap: 8px; }
   .pace-pill { padding: 6px 14px; font-size: 13px; min-height: 32px; }

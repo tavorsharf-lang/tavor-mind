@@ -10,8 +10,9 @@ import './BreathingVisualization.css';
  * by stacked alpha rather than mix-blend-mode (cross-browser safer). */
 
 const PETAL_COUNT = 6;
-const PETAL_RADIUS = 85;
-const MAX_OFFSET = 65;
+const MIN_PETAL_RADIUS = 10;   /* tight bright dot at full exhale */
+const MAX_PETAL_RADIUS = 105;  /* big flower at full inhale */
+const MAX_OFFSET = 90;
 const PETAL_OPACITY = 0.55;
 
 function clamp01(x) {
@@ -72,6 +73,7 @@ export default function BreathingVisualization({
 
   const normScale = clamp01((scale - SCALE_MIN) / (SCALE_MAX - SCALE_MIN));
   const offset = normScale * MAX_OFFSET;
+  const petalRadius = MIN_PETAL_RADIUS + normScale * (MAX_PETAL_RADIUS - MIN_PETAL_RADIUS);
 
   const petals = useMemo(() => {
     const list = [];
@@ -132,7 +134,7 @@ export default function BreathingVisualization({
               key={p.id}
               cx={p.x.toFixed(2)}
               cy={p.y.toFixed(2)}
-              r={PETAL_RADIUS}
+              r={petalRadius.toFixed(2)}
               fill={`url(#${gradId})`}
               opacity={PETAL_OPACITY}
             />
