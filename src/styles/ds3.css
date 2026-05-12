@@ -2408,3 +2408,174 @@
     animation: none;
   }
 }
+
+
+/* ===== CANONICAL MODAL COMPOSITION ======================================
+ * Drop-in pieces for any modal:
+ *
+ *   .modal-overlay[.modal-overlay-soft|-strong]
+ *     .modal-card[.modal-card-center][role="dialog"]
+ *       .modal-icon[.modal-icon-{terra|lichen|green|indigo|heart}]
+ *       .modal-accent[.modal-accent-{terra|lichen|green|indigo}]
+ *       h3.modal-title
+ *       p.modal-body
+ *       .modal-actions[.modal-actions-row]   ← stack of <button.ds3-btn>
+ *
+ * Legacy .modal-backdrop / .modal-card / .modal-title / .modal-body
+ * stay in styles.css for existing screens. .modal-card already
+ * text-align: center by default; .modal-card-center is a no-op alias for
+ * explicit, semantic markup. */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(20, 18, 16, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: ds3FadeIn 0.25s var(--ease-out);
+}
+
+.modal-overlay-soft {
+  background: rgba(20, 18, 16, 0.25);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.modal-overlay-strong {
+  background: rgba(20, 18, 16, 0.60);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal-card-center {
+  text-align: center;
+}
+
+/* === Modal icon — circle, tone-tinted, centered above title === */
+.modal-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 12px;
+  flex-shrink: 0;
+}
+.modal-icon svg { width: 24px; height: 24px; }
+
+.modal-icon-terra  { background: var(--terra-soft);            color: var(--terra); }
+.modal-icon-lichen { background: var(--lichen-soft);           color: var(--lichen); }
+.modal-icon-green  { background: rgba(52, 168, 106, 0.15);     color: var(--green); }
+.modal-icon-indigo { background: rgba(94, 92, 230, 0.15);      color: var(--indigo); }
+.modal-icon-heart  { background: rgba(255, 59, 48, 0.15);      color: var(--heart); }
+
+/* === Modal accent — small uppercase eyebrow tag === */
+.modal-accent {
+  font-size: var(--text-eyebrow-size);
+  font-weight: var(--text-eyebrow-weight);
+  letter-spacing: var(--text-eyebrow-tracking);
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 6px;
+}
+.modal-accent-terra  { color: var(--terra); }
+.modal-accent-lichen { color: var(--lichen); }
+.modal-accent-green  { color: var(--green); }
+.modal-accent-indigo { color: var(--indigo); }
+
+/* === Modal actions — button stack (default) or row === */
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.modal-actions-row {
+  flex-direction: row;
+}
+
+.modal-actions-row > * { flex: 1; }
+
+/* === Modal player — used by audio meditation modal === */
+.modal-player-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 8px;
+}
+
+.modal-player-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-alt);
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    background-color 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
+}
+.modal-player-btn:hover { background: var(--line-soft); }
+.modal-player-btn:active { transform: scale(0.94); }
+
+.modal-player-btn-primary {
+  width: 64px;
+  height: 64px;
+  background: var(--lichen);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(10, 132, 255, 0.30);
+}
+.modal-player-btn-primary:hover { background: var(--lichen-deep); }
+
+/* === Bottom sheet (new, for future use) ================================
+ * Use for secondary actions that don't need to block the whole screen —
+ * the sheet slides up from the bottom, leaves the canvas visible above. */
+.modal-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--surface);
+  border-radius: 22px 22px 0 0;
+  padding: 12px var(--pad-x) max(var(--pad-bottom), env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: ds3SheetUp 280ms var(--ease-out);
+}
+
+.modal-sheet::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  margin: 0 auto 12px;
+}
+
+@keyframes ds3SheetUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-sheet { animation: none; }
+}
+
+/* === A11y focus-visible on the dialog itself ===========================
+ * Picks up when a screen reader / keyboard user lands on the modal
+ * surface. Pair with role="dialog" + aria-labelledby + aria-modal="true"
+ * in JSX. */
+[role="dialog"]:focus-visible {
+  outline: 2px solid var(--lichen);
+  outline-offset: 4px;
+}
