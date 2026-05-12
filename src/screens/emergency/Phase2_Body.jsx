@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
+import KapalabhatiExercise from './components/KapalabhatiExercise.jsx';
 import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
@@ -317,6 +318,36 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             cycles={2}
             lockPattern={true}
             onComplete={() => setStage('breathe42_check')}
+          />
+        </main>
+        <footer className="ds3-screen-footer" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setStage('kapalabhati')}
+            style={{
+              background: 'none', border: 'none', cursor: 'pointer',
+              color: 'var(--heart)', fontFamily: 'inherit',
+              fontSize: 13, fontWeight: 600,
+              textDecoration: 'underline',
+              padding: '6px 8px',
+            }}
+          >
+            דיסוציאציה עמוקה? להחליף ל-Kapalabhati אגרסיבי
+          </button>
+        </footer>
+      </div>
+    );
+  }
+
+  if (stage === 'kapalabhati') {
+    return (
+      <div className="ds3-screen">
+        <Topbar onExit={onExit} />
+        <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
+          <KapalabhatiExercise
+            key={`hypo-kapal-${round}`}
+            onComplete={() => setStage('transition')}
+            onAbort={() => setStage('breathe42_initial')}
           />
         </main>
       </div>
