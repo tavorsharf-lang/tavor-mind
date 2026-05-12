@@ -25,19 +25,29 @@ function prefersReducedMotion() {
 }
 
 export default function BreathingVisualization({
+  // autonomous mode
   pattern = 'simple',
   inhaleDuration = 4000,
   holdDuration = 0,
   exhaleDuration = 6000,
   restDuration = 0,
+  // synced mode (drop-in for external phase/progress control)
+  phase: syncedPhase,
+  duration: _syncedDuration,
+  progress: syncedProgress,
+  // shared
   isActive = true,
   onPhaseChange,
   onCycleComplete,
   size = 400,
   color = '#06B6D4',
   darkBackground = true,
+  className = '',
 }) {
+  const synced = syncedPhase != null && syncedProgress != null;
+
   const durations = useMemo(() => {
+    if (synced) return { inhale: 0, hold: 0, exhale: 0, rest: 0 };
     if (pattern === 'custom') {
       return {
         inhale: inhaleDuration,
@@ -47,7 +57,7 @@ export default function BreathingVisualization({
       };
     }
     return getPattern(pattern);
-  }, [pattern, inhaleDuration, holdDuration, exhaleDuration, restDuration]);
+  }, [synced, pattern, inhaleDuration, holdDuration, exhaleDuration, restDuration]);
 
   const reduceMotion = useMemo(prefersReducedMotion, []);
 
@@ -56,6 +66,8 @@ export default function BreathingVisualization({
     holdDuration:   durations.hold,
     exhaleDuration: durations.exhale,
     restDuration:   durations.rest,
+    syncedPhase: synced ? syncedPhase : undefined,
+    syncedProgress: synced ? syncedProgress : undefined,
     isActive,
     onPhaseChange,
     onCycleComplete,
@@ -94,9 +106,15 @@ export default function BreathingVisualization({
   const gradStart = '#A5F3FC';
   const gradEnd   = color || '#0891B2';
 
+  const wrapperClass = [
+    'breathing-viz',
+    darkBackground ? 'is-dark' : '',
+    className,
+  ].filter(Boolean).join(' ');
+
   return (
     <div
-      className={`breathing-viz${darkBackground ? ' is-dark' : ''}`}
+      className={wrapperClass}
       style={{ maxWidth: size }}
       data-phase={phase}
     >

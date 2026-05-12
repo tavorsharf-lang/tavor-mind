@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getBreathingHaptic } from '../../../utils/breathingHaptic.js';
-import BreathingFlower from '../../../components/visuals/BreathingFlower.jsx';
+import BreathingVisualization from '../../../components/BreathingVisualization/BreathingVisualization.jsx';
 
 const PATTERNS = {
   '478': {
@@ -301,11 +301,14 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
             />
           </svg>
         )}
-        <BreathingFlower
+        <BreathingVisualization
           phase={step.label === 'תכניס' ? 'inhale' : step.label === 'תוציא' ? 'exhale' : 'hold'}
           duration={step.sec}
           progress={Math.min(1, Math.max(0, (renderTime - stepStartedAt) / (step.sec * 1000)))}
-          size={240}
+          isActive={!done}
+          size={260}
+          darkBackground
+          className="in-stage"
         />
         <div className="breathing-countdown" aria-hidden="true">{remainingSec}</div>
       </div>

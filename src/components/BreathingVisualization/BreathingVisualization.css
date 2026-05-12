@@ -21,6 +21,21 @@
   display: block;
 }
 
+/* When embedded inside .breathing-stage, fill the stage and sit behind overlays */
+.breathing-viz.in-stage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none !important;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Keep the box-pattern trace visible above the dark viz background */
+.breathing-stage .breathing-square {
+  z-index: 2;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .breathing-viz-svg g {
     transition: none !important;
