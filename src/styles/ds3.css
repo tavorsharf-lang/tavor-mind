@@ -1873,6 +1873,13 @@
   height: 100% !important;
 }
 
+/* Hide Spline free-tier watermark (personal app, not a public product) */
+.ds3-heart-hologram a,
+.ds3-heart-hologram [class*="watermark" i],
+.ds3-heart-hologram [class*="logo" i] {
+  display: none !important;
+}
+
 .ds3-heart-hologram-fallback {
   position: absolute;
   inset: 14%;
