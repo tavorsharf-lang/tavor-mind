@@ -1,4 +1,4 @@
-import { Suspense, lazy, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 
 const Spline = lazy(() => import('@splinetool/react-spline'));
 
@@ -6,6 +6,51 @@ const SCENE_URL = 'https://prod.spline.design/l-7SixbW4a6CMX42/scene.splinecode'
 
 export default function HeartHologramButton({ onClick, ariaLabel = 'עכשיו קשה לי' }) {
   const [loaded, setLoaded] = useState(false);
+  const rafRef = useRef(null);
+
+  useEffect(
+    () => () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    },
+    [],
+  );
+
+  const handleLoad = (spline) => {
+    try {
+      spline.setBackgroundColor?.('transparent');
+    } catch {}
+
+    let rotatables = [];
+    try {
+      const scene =
+        spline?.runtime?.scene ??
+        spline?._scene ??
+        spline?.scene ??
+        spline?.app?.scene;
+      if (scene?.children?.length) {
+        rotatables = scene.children.filter(
+          (c) => c && !c.isCamera && !c.isLight && c.rotation,
+        );
+      }
+    } catch {}
+
+    if (rotatables.length > 0) {
+      const start = performance.now();
+      const tick = (t) => {
+        const s = (t - start) / 1000;
+        const ry = Math.sin(s * 0.5) * 0.5;
+        const rx = Math.cos(s * 0.35) * 0.12;
+        rotatables.forEach((obj) => {
+          obj.rotation.y = ry;
+          obj.rotation.x = rx;
+        });
+        rafRef.current = requestAnimationFrame(tick);
+      };
+      rafRef.current = requestAnimationFrame(tick);
+    }
+
+    setLoaded(true);
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -25,18 +70,15 @@ export default function HeartHologramButton({ onClick, ariaLabel = 'עכשיו �
       data-loaded={loaded ? 'true' : 'false'}
     >
       {!loaded && <span className="ds3-heart-hologram-fallback" aria-hidden="true" />}
-      <Suspense fallback={null}>
-        <Spline
-          scene={SCENE_URL}
-          onLoad={() => setLoaded(true)}
-          style={{
-            width: '100%',
-            height: '100%',
-            background: 'transparent',
-            pointerEvents: 'none',
-          }}
-        />
-      </Suspense>
+      <div className="ds3-heart-hologram-stage">
+        <Suspense fallback={null}>
+          <Spline
+            scene={SCENE_URL}
+            onLoad={handleLoad}
+            style={{ width: '100%', height: '100%' }}
+          />
+        </Suspense>
+      </div>
     </div>
   );
 }

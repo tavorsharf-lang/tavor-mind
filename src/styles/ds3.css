@@ -1840,12 +1840,26 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  transition: transform 220ms var(--ease-out);
   -webkit-tap-highlight-color: transparent;
+  perspective: 1000px;
 }
 
-.ds3-heart-hologram:hover { transform: scale(1.04); }
-.ds3-heart-hologram:active { transform: scale(0.97); }
+.ds3-heart-hologram-stage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition: transform 220ms var(--ease-out);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.ds3-heart-hologram[data-loaded="true"] .ds3-heart-hologram-stage {
+  animation: ds3HoloFloat 7s ease-in-out infinite;
+}
+
+.ds3-heart-hologram:hover .ds3-heart-hologram-stage { transform: scale(1.04); }
+.ds3-heart-hologram:active .ds3-heart-hologram-stage { transform: scale(0.97); }
 
 .ds3-heart-hologram:focus-visible {
   outline: 3px solid var(--terra-soft);
@@ -1872,9 +1886,14 @@
   display: none;
 }
 
+@keyframes ds3HoloFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(0.4deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .ds3-heart-hologram { transition: none; }
-  .ds3-heart-hologram:hover { transform: none; }
+  .ds3-heart-hologram-stage { transition: none; animation: none !important; }
+  .ds3-heart-hologram:hover .ds3-heart-hologram-stage { transform: none; }
   .ds3-heart-hologram-fallback { animation: none; }
 }
 
