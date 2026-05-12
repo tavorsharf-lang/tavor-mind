@@ -5,7 +5,8 @@ import AnalysisListItem from './components/AnalysisListItem.jsx';
 import MoodListItem from './components/MoodListItem.jsx';
 import { Loading } from '../../components/ui/Loading.jsx';
 import UndoToast from '../../components/ui/UndoToast.jsx';
-import { ImportIcon, FilterIcon, TrashIcon } from '../../components/icons/index.jsx';
+import { TrashIcon } from '../../components/icons/index.jsx';
+import { Plus, Filter } from '../../components/icons/system.jsx';
 import { listAnalyses, restoreAnalysis, listDeletedAnalyses } from '../../utils/analysisStorage.js';
 import { listAllMoodCheckins, listDeletedMoodCheckins } from '../../utils/checkinStorage.js';
 import { ANALYSIS_TYPES, ANALYSIS_TYPE_IDS, SCHEMA_LABELS, SCHEMA_IDS, PATTERN_LABELS, PATTERN_IDS } from '../../data/analysisSchemas.js';
@@ -150,7 +151,7 @@ export default function RepositoryHub() {
       <main className="tool-content repo-content">
         <div className="repo-toolbar">
           <button type="button" className="repo-import-btn" onClick={() => navigate('/repository/import')}>
-            <ImportIcon size={18} />
+            <Plus size={18} />
             ייבא ניתוח
           </button>
           <button
@@ -159,7 +160,7 @@ export default function RepositoryHub() {
             onClick={() => setFiltersOpen(!filtersOpen)}
             aria-expanded={filtersOpen}
           >
-            <FilterIcon size={20} />
+            <Filter size={20} />
             סינון
             {activeFilterCount > 0 && <span className="filter-count-badge">{activeFilterCount}</span>}
           </button>
