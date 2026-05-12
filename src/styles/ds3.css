@@ -2712,3 +2712,152 @@
     animation: none;
   }
 }
+
+
+/* =====================================================================
+ * WAVE 8 · SECTIONS, SCREEN BODY, NUMBERED ROWS, EMPTY, TEXTAREA SIZES
+ *
+ * Layout primitives that cover the glue we still write inline today.
+ * Additive — every legacy class is kept via selector list, so the
+ * existing 91 screens render unchanged.
+ * ===================================================================== */
+
+/* === Canonical section primitive ======================================
+ *   .ds3-section            vertical stack of section content
+ *   .ds3-section-title      large heading (22/700) with optional icon
+ *   .ds3-section-title-row  title + trailing aside (link / count / chip)
+ *
+ * Aliases: .review-section / .review-section-title keep working. */
+.ds3-section,
+.review-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ds3-section-title,
+.review-section-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-wrap: balance;
+}
+
+/* Header row when the section has a title on one side and an aside
+ * (link, count, action chip) on the other. */
+.ds3-section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ds3-section-title-row > .ds3-section-title,
+.ds3-section-title-row > .review-section-title { flex: 1; min-width: 0; }
+
+/* === Canonical scrollable screen body =================================
+ *   .ds3-screen-body         flex:1; min-height:0; overflow-y:auto
+ *                            (default gap: --gap-section)
+ *   .ds3-screen-body.is-dense    gap: 8px  (tight lists)
+ *   .ds3-screen-body.is-loose    gap: 20px (review, repository)
+ *
+ * Aliases: .hub-main / .tool-content / .ck-hub-main keep working. */
+.ds3-screen-body,
+.hub-main,
+.tool-content,
+.ck-hub-main {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-section);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: max(var(--pad-bottom), env(safe-area-inset-bottom));
+}
+
+.ds3-screen-body.is-dense { gap: 8px; }
+.ds3-screen-body.is-loose { gap: 20px; }
+
+/* === Numbered row =====================================================
+ * Replaces the inline display:flex pattern that wraps a small numbered
+ * circle + content (HR setup, hypo step list, Phase 8 readback).
+ *
+ *   <div className="ds3-numbered-row">
+ *     <span className="step-num-circle">3</span>
+ *     <div>…content…</div>
+ *   </div>
+ *
+ * The circle itself stays owned by the component (.hypo-step-num /
+ * .hr-setup-step-num / .step-num-circle). This rule just gives the row
+ * a consistent layout. Use .is-top for multi-line content where the
+ * number should align to the first line, not center. */
+.ds3-numbered-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ds3-numbered-row.is-top { align-items: flex-start; }
+
+/* === Empty state ======================================================
+ *   <div className="ds3-empty">
+ *     <div className="ds3-empty-glyph"><Icon/></div>
+ *     <h3 className="ds3-empty-title">לא נמצאו ניתוחים</h3>
+ *     <p className="ds3-empty-text">תוסיף ניתוח ראשון…</p>
+ *   </div>
+ *
+ * Visually quiet — no card, no border. The whitespace itself is the
+ * message; the glyph is just a soft anchor for the eye. */
+.ds3-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 20px;
+  text-align: center;
+}
+
+.ds3-empty-glyph {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-alt);
+  color: var(--ink-muted);
+  margin-bottom: 4px;
+}
+.ds3-empty-glyph svg { width: 28px; height: 28px; }
+
+.ds3-empty-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.ds3-empty-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  max-width: 280px;
+  text-wrap: pretty;
+}
+
+/* === Textarea size modifiers ==========================================
+ * Replace the `rows={N}` attribute with semantic size classes. Heights
+ * derived from font 17 / line-height 1.55 / padding 14×2. Removes a
+ * layout-affecting HTML attribute that browsers honor inconsistently. */
+.ds3-textarea.is-sm { min-height: 100px; }
+.ds3-textarea.is-md { min-height: 160px; }
+.ds3-textarea.is-lg { min-height: 240px; }
+.ds3-textarea.is-xl { min-height: 380px; }
