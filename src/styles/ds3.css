@@ -1274,7 +1274,7 @@
   width: 62%;
   height: 62%;
   border-radius: 50%;
-  background: var(--terra);
+  background: radial-gradient(circle at 35% 30%, #FFB6A4 0%, var(--terra) 55%, #C24A35 100%);
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -1283,10 +1283,27 @@
   font-size: 22px;
   font-weight: 700;
   line-height: 1.35;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.20);
+  overflow: hidden;
+  isolation: isolate;
   box-shadow:
     0 12px 40px rgba(255, 106, 79, 0.45),
     0 4px 10px rgba(255, 106, 79, 0.32);
   transition: transform 200ms var(--ease-out);
+}
+
+/* Hero core scanlines — subtle horizontal sweep, overlay-blended */
+.ds3-home-hero-core::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.07) 0 1px,
+    transparent 1px 3px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
 .ds3-home-hero-btn:active .ds3-home-hero-core {
@@ -1763,3 +1780,131 @@
 
 .hr-summary-delta.is-down { color: var(--green); background: rgba(52, 168, 106, 0.10); }
 .hr-summary-delta.is-up { color: var(--orange); background: rgba(255, 138, 42, 0.10); }
+
+
+/* ===== HOLOGRAPHIC ACCENTS =============================================
+ * Three deliberate, restrained holo flourishes that signal "this moment
+ * is alive" without slipping into chrome. All three use the existing
+ * palette (terra / pink / lichen) — no new tokens.
+ *
+ *   1. Home hero halo            slow conic backdrop behind the heartbeat
+ *   2. Open-question card border traveling conic mask (the mirror prompt)
+ *   3. .is-selected shimmer pass diagonal white sweep across selected cards
+ *
+ * @keyframes live here so the reduced-motion guard at the bottom kills
+ * them with one rule. */
+
+/* 1 — Hero halo: rotating conic behind the heartbeat button. The pulses
+ *     (terra-soft rings) stay between this halo and the core. */
+.ds3-home-hero-btn::before {
+  content: '';
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--terra),
+    var(--pink),
+    var(--blue),
+    var(--terra)
+  );
+  filter: blur(22px);
+  opacity: 0.42;
+  z-index: 0;
+  pointer-events: none;
+  animation: ds3HoloSpin 8s linear infinite;
+}
+
+/* 2 — Open-question card: 1.5px conic gradient border via the mask trick.
+ *     Slow rotation suggests "still listening" without demanding focus. */
+.open-question-text {
+  position: relative;
+  isolation: isolate;
+}
+
+.open-question-text::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 0deg,
+    var(--terra),
+    var(--pink),
+    var(--lichen),
+    var(--terra)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.65;
+  pointer-events: none;
+  animation: ds3HoloSpin 12s linear infinite;
+}
+
+/* 3 — Selected card shimmer: diagonal white sweep, mix-blend overlay.
+ *     The base .is-selected coloring (terra-soft + terra border) is
+ *     unchanged — this is layered on top via ::after so :hover/:active
+ *     transforms on the card itself still work. */
+.ds3-list-card.is-selected,
+.ds3-card-button.is-selected,
+.ds3-mode-card.is-selected,
+.hub-card.is-selected,
+.tools-card.is-selected,
+.ck-card.is-selected {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ds3-list-card.is-selected::after,
+.ds3-card-button.is-selected::after,
+.ds3-mode-card.is-selected::after,
+.hub-card.is-selected::after,
+.tools-card.is-selected::after,
+.ck-card.is-selected::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  pointer-events: none;
+  animation: ds3HoloShimmer 3.6s ease-in-out infinite;
+}
+
+@keyframes ds3HoloSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ds3HoloShimmer {
+  0%   { transform: translateX(-100%); }
+  60%  { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-home-hero-btn::before,
+  .open-question-text::before,
+  .ds3-list-card.is-selected::after,
+  .ds3-card-button.is-selected::after,
+  .ds3-mode-card.is-selected::after,
+  .hub-card.is-selected::after,
+  .tools-card.is-selected::after,
+  .ck-card.is-selected::after {
+    animation: none;
+  }
+}
