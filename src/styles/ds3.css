@@ -147,9 +147,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px 8px;
+  padding: 16px 18px 8px;
   flex-shrink: 0;
-  height: 56px;
+  height: auto;
 }
 
 .ds3-topbar-back {
@@ -205,8 +205,104 @@
 
 .ds3-topbar-skip:hover { color: var(--ink); }
 
+/* === Canonical header (DS3) ============================================
+ * One source of truth for tool-header / ck-hub-header / ds3-topbar back-btn.
+ *
+ *   .ds3-header              column wrapper, padding 16/20/16
+ *   .ds3-header__row         back + title (flex row)
+ *   .ds3-header__title       title text — large display
+ *   .ds3-header__subtitle    optional subtitle / date below
+ *   .ds3-header__back        40×40 radius-12 back button (alias of .tool-back)
+ *
+ * Legacy classes (.tool-header, .ck-hub-header, .tool-title, .ck-hub-title,
+ * .tool-subtitle, .ck-hub-date, .tool-back) keep working through the
+ * selector list below. Layout (row vs column) stays per-class to avoid
+ * shifting the 91 existing screens — only shared properties unify here
+ * (padding-top:16, title font, back-button specs).
+ *
+ * Bug fix: .ck-hub-header was previously padded 4/0/16 → now unified to
+ * the same 16-top as .tool-header and .ds3-topbar, no more drift across
+ * checkin / tools / repo / review headers.
+ */
+.ds3-header,
+.tool-header,
+.ck-hub-header {
+  padding-top: 16px;
+}
+
+/* Canonical column layout (new markup only). */
+.ds3-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px 16px;
+}
+
+.ds3-header__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ds3-header__title,
+.tool-title,
+.ck-hub-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+.ds3-header__subtitle,
+.tool-subtitle,
+.ck-hub-date {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+/* Unified back button — 40×40, radius 12, transparent until hover. */
+.ds3-header__back,
+.tool-back,
+.ds3-topbar-back {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.ds3-header__back svg,
+.tool-back svg,
+.ds3-topbar-back svg { width: 22px; height: 22px; }
+
+.ds3-header__back:hover,
+.tool-back:hover,
+.ds3-topbar-back:hover {
+  background: rgba(60, 60, 67, 0.08);
+  color: var(--ink);
+}
+
+.ds3-header__back:active,
+.tool-back:active,
+.ds3-topbar-back:active { transform: scale(0.96); }
+
+/* .ds3-topbar-spacer mirrors the back button's footprint so the topbar
+ * stays balanced when no back arrow is rendered. */
 .ds3-topbar-spacer {
   width: 40px;
+  height: 40px;
 }
 
 /* Inline X close button (used in modals + closing screen) */
