@@ -95,6 +95,10 @@
   --radius-xl: 28px;             /* large primary CTAs (full pill) */
   --radius-pill: 999px;          /* fully round pills */
 
+  /* Canonical list-card radius — shared by .ds3-list-card and its aliases
+   * (hub-card / tools-card / ck-card / ds3-card-button). */
+  --card-radius: 18px;
+
   /* === SHADOWS (softer, color-tinted) === */
   --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 0 0 0.5px rgba(60, 60, 67, 0.10);
   --shadow-medium: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0 0 0.5px rgba(60, 60, 67, 0.08);
