@@ -339,12 +339,7 @@
   padding: 0 22px;
 }
 
-.ds3-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.ds3-btn:active:not(:disabled) {
+.ds3-btn:active:not(:disabled):not(.is-disabled):not(.is-loading) {
   transform: scale(0.98);
 }
 
@@ -481,6 +476,91 @@
   outline: 2px solid var(--lichen);
   outline-offset: 3px;
   border-radius: inherit;
+}
+
+/* === Disabled state ====================================================
+ * Both the native [disabled] attribute and the .is-disabled class take
+ * the button out of action: faded, no shadow, not clickable, no pointer
+ * cursor change on hover (cursor stays not-allowed). */
+.ds3-btn[disabled],
+.ds3-btn.is-disabled,
+.ds3-btn-link[disabled],
+.ds3-btn-link.is-disabled,
+.link-btn[disabled],
+.link-btn.is-disabled,
+.ds3-topbar-skip[disabled],
+.ds3-topbar-skip.is-disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* === Loading state =====================================================
+ * .is-loading hides the label (color:transparent) and reveals a centered
+ * spinner via ::after. pointer-events:none locks the button while the
+ * async task runs.
+ *
+ * Spinner color tracks the button variant:
+ *   solid (primary/blue/coral/ink)        → white spinner
+ *   cream / outline / link / quiet        → contextual dark or lichen
+ *
+ * prefers-reduced-motion does NOT remove the spinner — it slows from
+ * 720ms to 2.4s so the busy signal stays visible. */
+.ds3-btn.is-loading,
+.ds3-btn-link.is-loading,
+.link-btn.is-loading,
+.ds3-topbar-skip.is-loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.ds3-btn.is-loading::after,
+.ds3-btn-link.is-loading::after,
+.link-btn.is-loading::after,
+.ds3-topbar-skip.is-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2.5px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ds3Spin 720ms linear infinite;
+}
+
+/* Dark spinner on light surfaces */
+.ds3-btn-cream.is-loading::after,
+.ds3-btn-outline-terra.is-loading::after,
+.ds3-btn-outline-blue.is-loading::after {
+  border-color: var(--ink);
+  border-top-color: transparent;
+}
+
+/* Link-style buttons get a lichen spinner — reads as "working on it",
+ * not as a primary CTA. */
+.ds3-btn-link.is-loading::after,
+.link-btn.is-loading::after,
+.ds3-topbar-skip.is-loading::after {
+  border-color: var(--lichen);
+  border-top-color: transparent;
+}
+
+@keyframes ds3Spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds3-btn.is-loading::after,
+  .ds3-btn-link.is-loading::after,
+  .link-btn.is-loading::after,
+  .ds3-topbar-skip.is-loading::after {
+    animation-duration: 2.4s;
+  }
 }
 
 /* Quiet button — text-only, muted, for "skip"/"finish here" */
