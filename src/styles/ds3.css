@@ -1874,9 +1874,11 @@
 }
 
 /* Hide Spline free-tier watermark (personal app, not a public product) */
-.ds3-heart-hologram a,
-.ds3-heart-hologram [class*="watermark" i],
-.ds3-heart-hologram [class*="logo" i] {
+/* Spline 4.x portals the badge outside the wrapper — must be global */
+a[href*="spline.design" i],
+a[href*="spline.com" i],
+[class*="spline-watermark" i],
+[class*="SplineWatermark" i] {
   display: none !important;
 }
 
