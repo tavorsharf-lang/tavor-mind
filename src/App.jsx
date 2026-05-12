@@ -97,8 +97,9 @@ export default function App() {
   return (
     <BrowserRouter basename="/tavor-mind">
       <NavProvider>
-        <a href="#main-content" className="ds2-skip-link">דלג לתוכן הראשי</a>
+        <a href="#main-content" className="ds3-skip-link">דלג לתוכן</a>
         <NavRail />
+        <main id="main-content" tabIndex={-1}>
         <Routes>
         <Route path="/" element={<HomeScreen authError={authError} />} />
         <Route path="/emergency" element={<EmergencyFlow />} />
@@ -130,6 +131,7 @@ export default function App() {
         <Route path="/settings/therapy-day" element={<TherapyDaySettings />} />
         <Route path="/something-waiting" element={<SomethingWaitingScreen />} />
         </Routes>
+        </main>
       </NavProvider>
     </BrowserRouter>
   );

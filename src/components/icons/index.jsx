@@ -29,16 +29,23 @@ const DUOTONE = {
   fillOpacity: 0.25,
 };
 
-function Svg({ size = 24, children, ...rest }) {
+function Svg({ size = 24, title, children, ...rest }) {
+  // When `title` is provided the icon becomes meaningful: expose it as
+  // role="img" with an embedded <title> for screen readers. Otherwise the
+  // icon is decorative and aria-hidden so SR users skip it.
+  const a11y = title
+    ? { role: 'img', 'aria-label': title }
+    : { 'aria-hidden': true };
   return (
     <svg
       width={size}
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      aria-hidden="true"
+      {...a11y}
       {...rest}
     >
+      {title && <title>{title}</title>}
       {children}
     </svg>
   );

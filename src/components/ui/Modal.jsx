@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 
 const FOCUSABLE = 'a[href],button:not([disabled]),textarea:not([disabled]),input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-export function Modal({ open, onClose, children, ariaLabel }) {
+export function Modal({ open, onClose, children, ariaLabel, ariaLabelledBy }) {
   const cardRef = useRef(null);
   const restoreRef = useRef(null);
 
@@ -55,7 +55,8 @@ export function Modal({ open, onClose, children, ariaLabel }) {
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label={ariaLabel}
+      aria-label={ariaLabelledBy ? undefined : ariaLabel}
+      aria-labelledby={ariaLabelledBy}
     >
       <div
         ref={cardRef}

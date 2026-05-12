@@ -200,12 +200,13 @@ export default function HomeScreen({ authError }) {
         {hrReady && (
           <button
             type="button"
+            role="switch"
+            aria-checked={wearingWatch}
             className={`ds3-watch-toggle ${wearingWatch ? 'is-on' : 'is-off'}`}
             onClick={toggleWearingWatch}
-            aria-pressed={wearingWatch}
           >
             <span className="ds3-watch-toggle-label">אני עונד שעון</span>
-            <span className="ds3-watch-toggle-pill">{wearingWatch ? 'כן' : 'לא'}</span>
+            <span className="ds3-watch-toggle-pill" aria-hidden="true">{wearingWatch ? 'כן' : 'לא'}</span>
           </button>
         )}
         <div className="ds3-home-footer-row">
