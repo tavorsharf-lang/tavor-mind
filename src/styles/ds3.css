@@ -1830,11 +1830,12 @@
 
 /* ── Heart hologram button (Spline) ─────────────────────────── */
 .ds3-heart-hologram {
-  /* Heart is rendered in the bottom-left of the Spline frame.
-     Shift the canvas right + up to bring it to the visible center.
-     Tune these two values if alignment drifts. */
-  --heart-shift-x: 25%;
-  --heart-shift-y: -25%;
+  /* Heart sits in the bottom-left of the Spline frame.
+     The .ds3-heart-hologram-frame inside is 200% larger than the clip
+     and gets translated so the heart lands at the visible center.
+     Tune --heart-shift-x / -y if alignment drifts after a scene update. */
+  --heart-shift-x: 30%;
+  --heart-shift-y: -30%;
 
   position: relative;
   z-index: 1;
@@ -1853,11 +1854,23 @@
 .ds3-heart-hologram-stage {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
+  overflow: hidden;
   transition: transform 220ms var(--ease-out);
   transform-origin: center;
   will-change: transform;
+}
+
+.ds3-heart-hologram-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  transform: translate(
+    calc(-50% + var(--heart-shift-x)),
+    calc(-50% + var(--heart-shift-y))
+  );
+  pointer-events: auto;
 }
 
 .ds3-heart-hologram[data-loaded="true"] .ds3-heart-hologram-stage {
@@ -1872,13 +1885,12 @@
   outline-offset: 8px;
 }
 
+.ds3-heart-hologram-frame > div,
 .ds3-heart-hologram canvas {
   display: block;
   background: transparent !important;
   width: 100% !important;
   height: 100% !important;
-  transform: translate(var(--heart-shift-x), var(--heart-shift-y));
-  transform-origin: center;
 }
 
 /* Hide Spline free-tier watermark (personal app, not a public product) */

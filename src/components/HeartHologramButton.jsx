@@ -72,13 +72,15 @@ export default function HeartHologramButton({ onClick, ariaLabel = 'עכשיו �
     >
       {!loaded && <span className="ds3-heart-hologram-fallback" aria-hidden="true" />}
       <div className="ds3-heart-hologram-stage">
-        <Suspense fallback={null}>
-          <Spline
-            scene={SCENE_URL}
-            onLoad={handleLoad}
-            style={{ width: '100%', height: '100%' }}
-          />
-        </Suspense>
+        <div className="ds3-heart-hologram-frame">
+          <Suspense fallback={null}>
+            <Spline
+              scene={SCENE_URL}
+              onLoad={handleLoad}
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
