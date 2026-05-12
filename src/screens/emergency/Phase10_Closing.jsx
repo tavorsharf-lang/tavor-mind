@@ -1,4 +1,4 @@
-import { Phase10ClosingIcon } from '../../components/icons/index.jsx';
+import { PhaseIntegration as Phase10ClosingIcon } from '../../components/icons/system.jsx';
 
 export default function Phase10Closing({
   analyzed,

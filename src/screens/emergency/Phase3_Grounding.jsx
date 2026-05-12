@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Phase3GroundingIcon } from '../../components/icons/index.jsx';
+import { PhaseGrounding as Phase3GroundingIcon } from '../../components/icons/system.jsx';
 import {
   SENSES_54321,
   COLOR_SCAN,

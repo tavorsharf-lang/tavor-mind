@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Phase1ActivationIcon } from '../../components/icons/index.jsx';
+import { PhaseActivation as Phase1ActivationIcon } from '../../components/icons/system.jsx';
 import { buildStartShortcutUrl, isWearingWatch, setWearingWatch } from '../../utils/liveHr.js';
 
 const OPTIONS = [

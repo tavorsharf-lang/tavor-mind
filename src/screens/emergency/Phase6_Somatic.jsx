@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { colorForScore } from '../../utils/scoreColor.js';
-import { Phase6SomaticIcon } from '../../components/icons/index.jsx';
+import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
 
 const BUTTERFLY_DURATION_SEC = 60;
 const VAGAL_DURATION_SEC = 90;

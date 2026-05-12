@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import PhaseHeader from './components/PhaseHeader.jsx';
 import SoftButton from './components/SoftButton.jsx';
-import { Phase8TriggerIcon } from '../../components/icons/index.jsx';
+import { PhaseTriggers as Phase8TriggerIcon } from '../../components/icons/system.jsx';
 import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { useBackHandler } from '../../utils/navContext.jsx';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from '../../components/ui/Modal.jsx';
 import { anchors } from '../../data/anchors.js';
-import { Phase5AnchorIcon } from '../../components/icons/index.jsx';
+import { ActionAnchor as Phase5AnchorIcon } from '../../components/icons/system.jsx';
 
 export default function Phase5Anchor({ onNext, onExit }) {
   const [openImage, setOpenImage] = useState(null);

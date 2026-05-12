@@ -1,3 +1,5 @@
+import { ChevronStart } from '../../../components/icons/system.jsx';
+
 // PhaseHeader — DS3 topbar style. Replaces the old progress-dots + "לעצור כאן" pattern
 // with a simple back-arrow + label header (matching the design's ScreenTopBar).
 //
@@ -6,7 +8,7 @@
 //   stageLabel — shown as the centered topbar label
 //   onExit — wired to the back button
 //   extra — rendered on the visual-left side (the "skip" slot)
-//   icon — optional Phosphor Duotone icon component rendered before the label
+//   icon — optional icon component rendered before the label
 //   tone — family color for the icon (e.g. 'crisis', 'calm', 'reflect')
 export default function PhaseHeader({ stageLabel = null, onExit, extra = null, icon: Icon = null, tone = null }) {
   return (
@@ -28,9 +30,7 @@ export default function PhaseHeader({ stageLabel = null, onExit, extra = null, i
         onClick={onExit}
         aria-label="לעצור כאן ולשמור"
       >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );

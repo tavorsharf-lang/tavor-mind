@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
-import { Phase2BreathingIcon } from '../../components/icons/index.jsx';
+import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
   markOnboardingSeen,
