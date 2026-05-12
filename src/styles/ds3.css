@@ -796,37 +796,40 @@
   background: var(--surface);
 }
 
-.ds3-icon-tile-blue   { background: rgba(10, 132, 255, 0.15);  color: var(--lichen); }
-.ds3-icon-tile-terra  { background: rgba(255, 106, 79, 0.15);  color: var(--terra); }
-.ds3-icon-tile-orange { background: rgba(255, 138, 42, 0.15);  color: var(--orange); }
-.ds3-icon-tile-green  { background: rgba(52, 168, 106, 0.15);  color: var(--green); }
-.ds3-icon-tile-indigo { background: rgba(94, 92, 230, 0.15);   color: var(--indigo); }
-.ds3-icon-tile-coral  { background: rgba(255, 59, 48, 0.15);   color: var(--heart); }
-.ds3-icon-tile-purple { background: rgba(175, 82, 222, 0.15);  color: var(--purple); }
-.ds3-icon-tile-teal   { background: rgba(31, 182, 166, 0.15);  color: var(--teal); }
-.ds3-icon-tile-yellow { background: rgba(255, 185, 56, 0.18);  color: #B8924E; }
-
-/* Phosphor Duotone family tones — generic, reusable on any icon container.
- * Works on .hub-card-icon, .tools-card-icon, .ck-card-icon, etc.
- * Family map:
- *   crisis  → heart red       (Emergency, triggers, hyper, activated)
- *   calm    → lichen blue     (Mindfulness, breath, on-edge)
- *   body    → green           (Somatic, grounding, body)
- *   self    → purple          (Modes, parts, schemas, profile)
- *   warmth  → clay orange     (Gratitude, mood, morning, mid-balance)
- *   reflect → indigo          (Therapy, repository, i-language, catastrophe)
- *   mind    → teal            (Review, history, meta, settings)
+/* Phosphor Duotone family tones — semantic-named is canonical; palette-named
+ * (.ds3-icon-tile-*) are aliases kept for the legacy HomeScreen / Phase 1
+ * markup that builds class names from a tone string. Both selectors share
+ * one rule so background+color stay in lockstep — no drift.
+ *
+ * Semantic mapping (intent → palette → where it shows up):
+ *   brand   → terra  (#FF6A4F)   Home hero, Phase 1 activation, primary CTA
+ *   crisis  → heart  (#FF3B30)   Trigger tracker, Phase 8 distortions
+ *   calm    → lichen (#0A84FF)   Reality-check, breathing, mindfulness
+ *   body    → green  (#34A86A)   Somatic, grounding, body regulation
+ *   self    → purple (#AF52DE)   Schemas, attachment, modes — the inner cast
+ *   warmth  → orange (#FF8A2A)   Mood check-in, gratitude, letter from self
+ *   reflect → indigo (#5E5CE6)   Mirror, history, analysis repository
+ *   mind    → teal   (#1FB6A6)   Mindfulness, thinking, meta-analysis
+ *
+ * !important on icon-tone-* because higher-specificity card-icon rules
+ * (.hub-card-icon, .ck-card-icon, …) set their own background. The tone
+ * modifier needs to win regardless of source order.
  */
-.icon-tone-crisis  { background: rgba(255, 59, 48, 0.15)  !important; color: var(--heart)  !important; }
-.icon-tone-calm    { background: rgba(10, 132, 255, 0.15) !important; color: var(--lichen) !important; }
-.icon-tone-body    { background: rgba(52, 168, 106, 0.15) !important; color: var(--green)  !important; }
-.icon-tone-self    { background: rgba(175, 82, 222, 0.15) !important; color: var(--purple) !important; }
-.icon-tone-warmth  { background: rgba(255, 138, 42, 0.15) !important; color: var(--orange) !important; }
-.icon-tone-reflect { background: rgba(94, 92, 230, 0.15)  !important; color: var(--indigo) !important; }
-.icon-tone-mind    { background: rgba(31, 182, 166, 0.15) !important; color: var(--teal)   !important; }
+.icon-tone-brand,   .ds3-icon-tile-terra  { background: rgba(255, 106, 79, 0.15) !important; color: var(--terra)  !important; }
+.icon-tone-crisis,  .ds3-icon-tile-coral  { background: rgba(255, 59, 48, 0.15)  !important; color: var(--heart)  !important; }
+.icon-tone-calm,    .ds3-icon-tile-blue   { background: rgba(10, 132, 255, 0.15) !important; color: var(--lichen) !important; }
+.icon-tone-body,    .ds3-icon-tile-green  { background: rgba(52, 168, 106, 0.15) !important; color: var(--green)  !important; }
+.icon-tone-self,    .ds3-icon-tile-purple { background: rgba(175, 82, 222, 0.15) !important; color: var(--purple) !important; }
+.icon-tone-warmth,  .ds3-icon-tile-orange { background: rgba(255, 138, 42, 0.15) !important; color: var(--orange) !important; }
+.icon-tone-reflect, .ds3-icon-tile-indigo { background: rgba(94, 92, 230, 0.15)  !important; color: var(--indigo) !important; }
+.icon-tone-mind,    .ds3-icon-tile-teal   { background: rgba(31, 182, 166, 0.15) !important; color: var(--teal)   !important; }
+
+/* Yellow has no semantic tone yet — palette-only until claimed. */
+.ds3-icon-tile-yellow { background: rgba(255, 185, 56, 0.18); color: #B8924E; }
 
 /* Color-only variants — no background, just the family hue. Use inline (e.g.,
  * topbar labels) where a tile would feel too heavy. */
+.color-tone-brand   { color: var(--terra); }
 .color-tone-crisis  { color: var(--heart); }
 .color-tone-calm    { color: var(--lichen); }
 .color-tone-body    { color: var(--green); }
