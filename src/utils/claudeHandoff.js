@@ -86,7 +86,6 @@ export function buildEmergencyPrompt(session) {
   const occurredAt = resolveOccurredAt(session);
   const closingNote = (session.note ?? session.closingNote ?? '').toString().trim() || 'ללא';
   const breathing = (session.breathingNote ?? '').toString().trim() || 'ללא';
-  const score = (session.closingScore ?? null);
   const activation = ACTIVATION_LABELS[session.activation] || session.activation || 'ללא';
 
   const triggerEvent = (session.triggerEvent ?? '').toString().trim() || 'ללא';
@@ -107,7 +106,6 @@ export function buildEmergencyPrompt(session) {
 - משך: ${formatDuration(session.durationSeconds)}
 - רמת הפעלה: ${activation}
 - הערת נשימה: ${breathing}
-- ציון סגירה: ${score == null ? 'ללא' : `${score}/10`}
 - הערה אישית: ${closingNote}`;
 
   if (!analyzed) return baseBlock;
