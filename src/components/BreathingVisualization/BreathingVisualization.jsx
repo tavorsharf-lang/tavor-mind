@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useId, useMemo, useRef } from 'react';
 import { useBreathingAnimation, SCALE_MIN, SCALE_MAX } from './useBreathingAnimation.js';
 import { getPattern } from './breathingPatterns.js';
 import './BreathingVisualization.css';
@@ -31,7 +31,7 @@ export default function BreathingVisualization({
   exhaleDuration = 6000,
   restDuration = 0,
   phase: syncedPhase,
-  duration: _syncedDuration,
+  duration: syncedDuration,
   progress: syncedProgress,
   isActive = true,
   onPhaseChange,
@@ -58,13 +58,33 @@ export default function BreathingVisualization({
 
   const reduceMotion = useMemo(prefersReducedMotion, []);
 
+  /* Smooth progress derived from a local clock — the parent
+   * (BreathingExercise) only re-renders every 250ms (its tick interval),
+   * so progress prop ticks in 250ms quanta. Scale derived from that prop
+   * stayed flat for 250ms then jumped, which read as 'pulses'. We
+   * recompute progress on every render (the hook's rAF triggers re-renders
+   * already), so scale animates smoothly between phase boundaries. */
+  const phaseStartRef = useRef(typeof performance !== 'undefined' ? performance.now() : 0);
+  const phaseKeyRef = useRef(synced ? `${syncedPhase}|${syncedDuration}` : '');
+  if (synced) {
+    const key = `${syncedPhase}|${syncedDuration}`;
+    if (key !== phaseKeyRef.current) {
+      phaseKeyRef.current = key;
+      phaseStartRef.current = performance.now();
+    }
+  }
+  const smoothProgress =
+    synced && syncedDuration && typeof performance !== 'undefined'
+      ? clamp01((performance.now() - phaseStartRef.current) / (syncedDuration * 1000))
+      : syncedProgress;
+
   const { scale, rotation, phase } = useBreathingAnimation({
     inhaleDuration: durations.inhale,
     holdDuration:   durations.hold,
     exhaleDuration: durations.exhale,
     restDuration:   durations.rest,
     syncedPhase: synced ? syncedPhase : undefined,
-    syncedProgress: synced ? syncedProgress : undefined,
+    syncedProgress: synced ? smoothProgress : undefined,
     isActive,
     onPhaseChange,
     onCycleComplete,
