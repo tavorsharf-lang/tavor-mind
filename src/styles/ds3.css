@@ -596,6 +596,21 @@
   gap: 8px;
 }
 
+/* Two pill families, kept semantically separate:
+ *   .ds3-pill   primary selection — terra-active, flex-fill, 40h
+ *               (pace pickers, breathing patterns, mood chips)
+ *   .scope-pill filter — ink-active, auto-width, 36h (review scope tabs,
+ *               history filters). Defined in styles.css; transition +
+ *               focus-visible aligned with .ds3-pill below. */
+
+.ds3-pill,
+.scope-pill {
+  transition:
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out),
+    color 120ms var(--ease-out);
+}
+
 .ds3-pill {
   flex: 1;
   height: 40px;
@@ -607,7 +622,6 @@
   font-weight: 500;
   color: var(--ink-muted);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
   padding: 0 14px;
 }
 
@@ -1054,7 +1068,18 @@
   background: var(--ink);
 }
 
-/* ===== CHIPS (emotion picker) ========================================== */
+/* ===== CHIPS (unified 3 sizes + tone modifiers) ========================
+ *   .ds3-chip      (md) tappable selection · alias: .emotion-chip
+ *                       is-selected → terra (commit)
+ *   .ds3-chip-sm        readonly stats · alias: .review-chip
+ *                       is-strong → terra-soft + terra (emphasis)
+ *   .ds3-chip-xs        dense inline summary · alias: .chip / .chip-row .chip
+ *
+ * Tone modifiers (apply on any size):
+ *   .ds3-chip-warm   terra-soft  · alias: .chip-row .chip.warm
+ *   .ds3-chip-cool   lichen-soft · alias: .chip-row .chip.cool
+ *   .ds3-chip-dashed placeholder / empty state
+ */
 
 .ds3-chip-group {
   display: flex;
@@ -1062,33 +1087,99 @@
   gap: 8px;
 }
 
-.ds3-chip {
+/* — md (tappable selection) — */
+.ds3-chip,
+.emotion-chip {
   padding: 10px 16px;
   border-radius: 999px;
   border: 1px solid var(--line-soft);
-  background: transparent;
+  background: var(--surface);
   font-family: inherit;
-  font-size: 17px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 500;
   color: var(--ink);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  min-height: 40px;
+  letter-spacing: 0.005em;
+  transition:
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out),
+    color 120ms var(--ease-out);
 }
 
-.ds3-chip:hover {
-  border-color: var(--line);
-}
+.ds3-chip:hover,
+.emotion-chip:hover { border-color: var(--line); }
 
-.ds3-chip.is-selected {
+.ds3-chip:active,
+.emotion-chip:active { transform: scale(0.97); }
+
+.ds3-chip.is-selected,
+.emotion-chip.is-selected {
   background: var(--terra);
   border-color: var(--terra);
   color: #fff;
+  font-weight: 600;
+}
+
+/* — sm (readonly stats) — */
+.ds3-chip-sm,
+.review-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface-alt);
+  font-family: inherit;
+  font-size: 13px;
   font-weight: 500;
+  color: var(--ink-soft);
+  white-space: nowrap;
+  transition:
+    background-color 120ms var(--ease-out),
+    border-color 120ms var(--ease-out),
+    color 120ms var(--ease-out);
+}
+
+.ds3-chip-sm.is-strong,
+.review-chip.is-strong {
+  background: var(--terra-soft);
+  color: var(--terra);
+  border-color: rgba(255, 106, 79, 0.30);
+  font-weight: 600;
+}
+
+/* — xs (dense inline) — */
+.ds3-chip-xs,
+.chip,
+.chip-row .chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: var(--surface-alt);
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* — Tone modifiers (apply on any size) — */
+.ds3-chip-warm,
+.chip-row .chip.warm {
+  background: var(--terra-soft);
+  color: var(--terra);
+  border-color: rgba(255, 106, 79, 0.30);
+}
+
+.ds3-chip-cool,
+.chip-row .chip.cool {
+  background: var(--lichen-soft);
+  color: var(--lichen-deep);
+  border-color: rgba(10, 132, 255, 0.30);
 }
 
 .ds3-chip-dashed {
   border-style: dashed;
   color: var(--ink-muted);
+  background: transparent;
 }
 
 .ds3-chip-group-label {
@@ -1096,6 +1187,15 @@
   color: var(--ink-muted);
   margin: 0 0 8px;
   font-weight: 500;
+}
+
+/* :focus-visible on pills + chips — 2px lichen outline, keyboard-only */
+.ds3-pill:focus-visible,
+.scope-pill:focus-visible,
+.ds3-chip:focus-visible,
+.emotion-chip:focus-visible {
+  outline: 2px solid var(--lichen);
+  outline-offset: 2px;
 }
 
 /* ===== MODE / CHOICE CARD ============================================== */

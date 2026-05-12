@@ -1110,15 +1110,8 @@ button:focus-visible {
   gap: 6px;
 }
 
-.chip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 4px 12px;
-  font-size: 13px;
-  color: var(--text-soft);
-  white-space: nowrap;
-}
+/* .chip canonical lives in src/styles/ds3.css as an alias of .ds3-chip-xs.
+ * Tone variants: .chip.warm / .chip.cool there too. */
 
 /* ── Toolbox Hub ───────────────────────────────────────────────────── */
 .hub-main {
@@ -2254,33 +2247,8 @@ button:focus-visible {
   align-content: flex-start;
 }
 
-.emotion-chip {
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  border-radius: 999px;
-  padding: 10px 16px;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-  cursor: pointer;
-  min-height: 40px;
-  transition: all 150ms cubic-bezier(0.4,0,0.2,1);
-  letter-spacing: 0.005em;
-}
-
-.emotion-chip:hover {
-  border-color: var(--line);
-}
-
-.emotion-chip.is-selected {
-  background: var(--terra);
-  color: #fff;
-  border-color: var(--terra);
-  font-weight: 600;
-}
-
-.emotion-chip:active { transform: scale(0.97); }
+/* .emotion-chip canonical lives in src/styles/ds3.css as an alias of
+ * .ds3-chip — shared base, transitions, hover/active/is-selected. */
 
 /* Gratitude list (evening Step 1) */
 .grat-list {
