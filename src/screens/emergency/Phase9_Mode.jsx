@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { orderModes, MODE_ORDER_BY_ACTIVATION } from '../../data/modes.js';
-import { Phase9ModeIcon } from '../../components/icons/index.jsx';
+import { SchemaHealthyAdult as Phase9ModeIcon } from '../../components/icons/system.jsx';
 
 const MODE_GLYPH = {
   manager:    'wedge',

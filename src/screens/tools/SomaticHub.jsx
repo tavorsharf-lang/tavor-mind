@@ -2,12 +2,14 @@ import { useNavigate } from 'react-router-dom';
 import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import { SOMATIC_EXERCISES } from '../../data/somatic.js';
 import {
-  PhysioSighIcon,
   ButterflyHugIcon,
-  ColdAnchorIcon,
   VagalHummingIcon,
-  BodyScanIcon,
 } from '../../components/icons/index.jsx';
+import {
+  PhaseBreath as PhysioSighIcon,
+  ActionAnchor as ColdAnchorIcon,
+  PhaseSomatic as BodyScanIcon,
+} from '../../components/icons/system.jsx';
 
 const ICONS = {
   physio_sigh:   <PhysioSighIcon />,

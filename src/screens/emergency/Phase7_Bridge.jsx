@@ -2,7 +2,7 @@ import { useState } from 'react';
 import CallSomeoneModal from '../../components/ui/CallSomeoneModal.jsx';
 import { VagalAnim, ButterflyAnim, BodyScanAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
-import { Phase7BridgeIcon } from '../../components/icons/index.jsx';
+import { PhaseIntegration as Phase7BridgeIcon } from '../../components/icons/system.jsx';
 
 const MAX_EXTRA_ROUNDS = 3;
 
