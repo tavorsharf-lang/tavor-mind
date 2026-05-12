@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TherapyIcon } from '../components/icons/index.jsx';
 import {
-  CheckinIcon,
-  ToolsIcon,
-  MirrorIcon,
-  TherapyIcon,
-  Phase8TriggerIcon,
-} from '../components/icons/index.jsx';
+  Calendar,
+  HomeToolbox,
+  HomeMirror,
+  Search,
+} from '../components/icons/system.jsx';
 import { getTherapyDayOfWeek, getRelevantFrameDate } from '../utils/therapyDay.js';
 import { getFrame } from '../utils/therapyStorage.js';
 import { countWaitingItems, flushPendingWaitingItems } from '../utils/somethingWaitingStorage.js';
@@ -141,7 +141,7 @@ export default function HomeScreen({ authError }) {
       <div className="ds3-home-grid">
         <HomeTile
           tone="warmth"
-          icon={<CheckinIcon />}
+          icon={<Calendar />}
           title="צ'ק-אין יומי"
           badge={firstRun ? 'התחל כאן' : null}
           onClick={() => goTo('/checkin')}
@@ -156,19 +156,19 @@ export default function HomeScreen({ authError }) {
         )}
         <HomeTile
           tone="brand"
-          icon={<ToolsIcon />}
+          icon={<HomeToolbox />}
           title="כלים"
           onClick={() => goTo('/tools')}
         />
         <HomeTile
           tone="reflect"
-          icon={<Phase8TriggerIcon />}
+          icon={<Search />}
           title="ניתוח מקרה"
           onClick={() => goTo('/emergency', { state: { startAtAnalysis: true } })}
         />
         <HomeTile
           tone="reflect"
-          icon={<MirrorIcon />}
+          icon={<HomeMirror />}
           title="המראה"
           onClick={() => goTo('/review')}
         />

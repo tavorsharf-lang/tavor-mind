@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { ChevronStart } from '../../../components/icons/system.jsx';
 
 export default function ToolHeader({ title, subtitle, subtitleItalic = false, backTo = '/toolbox' }) {
   const navigate = useNavigate();
@@ -10,9 +11,7 @@ export default function ToolHeader({ title, subtitle, subtitleItalic = false, ba
         aria-label="חזרה"
         onClick={() => navigate(backTo)}
       >
-        <svg viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-          <polyline points="9 6 15 12 9 18" />
-        </svg>
+        <ChevronStart size={22} />
       </button>
       <div className="tool-header-text">
         <h1 className="tool-title">{title}</h1>
