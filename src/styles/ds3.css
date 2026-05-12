@@ -18,6 +18,8 @@
   color: var(--ink);
 }
 
+/* Headings auto-get text-wrap: balance — RTL Hebrew titles stop splitting
+ * a single word onto its own line. Falls back gracefully in older browsers. */
 .ds3-h1 {
   font-size: 28px;
   font-weight: 700;
@@ -25,6 +27,7 @@
   letter-spacing: -0.015em;
   color: var(--ink);
   margin: 0;
+  text-wrap: balance;
 }
 
 .ds3-h2 {
@@ -34,6 +37,7 @@
   letter-spacing: -0.01em;
   color: var(--ink);
   margin: 0;
+  text-wrap: balance;
 }
 
 .ds3-h3 {
@@ -42,13 +46,16 @@
   line-height: 1.45;
   color: var(--ink);
   margin: 0;
+  text-wrap: balance;
 }
 
+/* Body copy auto-gets text-wrap: pretty — no last-line orphans. */
 .ds3-body {
   font-size: 17px;
   font-weight: 400;
   line-height: 1.55;
   color: var(--ink);
+  text-wrap: pretty;
 }
 
 .ds3-body-lg {
@@ -89,6 +96,50 @@
 .ds3-text-coral   { color: var(--heart); }
 
 .ds3-text-center  { text-align: center; }
+
+/* === Semantic typography utilities =====================================
+ * Use these instead of inline style="font-size:Xpx;font-weight:Y". They
+ * read at a glance and stay in sync with the scale in tokens.css. */
+.ds3-text-eyebrow {
+  font-size: var(--text-eyebrow-size);
+  font-weight: var(--text-eyebrow-weight);
+  letter-spacing: var(--text-eyebrow-tracking);
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.ds3-text-meta {
+  font-size: var(--text-meta);
+  color: var(--ink-muted);
+}
+
+.ds3-text-label {
+  font-size: var(--text-label-size);
+  font-weight: var(--text-label-weight);
+  color: var(--ink);
+}
+
+.ds3-text-label-lg {
+  font-size: var(--text-label-lg-size);
+  font-weight: var(--text-label-weight);
+  color: var(--ink);
+}
+
+.ds3-text-large {
+  font-size: var(--text-large);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* text-wrap helpers — explicit opt-in / opt-out beyond the defaults
+ * applied to .ds3-h*/.ds3-body. */
+.ds3-text-balance { text-wrap: balance; }
+.ds3-text-pretty  { text-wrap: pretty; }
+
+/* Line-height utilities */
+.ds3-leading-tight   { line-height: 1.25; }
+.ds3-leading-normal  { line-height: 1.45; }
+.ds3-leading-relaxed { line-height: 1.7; }
 
 /* ===== SCREEN SCAFFOLDING ============================================== */
 
@@ -1339,6 +1390,59 @@
 .ds3-row-2  { display: flex; flex-direction: row; gap: 8px; }
 .ds3-row-3  { display: flex; flex-direction: row; gap: 12px; }
 .ds3-row-4  { display: flex; flex-direction: row; gap: 16px; }
+
+/* === Vertical rhythm — replace inline margin styles ====================
+ *   .ds3-mt-N / .ds3-mb-N   (N = 1..6, values follow --space-1..6)
+ *   .ds3-m-0                wipe out any inherited margin
+ * Scale: 1=4 · 2=8 · 3=12 · 4=16 · 5=20 · 6=24 */
+.ds3-mt-1 { margin-top: var(--space-1); }
+.ds3-mt-2 { margin-top: var(--space-2); }
+.ds3-mt-3 { margin-top: var(--space-3); }
+.ds3-mt-4 { margin-top: var(--space-4); }
+.ds3-mt-5 { margin-top: var(--space-5); }
+.ds3-mt-6 { margin-top: var(--space-6); }
+
+.ds3-mb-1 { margin-bottom: var(--space-1); }
+.ds3-mb-2 { margin-bottom: var(--space-2); }
+.ds3-mb-3 { margin-bottom: var(--space-3); }
+.ds3-mb-4 { margin-bottom: var(--space-4); }
+.ds3-mb-5 { margin-bottom: var(--space-5); }
+.ds3-mb-6 { margin-bottom: var(--space-6); }
+
+.ds3-m-0  { margin: 0; }
+
+/* === Row utilities — replace inline display:flex declarations ==========
+ *   .ds3-row           plain centered flex row with a sensible gap
+ *   .ds3-row-between   adds justify-content:space-between
+ *   .ds3-row-dot       a row prefixed by a small color-tinted bullet
+ *                      (use with .color-tone-* / inline color for the dot) */
+.ds3-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds3-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ds3-row-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds3-row-dot::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
 
 /* ===== ANIMATIONS ====================================================== */
 

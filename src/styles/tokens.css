@@ -66,6 +66,16 @@
   --text-2xl: 28px;
   --text-3xl: 34px;            /* display weight */
 
+  /* === SEMANTIC TYPOGRAPHY (canonical, used by .ds3-text-* utilities) === */
+  --text-eyebrow-size: 11px;
+  --text-eyebrow-weight: 700;
+  --text-eyebrow-tracking: 0.04em;
+  --text-meta: 13px;             /* timestamps, context lines, table meta */
+  --text-label-size: 15px;       /* small card-row title */
+  --text-label-lg-size: 16px;    /* medium card-row title */
+  --text-label-weight: 700;
+  --text-large: 22px;            /* slider current-value, big-stat */
+
   --weight-light: 400;          /* nudged up — vivid system avoids hairline */
   --weight-regular: 500;
   --weight-medium: 600;
