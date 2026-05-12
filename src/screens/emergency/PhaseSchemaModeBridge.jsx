@@ -20,12 +20,13 @@ function modeLabel(shortId) {
   }
 }
 
-function ModeCard({ mode, role, hint, smaller, onClick }) {
+function ModeCard({ mode, role, hint, smaller, onClick, className }) {
   const isPrimary = role === 'primary';
   return (
     <button
       type="button"
       onClick={onClick}
+      className={className || undefined}
       style={{
         width: '100%', textAlign: 'right', direction: 'rtl',
         background: 'var(--surface)',
@@ -210,7 +211,7 @@ export default function PhaseSchemaModeBridge({
       <main className="ds3-screen-content">
         <div style={{ marginTop: 8 }}>
           <p className="ds3-caption" style={{ marginBottom: 6 }}>הסכמה שזיהית:</p>
-          <h1 className="ds3-h1" style={{
+          <h1 className="ds3-h1 ds3-schema-name" style={{
             color: 'var(--terra)',
             fontWeight: 700,
             lineHeight: 1.3,
@@ -223,8 +224,10 @@ export default function PhaseSchemaModeBridge({
           </p>
         </div>
 
+        <span className="ds3-bridge-connector" aria-hidden="true" />
+
         <div className="ds3-stack-3">
-          <ModeCard mode={mapping.primary.id}   role="primary"   hint={mapping.primary.hint} />
+          <ModeCard mode={mapping.primary.id}   role="primary"   hint={mapping.primary.hint} className="ds3-bridge-primary" />
           <ModeCard mode={mapping.secondary.id} role="secondary" hint={mapping.secondary.hint} />
         </div>
 
