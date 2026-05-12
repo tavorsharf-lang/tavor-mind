@@ -30,7 +30,6 @@ import {
   getClaudeProjectUrl,
 } from '../../utils/claudeHandoff.js';
 import {
-  isHrSetupDone,
   isWearingWatch,
   generateHrSessionId,
 } from '../../utils/liveHr.js';
@@ -94,18 +93,16 @@ export default function EmergencyFlow() {
   const [savingState, setSavingState] = useState('idle');
   const startedAtRef = useRef(Date.now());
 
-  // HR session id — pre-generated when HR is set up AND user is wearing the
-  // watch, so PhaseSummary can fetch post-session samples written by the iOS
-  // Shortcut. Lazy: not created until needed so flows without HR don't
-  // pollute RTDB. Captured at mount (per session) so toggling later in the
-  // flow doesn't strand a half-emitted hrTrack reference.
-  const [hrActive] = useState(() => isHrSetupDone() && isWearingWatch());
+  // HR session id — generated lazily on first call when user has the
+  // "אני עונד שעון" toggle on. Read live from localStorage so toggling the
+  // switch inside Phase 1 (which mounts AFTER EmergencyFlow) takes effect
+  // immediately instead of being stranded at the initial mount value.
   const hrSessionIdRef = useRef(null);
   const ensureHrSessionId = useCallback(() => {
-    if (!hrActive) return null;
+    if (!isWearingWatch()) return null;
     if (!hrSessionIdRef.current) hrSessionIdRef.current = generateHrSessionId();
     return hrSessionIdRef.current;
-  }, [hrActive]);
+  }, []);
 
   // Frozen endedAt — captured once when phase first transitions to 11 so the
   // HR summary's polling effect (which keys on endedAtMs) doesn't restart on
