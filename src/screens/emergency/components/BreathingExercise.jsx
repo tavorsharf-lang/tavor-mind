@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getBreathingHaptic } from '../../../utils/breathingHaptic.js';
+import BreathingFlower from '../../../components/visuals/BreathingFlower.jsx';
 
 const PATTERNS = {
   '478': {
@@ -86,20 +87,6 @@ const PATTERNS = {
   },
 };
 
-// Physiological easing per breath phase.
-// Inhale: symmetric ease-in-out-sine — sigmoid lung-volume curve during relaxed active inhalation.
-// Exhale: ease-out-quad — bias toward early release (elastic recoil) with gentle settle, soft enough for guided breathing.
-// Hold: linear placeholder (scale doesn't change so curve is irrelevant).
-const EASING_INHALE = 'cubic-bezier(0.37, 0, 0.63, 1)';
-const EASING_EXHALE = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-const EASING_HOLD = 'linear';
-
-function easingFor(label) {
-  if (label === 'תכניס') return EASING_INHALE;
-  if (label === 'תוציא') return EASING_EXHALE;
-  return EASING_HOLD;
-}
-
 function prefersReducedMotion() {
   return typeof window !== 'undefined'
     && window.matchMedia
@@ -148,8 +135,6 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
   const step = steps[Math.min(stepIndex, stepCount - 1)];
   const isBox = pattern === 'box';
 
-  const circleRef = useRef(null);
-  const auraRef = useRef(null);
   const traceRef = useRef(null);
 
   // Timestamps — refs (not memo). React may evict useMemo for memory pressure,
@@ -195,43 +180,10 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
   useLayoutEffect(() => {
     if (done) return;
     const reduce = prefersReducedMotion();
-    const ease = easingFor(step.label);
     const haptic = getBreathingHaptic();
-    // Cancel anything scheduled from the previous step, then schedule taps only for inhale.
-    // Same effect that wires the visual transition → audio fires in the same frame as the visual.
     haptic.cancel();
     if (step.label === 'תכניס' && !reduce) {
       haptic.scheduleInhale(step.sec);
-    }
-    const el = circleRef.current;
-    if (el) {
-      if (reduce) {
-        el.style.transition = 'none';
-        el.style.transform = `scale(${(step.from + step.to) / 2})`;
-      } else {
-        el.style.transition = 'none';
-        el.style.transform = `scale(${step.from})`;
-        void el.offsetWidth;
-        el.style.transition = `transform ${step.sec}s ${ease}`;
-        el.style.transform = `scale(${step.to})`;
-      }
-    }
-    // Aura tracks the breath at a softer amplitude — anchored at 1.0, expands ~10% on inhale peak.
-    // This makes the surrounding halo feel like it's breathing with the body, not just the orb.
-    const aura = auraRef.current;
-    if (aura) {
-      const auraFrom = 1 + (step.from - 1) * 0.18;
-      const auraTo = 1 + (step.to - 1) * 0.18;
-      if (reduce) {
-        aura.style.transition = 'none';
-        aura.style.transform = `scale(${(auraFrom + auraTo) / 2})`;
-      } else {
-        aura.style.transition = 'none';
-        aura.style.transform = `scale(${auraFrom})`;
-        void aura.offsetWidth;
-        aura.style.transition = `transform ${step.sec}s ${ease}`;
-        aura.style.transform = `scale(${auraTo})`;
-      }
     }
     if (isBox && traceRef.current) {
       const t = traceRef.current;
@@ -349,8 +301,12 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
             />
           </svg>
         )}
-        <div ref={auraRef} className="breathing-aura" aria-hidden="true" />
-        <div ref={circleRef} className="breathing-circle" aria-hidden="true" />
+        <BreathingFlower
+          phase={step.label === 'תכניס' ? 'inhale' : step.label === 'תוציא' ? 'exhale' : 'hold'}
+          duration={step.sec}
+          progress={Math.min(1, Math.max(0, (renderTime - stepStartedAt) / (step.sec * 1000)))}
+          size={240}
+        />
         <div className="breathing-countdown" aria-hidden="true">{remainingSec}</div>
       </div>
 
