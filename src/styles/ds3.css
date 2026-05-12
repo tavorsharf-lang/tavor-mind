@@ -191,19 +191,9 @@
 }
 .ds3-topbar-label-icon svg { width: 22px; height: 22px; }
 
-.ds3-topbar-skip {
-  background: none;
-  border: none;
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ink-muted);
-  cursor: pointer;
-  padding: 6px 4px;
-  height: 32px;
-}
-
-.ds3-topbar-skip:hover { color: var(--ink); }
+/* Topbar skip — canonical styles come from .ds3-btn-link below; this only
+ * keeps the selector reachable for any markup that uses `.ds3-topbar-skip`
+ * directly. */
 
 /* === Canonical header (DS3) ============================================
  * One source of truth for tool-header / ck-hub-header / ds3-topbar back-btn.
@@ -341,9 +331,10 @@
   font-weight: 700;
   letter-spacing: 0.005em;
   cursor: pointer;
-  transition: background var(--duration-fast) var(--ease-out),
-              transform var(--duration-fast) var(--ease-out),
-              box-shadow var(--duration-fast) var(--ease-out);
+  transition:
+    background 120ms var(--ease-out),
+    box-shadow 120ms var(--ease-out),
+    transform 120ms var(--ease-out);
   text-align: center;
   padding: 0 22px;
 }
@@ -428,6 +419,68 @@
   border: 1.5px solid var(--lichen);
   font-weight: 600;
   box-shadow: none;
+}
+
+/* === Canonical text-only button (link-style) ===========================
+ * One source of truth for in-flow text actions ("נקה", "הדבק", "סגור",
+ * topbar "skip", etc). Legacy classes (.link-btn, .ds3-topbar-skip) keep
+ * working through the selector list — no HTML changes needed.
+ *
+ * Min-height 44 makes the whole thing a real tap target instead of a
+ * 32px touch trap. Topbar grows by 4px to accommodate; intentional. */
+.ds3-btn-link,
+.link-btn,
+.ds3-topbar-skip {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-muted);
+  cursor: pointer;
+  padding: 8px 12px;
+  min-height: 44px;
+  transition: color 120ms var(--ease-out);
+}
+
+.ds3-btn-link:hover,
+.link-btn:hover,
+.ds3-topbar-skip:hover { color: var(--ink); }
+
+/* Color modifiers for the link-style button. Replace inline
+ * style="color:var(--heart)" / etc. */
+.ds3-btn-link-danger        { color: var(--heart); }
+.ds3-btn-link-danger:hover  { color: #E33327; }
+.ds3-btn-link-success       { color: var(--green); }
+.ds3-btn-link-success:hover { color: #289858; }
+.ds3-btn-link-muted         { color: var(--ink-muted); }
+
+/* === Size modifiers (apply on top of .ds3-btn) =========================
+ * Replaces ad-hoc style="height:Xpx;font-size:Ypx" inline overrides. */
+.ds3-btn-sm {
+  height: 36px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 0 14px;
+}
+.ds3-btn-md {
+  height: 48px;
+  border-radius: 14px;
+  font-size: 17px;
+}
+
+/* === Focus-visible (a11y) ==============================================
+ * Keyboard-only outline; mouse clicks don't trigger it. lichen ring with
+ * 3px breathing room reads as "currently focused" without competing with
+ * the button's own color. */
+.ds3-btn:focus-visible,
+.ds3-btn-link:focus-visible,
+.link-btn:focus-visible,
+.ds3-topbar-skip:focus-visible {
+  outline: 2px solid var(--lichen);
+  outline-offset: 3px;
+  border-radius: inherit;
 }
 
 /* Quiet button — text-only, muted, for "skip"/"finish here" */

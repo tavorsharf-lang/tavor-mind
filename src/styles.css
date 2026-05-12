@@ -444,17 +444,8 @@ button:focus-visible {
   border-color: var(--accent-soft);
 }
 
-.link-btn {
-  background: none;
-  border: none;
-  color: var(--text-soft);
-  font-family: inherit;
-  font-size: 15px;
-  cursor: pointer;
-  padding: 12px 8px;
-  min-height: 44px;
-}
-.link-btn:hover { color: var(--accent); }
+/* .link-btn canonical styles live in src/styles/ds3.css as an alias of
+ * .ds3-btn-link. Kept here only to anchor the rename in source history. */
 
 /* ── Phase 1: Activation ────────────────────────────────────────────── */
 .activation-options {
