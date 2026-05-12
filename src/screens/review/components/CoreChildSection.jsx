@@ -1,5 +1,5 @@
 import { formatHebrewDate, getIsraelDateString } from '../../../utils/dateHelpers.js';
-import { CoreChildIcon } from '../../../components/icons/index.jsx';
+import { SchemaVulnerable as CoreChildIcon } from '../../../components/icons/system.jsx';
 
 export default function CoreChildSection({ data }) {
   if (!data) return null;

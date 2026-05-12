@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import EmptyState from './EmptyState.jsx';
 import { SCHEMA_LABELS } from '../../../data/analysisSchemas.js';
-import { TriggersIcon } from '../../../components/icons/index.jsx';
+import { PhaseTriggers as TriggersIcon } from '../../../components/icons/system.jsx';
 
 export default function TriggersList({ data, scope }) {
   const [openIdx, setOpenIdx] = useState(null);

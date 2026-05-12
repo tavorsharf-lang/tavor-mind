@@ -1,6 +1,6 @@
 import EmptyState from './EmptyState.jsx';
 import { VALENCE_COLORS, VALENCE_LABELS } from '../../../data/emotionsCorpus.js';
-import { CheckinRhythmIcon } from '../../../components/icons/index.jsx';
+import { HomePulse as CheckinRhythmIcon } from '../../../components/icons/system.jsx';
 
 function trendDirection(points) {
   if (!Array.isArray(points) || points.length < 4) return null;
