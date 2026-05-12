@@ -3,20 +3,16 @@ import { useBreathingAnimation, SCALE_MIN, SCALE_MAX } from './useBreathingAnima
 import { getPattern } from './breathingPatterns.js';
 import './BreathingVisualization.css';
 
-const RIPPLE_COUNT = 5;
-const RIPPLE_LIFETIME_MS = 8000;
-const RIPPLE_MIN_RADIUS = 16;
-const RIPPLE_MAX_RADIUS = 175;
-const CORE_RADIUS = 18;
+/* Apple Watch "Breathe" style: 6 translucent petal blobs arranged radially,
+ * spread outward with the inhale and overlap into a bright orb on the
+ * exhale. Continuous rotation (from the hook's clock) keeps the field
+ * alive even through hold/rest phases. Overlap brightening is achieved
+ * by stacked alpha rather than mix-blend-mode (cross-browser safer). */
 
-/* Hook exposes elapsed time indirectly via rotation =
- * (elapsed / 30000ms) * 360deg, so multiply rotation by this to recover ms.
- * Avoids a second rAF loop in this component. */
-const ROTATION_TO_MS = 30000 / 360;
-
-function bell(x) {
-  return Math.sin(Math.PI * x);
-}
+const PETAL_COUNT = 6;
+const PETAL_RADIUS = 85;
+const MAX_OFFSET = 65;
+const PETAL_OPACITY = 0.55;
 
 function clamp01(x) {
   return Math.max(0, Math.min(1, x));
@@ -74,26 +70,21 @@ export default function BreathingVisualization({
     reduceMotion,
   });
 
-  const elapsedMs = rotation * ROTATION_TO_MS;
-
   const normScale = clamp01((scale - SCALE_MIN) / (SCALE_MAX - SCALE_MIN));
-  const breathBrightness = 0.4 + 0.6 * normScale;
-  const groupScale = 0.85 + 0.20 * normScale;
-  const coreOpacity = 0.55 + 0.45 * normScale;
+  const offset = normScale * MAX_OFFSET;
 
-  const ripples = useMemo(() => {
+  const petals = useMemo(() => {
     const list = [];
-    for (let i = 0; i < RIPPLE_COUNT; i++) {
-      const lifecyclePos =
-        ((elapsedMs / RIPPLE_LIFETIME_MS) + i / RIPPLE_COUNT) % 1;
-      const radius =
-        RIPPLE_MIN_RADIUS +
-        lifecyclePos * (RIPPLE_MAX_RADIUS - RIPPLE_MIN_RADIUS);
-      const opacity = bell(lifecyclePos) * breathBrightness * 0.85;
-      list.push({ id: i, radius, opacity });
+    for (let i = 0; i < PETAL_COUNT; i++) {
+      const rad = ((360 / PETAL_COUNT) * i + rotation) * (Math.PI / 180);
+      list.push({
+        id: i,
+        x: offset * Math.cos(rad),
+        y: offset * Math.sin(rad),
+      });
     }
     return list;
-  }, [elapsedMs, breathBrightness]);
+  }, [offset, rotation]);
 
   const rawId = useId();
   const safeId = rawId.replace(/[^a-z0-9]/gi, '');
@@ -123,7 +114,7 @@ export default function BreathingVisualization({
       >
         <defs>
           <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feGaussianBlur stdDeviation="7" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -131,34 +122,22 @@ export default function BreathingVisualization({
           </filter>
           <radialGradient id={gradId}>
             <stop offset="0%"   stopColor={gradStart} stopOpacity="1" />
-            <stop offset="70%"  stopColor={gradEnd}   stopOpacity="0.6" />
+            <stop offset="55%"  stopColor={gradEnd}   stopOpacity="0.92" />
             <stop offset="100%" stopColor={gradEnd}   stopOpacity="0" />
           </radialGradient>
         </defs>
 
-        <g
-          transform={`scale(${groupScale.toFixed(4)})`}
-          filter={`url(#${glowId})`}
-        >
-          {ripples.map((r) => (
+        <g filter={`url(#${glowId})`}>
+          {petals.map((p) => (
             <circle
-              key={r.id}
-              cx={0}
-              cy={0}
-              r={r.radius.toFixed(2)}
-              fill="none"
-              stroke={gradEnd}
-              strokeWidth={2.5}
-              opacity={r.opacity.toFixed(3)}
+              key={p.id}
+              cx={p.x.toFixed(2)}
+              cy={p.y.toFixed(2)}
+              r={PETAL_RADIUS}
+              fill={`url(#${gradId})`}
+              opacity={PETAL_OPACITY}
             />
           ))}
-          <circle
-            cx={0}
-            cy={0}
-            r={CORE_RADIUS}
-            fill={`url(#${gradId})`}
-            opacity={coreOpacity.toFixed(3)}
-          />
         </g>
       </svg>
     </div>
