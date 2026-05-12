@@ -37,7 +37,7 @@ export default function BreathingVisualization({
   onCycleComplete,
   size = 400,
   color = '#06B6D4',
-  darkBackground = true,
+  darkBackground = false,
   className = '',
 }) {
   const synced = syncedPhase != null && syncedProgress != null;
@@ -91,8 +91,7 @@ export default function BreathingVisualization({
   const glowId = `bv-glow-${safeId}`;
   const gradId = `bv-grad-${safeId}`;
 
-  const gradStart = '#A5F3FC';
-  const gradEnd   = color || '#0891B2';
+  const petalColor = color || '#0891B2';
 
   const wrapperClass = [
     'breathing-viz',
@@ -121,9 +120,9 @@ export default function BreathingVisualization({
             </feMerge>
           </filter>
           <radialGradient id={gradId}>
-            <stop offset="0%"   stopColor={gradStart} stopOpacity="1" />
-            <stop offset="55%"  stopColor={gradEnd}   stopOpacity="0.92" />
-            <stop offset="100%" stopColor={gradEnd}   stopOpacity="0" />
+            <stop offset="0%"   stopColor={petalColor} stopOpacity="0.85" />
+            <stop offset="60%"  stopColor={petalColor} stopOpacity="0.45" />
+            <stop offset="100%" stopColor={petalColor} stopOpacity="0" />
           </radialGradient>
         </defs>
 

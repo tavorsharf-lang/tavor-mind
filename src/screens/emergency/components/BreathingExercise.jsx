@@ -307,7 +307,6 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
           progress={Math.min(1, Math.max(0, (renderTime - stepStartedAt) / (step.sec * 1000)))}
           isActive={!done}
           size={260}
-          darkBackground
           className="in-stage"
         />
         <div className="breathing-countdown" aria-hidden="true">{remainingSec}</div>
