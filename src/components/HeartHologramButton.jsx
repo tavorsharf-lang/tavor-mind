@@ -20,30 +20,31 @@ export default function HeartHologramButton({ onClick, ariaLabel = 'עכשיו �
       spline.setBackgroundColor?.('transparent');
     } catch {}
 
-    let rotatables = [];
+    let target = null;
     try {
-      const scene =
-        spline?.runtime?.scene ??
-        spline?._scene ??
-        spline?.scene ??
-        spline?.app?.scene;
-      if (scene?.children?.length) {
-        rotatables = scene.children.filter(
-          (c) => c && !c.isCamera && !c.isLight && c.rotation,
-        );
-      }
+      target = spline.findObjectByName?.('heartlowpoly') ?? null;
     } catch {}
 
-    if (rotatables.length > 0) {
+    if (!target) {
+      try {
+        const scene =
+          spline?.runtime?.scene ??
+          spline?._scene ??
+          spline?.scene ??
+          spline?.app?.scene;
+        target = scene?.children?.find(
+          (c) => c && !c.isCamera && !c.isLight && c.rotation,
+        );
+      } catch {}
+    }
+
+    if (target) {
+      const baseRotX = target.rotation?.x ?? 0;
       const start = performance.now();
       const tick = (t) => {
         const s = (t - start) / 1000;
-        const ry = Math.sin(s * 0.5) * 0.5;
-        const rx = Math.cos(s * 0.35) * 0.12;
-        rotatables.forEach((obj) => {
-          obj.rotation.y = ry;
-          obj.rotation.x = rx;
-        });
+        target.rotation.y = s * 0.6;
+        target.rotation.x = baseRotX + Math.sin(s * 0.7) * 0.12;
         rafRef.current = requestAnimationFrame(tick);
       };
       rafRef.current = requestAnimationFrame(tick);
