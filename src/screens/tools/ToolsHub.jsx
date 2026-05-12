@@ -1,19 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import ToolHeader from '../toolbox/components/ToolHeader.jsx';
+import { MindfulnessIcon } from '../../components/icons/index.jsx';
 import {
-  TriggersIcon,
-  ModeCheckIcon,
-  CatastropheIcon,
-  SomaticToolIcon,
-  MindfulnessIcon,
-} from '../../components/icons/index.jsx';
+  PhaseTriggers,
+  SchemaHealthyAdult,
+  PhaseDistortion,
+  PhaseSomatic,
+} from '../../components/icons/system.jsx';
 
 const TOOLS = [
-  { id: 'triggers',     icon: <TriggersIcon />,     tone: 'crisis',  title: 'מאתר טריגרים',   subtitle: 'מה הפעיל אותך עכשיו, ומה זה אומר',           route: '/tools/triggers' },
-  { id: 'mode-check',   icon: <ModeCheckIcon />,    tone: 'self',    title: 'מצב סכמה עכשיו', subtitle: 'איזה מוד מדבר ברגע הזה',                       route: '/tools/mode-check' },
-  { id: 'catastrophe',  icon: <CatastropheIcon />,  tone: 'calm',    title: 'בדיקת מציאות',   subtitle: 'האם הקטסטרופה שאתה רואה אמיתית?',              route: '/tools/catastrophe' },
-  { id: 'somatic',      icon: <SomaticToolIcon />,  tone: 'body',    title: 'ויסות בגוף',     subtitle: '5 תרגילים מהירים שמדברים ישירות לגוף',         route: '/tools/somatic' },
-  { id: 'mindfulness',  icon: <MindfulnessIcon />,  tone: 'reflect', title: 'מיינדפולנס',     subtitle: 'הקלטות מדיטציה',                                route: '/mindfulness' },
+  { id: 'triggers',     icon: <PhaseTriggers />,      tone: 'crisis',  title: 'מאתר טריגרים',   subtitle: 'מה הפעיל אותך עכשיו, ומה זה אומר',           route: '/tools/triggers' },
+  { id: 'mode-check',   icon: <SchemaHealthyAdult />, tone: 'self',    title: 'מצב סכמה עכשיו', subtitle: 'איזה מוד מדבר ברגע הזה',                       route: '/tools/mode-check' },
+  { id: 'catastrophe',  icon: <PhaseDistortion />,    tone: 'calm',    title: 'בדיקת מציאות',   subtitle: 'האם הקטסטרופה שאתה רואה אמיתית?',              route: '/tools/catastrophe' },
+  { id: 'somatic',      icon: <PhaseSomatic />,       tone: 'body',    title: 'ויסות בגוף',     subtitle: '5 תרגילים מהירים שמדברים ישירות לגוף',         route: '/tools/somatic' },
+  { id: 'mindfulness',  icon: <MindfulnessIcon />,    tone: 'reflect', title: 'מיינדפולנס',     subtitle: 'הקלטות מדיטציה',                                route: '/mindfulness' },
 ];
 
 export default function ToolsHub() {
