@@ -11,7 +11,7 @@ import {
 const TOOLS = [
   { id: 'triggers',     icon: <TriggersIcon />,     tone: 'crisis',  title: 'מאתר טריגרים',   subtitle: 'מה הפעיל אותך עכשיו, ומה זה אומר',           route: '/tools/triggers' },
   { id: 'mode-check',   icon: <ModeCheckIcon />,    tone: 'self',    title: 'מצב סכמה עכשיו', subtitle: 'איזה מוד מדבר ברגע הזה',                       route: '/tools/mode-check' },
-  { id: 'catastrophe',  icon: <CatastropheIcon />,  tone: 'reflect', title: 'בדיקת מציאות',   subtitle: 'האם הקטסטרופה שאתה רואה אמיתית?',              route: '/tools/catastrophe' },
+  { id: 'catastrophe',  icon: <CatastropheIcon />,  tone: 'calm',    title: 'בדיקת מציאות',   subtitle: 'האם הקטסטרופה שאתה רואה אמיתית?',              route: '/tools/catastrophe' },
   { id: 'somatic',      icon: <SomaticToolIcon />,  tone: 'body',    title: 'ויסות בגוף',     subtitle: '5 תרגילים מהירים שמדברים ישירות לגוף',         route: '/tools/somatic' },
   { id: 'mindfulness',  icon: <MindfulnessIcon />,  tone: 'reflect', title: 'מיינדפולנס',     subtitle: 'הקלטות מדיטציה',                                route: '/mindfulness' },
 ];
