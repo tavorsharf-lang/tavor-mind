@@ -511,18 +511,39 @@
   border-radius: 22px;
 }
 
-/* === Canonical list-card (DS3) =========================================
- * One source of truth for hub-card / tools-card / ck-card / ds3-card-button.
- * Old class names are kept as aliases via the selector list so the existing
- * 91 screens render correctly without HTML changes. BEM children
- * (__icon / __text / __title / __sub) are the canonical names going forward.
+/* === State taxonomy (DS3) ==============================================
+ * Three orthogonal "active-ish" states; do not mix their colors.
  *
- * Border is always 1.5px transparent so toggling .is-selected doesn't shift
- * layout. The hairline visual comes from an inset 0.5px shadow that's
- * dropped when selected (replaced by the terra border).
+ *   .is-selected   → TERRA   commit / multi-select (user picked this item
+ *                            from a set; toggleable). Used by list-cards,
+ *                            mode-cards, ds3-card-button, chips/emotions.
+ *
+ *   .is-active (filter)        → INK     mutex filter pills (e.g. review
+ *                                        scope tabs: week/month/90d).
+ *
+ *   .is-active (live sequence) → LICHEN  the currently-running step in a
+ *                                        guided sequence (breathing pace
+ *                                        chip, phase progress dot, etc.).
+ *
+ * Same class name, two different accents — disambiguate per component.
+ * When in doubt: terra = "this is the answer", ink = "this filter is on",
+ * lichen = "this step is live right now".
+ */
+
+/* === Canonical list-card (DS3) =========================================
+ * One source of truth for hub-card / tools-card / ck-card / ds3-card-button
+ * / ds3-mode-card. Old class names are kept as aliases via the selector
+ * list so the existing 91 screens render correctly without HTML changes.
+ * BEM children (__icon / __text / __title / __sub) are the canonical names
+ * going forward.
+ *
+ * Border is always 1.5px transparent so toggling .is-selected doesn't
+ * shift layout. The hairline visual comes from an inset 0.5px shadow
+ * that's dropped when selected (replaced by the terra border).
  */
 .ds3-list-card,
 .ds3-card-button,
+.ds3-mode-card,
 .hub-card,
 .tools-card,
 .ck-card {
@@ -544,16 +565,19 @@
 }
 
 .ds3-list-card,
-.ds3-card-button { padding: 14px 16px; }
+.ds3-card-button,
+.ds3-mode-card { padding: 14px 16px; }
 
 .ds3-list-card:active,
 .ds3-card-button:active,
+.ds3-mode-card:active,
 .hub-card:active,
 .tools-card:active,
 .ck-card:active { transform: scale(0.99); }
 
 .ds3-list-card.is-selected,
 .ds3-card-button.is-selected,
+.ds3-mode-card.is-selected,
 .hub-card.is-selected,
 .tools-card.is-selected,
 .ck-card.is-selected {
@@ -940,34 +964,10 @@
 
 /* ===== MODE / CHOICE CARD ============================================== */
 
-/* The mode card from modes-flow.jsx — glyph + name + desc + checkbox */
-.ds3-mode-card {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: var(--surface);
-  border: 1px solid var(--line-soft);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  direction: rtl;
-  text-align: right;
-  cursor: pointer;
-  transition: all 0.18s var(--ease-out);
-  font-family: inherit;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-}
-
-.ds3-mode-card:hover {
-  border-color: var(--line);
-}
-
-.ds3-mode-card.is-selected {
-  background: var(--terra-soft);
-  border-color: var(--terra);
-  border-width: 1.5px;
-  box-shadow: 0 1px 2px rgba(255, 106, 79, 0.20);
-}
+/* The mode card from modes-flow.jsx — glyph + name + desc + checkbox.
+ * Base box (background, border, radius 18, shadow, transition) and the
+ * .is-selected coloring come from the canonical list-card rule above.
+ * Only the children layout is unique to mode cards. */
 
 .ds3-mode-card-glyph {
   width: 44px;
