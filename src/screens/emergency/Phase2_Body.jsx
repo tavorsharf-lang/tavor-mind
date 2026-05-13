@@ -119,7 +119,7 @@ function NextButton({ onNext }) {
 function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
   const pattern = PATTERN_BY_ACTIVATION.hyper;
   const [round, setRound] = useState(1);
-  const [stage, setStage] = useState('breathe'); // 'breathe' | 'continuation' | 'eof'
+  const [stage, setStage] = useState('breathe'); // 'breathe' | 'continuation'
   const [currentCycles, setCurrentCycles] = useState(CYCLES_BY_PATTERN[pattern]);
   const ready = useVisibleSinceMount();
 
@@ -127,19 +127,22 @@ function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
     return (
       <div className="ds3-screen">
         <Topbar onExit={onExit} />
-        <main className="ds3-screen-content ds3-screen-content-center ds3-text-center">
+        <main className="ds3-screen-content ds3-screen-content-center ds3-text-center ds3-stack-4">
           <h1 className="ds3-h1">נשמת.</h1>
-          <p className="ds3-body ds3-text-muted" style={{ marginTop: 10 }}>
+          <p className="ds3-body ds3-text-muted">
             לרצות עוד מחזורים, או להתקדם?
           </p>
+          <button type="button" className="ds3-btn-quiet" onClick={onRestart}>
+            צריך משהו אחר
+          </button>
         </main>
         <footer className="ds3-screen-footer ds3-stack-3">
           <button
             type="button"
             className="ds3-btn ds3-btn-primary"
-            onClick={() => setStage('eof')}
+            onClick={onNext}
           >
-            מספיק
+            הלאה
           </button>
           <button
             type="button"
@@ -157,18 +160,6 @@ function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
           </button>
         </footer>
       </div>
-    );
-  }
-
-  if (stage === 'eof') {
-    return (
-      <EndOfFlowCheck
-        activation="hyper"
-        onExit={onExit}
-        onNext={onNext}
-        onRepeat={() => { setCurrentCycles(CYCLES_BY_PATTERN[pattern]); setRound(round + 1); setStage('breathe'); }}
-        onSwitch={onRestart}
-      />
     );
   }
 
@@ -536,23 +527,23 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
     );
   }
 
-  // After breathe55 completes → end-of-flow check (3 buttons).
+  // After breathe55 completes → end-of-flow prompt rendered on the same screen layout.
   return (
-    <EndOfFlowCheck
-      activation="hypo"
-      onExit={onExit}
-      note={note}
-      setNote={setNote}
-      onNext={onNext}
-      onRepeat={() => {
-        setStepIdx(0);
-        setTooMuch(false);
-        setMoreCycles(0);
-        setRound(round + 1);
-        setStage('activate');
-      }}
-      onSwitch={onRestart}
-    />
+    <div className="ds3-screen">
+      <Topbar onExit={onExit} />
+      <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
+        <h1 className="ds3-h1">הנשימה הספיקה?</h1>
+        <button type="button" className="ds3-btn-quiet" onClick={onRestart}>
+          צריך משהו אחר
+        </button>
+        <NoteField note={note} setNote={setNote} />
+      </main>
+      <footer className="ds3-screen-footer">
+        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
+          הלאה
+        </button>
+      </footer>
+    </div>
   );
 }
 
@@ -565,16 +556,22 @@ function MidBranch({ onNext, onSkip, onExit, onRestart, note, setNote }) {
 
   if (done) {
     return (
-      <EndOfFlowCheck
-        activation="mid"
-        onExit={onExit}
-        note={note}
-        setNote={setNote}
-        afterLine={AFTER_LINE}
-        onNext={onNext}
-        onRepeat={() => { setDone(false); setRound(round + 1); }}
-        onSwitch={onRestart}
-      />
+      <div className="ds3-screen">
+        <Topbar onExit={onExit} />
+        <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
+          <h1 className="ds3-h1">הנשימה הספיקה?</h1>
+          <p className="ds3-body ds3-text-muted">{AFTER_LINE}</p>
+          <button type="button" className="ds3-btn-quiet" onClick={onRestart}>
+            צריך משהו אחר
+          </button>
+          <NoteField note={note} setNote={setNote} />
+        </main>
+        <footer className="ds3-screen-footer">
+          <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
+            הלאה
+          </button>
+        </footer>
+      </div>
     );
   }
 
@@ -603,74 +600,3 @@ function MidBranch({ onNext, onSkip, onExit, onRestart, note, setNote }) {
   );
 }
 
-// End-of-flow check (3 buttons) — shown after every branch completes.
-// "אני שם" → advance to next phase
-// "כמעט — עוד פעם" → re-run same branch
-// "צריך משהו אחר" → back to Phase 1 to re-pick activation
-const SWITCH_HINT = {
-  hyper: 'הצעה: לעבור ל-"עוד טריגר אחד" (קופסה 4×4)',
-  mid:   'הצעה: לעבור ל-"הופעלתי" (אנחה פיזיולוגית) או "מרוקן" (נשימה מעוררת)',
-  hypo:  'הצעה: לעבור ל-"עוד טריגר אחד" (קופסה 4×4)',
-};
-
-function EndOfFlowCheck({ activation, onExit, note, setNote, afterLine, onNext, onRepeat, onSwitch }) {
-  return (
-    <div className="ds3-screen">
-      <Topbar onExit={onExit} />
-      <main className="ds3-screen-content">
-        <div className="ds3-stack-3" style={{ marginTop: 12, padding: '8px 4px' }}>
-          <p className="ds3-caption" style={{ color: 'var(--lichen)', fontWeight: 700, margin: 0 }}>
-            איך אתה עכשיו
-          </p>
-          <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>הנשימה הספיקה?</h1>
-          {afterLine && (
-            <p className="ds3-body ds3-text-muted" style={{ marginTop: 4 }}>{afterLine}</p>
-          )}
-        </div>
-
-        <div className="ds3-grow" />
-
-        <div className="ds3-stack-3" style={{ padding: '0 4px 4px' }}>
-          <button
-            type="button"
-            onClick={onRepeat}
-            style={{
-              width: '100%', minHeight: 64, borderRadius: 24,
-              background: 'var(--surface)', color: 'var(--ink)',
-              border: '1.5px solid var(--orange)',
-              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
-              padding: '10px 22px', gap: 2,
-              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
-            }}
-          >
-            <span style={{ fontSize: 17, fontWeight: 600 }}>כמעט — עוד פעם</span>
-            <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>לחזור על אותו זרם נשימה</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={onSwitch}
-            style={{
-              width: '100%', minHeight: 64, borderRadius: 24,
-              background: 'var(--surface)', color: 'var(--ink)',
-              border: '1.5px solid var(--line)',
-              display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
-              padding: '10px 22px', gap: 2,
-              fontFamily: 'inherit', cursor: 'pointer', textAlign: 'right',
-            }}
-          >
-            <span style={{ fontSize: 17, fontWeight: 600 }}>צריך משהו אחר</span>
-            <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>{SWITCH_HINT[activation]}</span>
-          </button>
-        </div>
-
-        {setNote && <NoteField note={note} setNote={setNote} />}
-      </main>
-      <footer className="ds3-screen-footer">
-        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
-          הלאה
-        </button>
-      </footer>
-    </div>
-  );
-}
