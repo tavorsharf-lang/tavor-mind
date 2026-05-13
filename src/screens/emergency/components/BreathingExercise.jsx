@@ -138,6 +138,15 @@ function formatElapsed(ms) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+/* Pattern from/to values are in the legacy CSS-scale space (0.55–1.55).
+ * Map to the viz's normalized space (0–1) so consecutive same-phase
+ * steps (e.g. physio_sigh's two inhales 0.55→1.30 then 1.30→1.55)
+ * chain into a single continuous scale curve in the viz. */
+const PATTERN_SCALE_MIN = 0.55;
+const PATTERN_SCALE_MAX = 1.55;
+const normPatternScale = (v) =>
+  Math.max(0, Math.min(1, (v - PATTERN_SCALE_MIN) / (PATTERN_SCALE_MAX - PATTERN_SCALE_MIN)));
+
 export default function BreathingExercise({ defaultPattern = '478', defaultPace = 'normal', cycles, onComplete, onPatternChange, lockPattern = false }) {
   const [pattern, setPattern] = useState(defaultPattern);
   const [pace, setPace] = useState(defaultPace);
@@ -321,6 +330,8 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
           phase={step.label === 'תכניס' ? 'inhale' : step.label === 'תוציא' ? 'exhale' : 'hold'}
           duration={step.sec}
           progress={Math.min(1, Math.max(0, (renderTime - stepStartedAt) / (step.sec * 1000)))}
+          fromScale={normPatternScale(step.from)}
+          toScale={normPatternScale(step.to)}
           isActive={!done}
           size={260}
           className="in-stage"

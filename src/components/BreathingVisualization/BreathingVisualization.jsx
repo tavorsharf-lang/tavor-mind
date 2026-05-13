@@ -19,6 +19,10 @@ function clamp01(x) {
   return Math.max(0, Math.min(1, x));
 }
 
+function easeInOutSine(t) {
+  return -(Math.cos(Math.PI * t) - 1) / 2;
+}
+
 function prefersReducedMotion() {
   if (typeof window === 'undefined' || !window.matchMedia) return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -33,6 +37,8 @@ export default function BreathingVisualization({
   phase: syncedPhase,
   duration: syncedDuration,
   progress: syncedProgress,
+  fromScale,
+  toScale,
   isActive = true,
   onPhaseChange,
   onCycleComplete,
@@ -91,7 +97,13 @@ export default function BreathingVisualization({
     reduceMotion,
   });
 
-  const normScale = clamp01((scale - SCALE_MIN) / (SCALE_MAX - SCALE_MIN));
+  /* Prefer fromScale/toScale when supplied — they let consecutive same-phase
+   * steps (e.g. physio_sigh's two inhales) chain into a single continuous
+   * scale curve. Falling back to the hook's scale keeps autonomous mode and
+   * older callers working. */
+  const normScale = (fromScale != null && toScale != null)
+    ? clamp01(fromScale + (toScale - fromScale) * easeInOutSine(clamp01(smoothProgress)))
+    : clamp01((scale - SCALE_MIN) / (SCALE_MAX - SCALE_MIN));
   const offset = normScale * MAX_OFFSET;
   const petalRadius = MIN_PETAL_RADIUS + normScale * (MAX_PETAL_RADIUS - MIN_PETAL_RADIUS);
 
