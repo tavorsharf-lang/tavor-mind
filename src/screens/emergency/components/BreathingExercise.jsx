@@ -303,6 +303,25 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
 
       <div className="breathing-elapsed" aria-hidden="true">{elapsedTotal}</div>
 
+      <div className="breathing-rhythm" aria-label="קצב הסשן הנוכחי">
+        {steps.map((s, i) => {
+          const isActive = i === stepIndex && !done;
+          const sec = Number.isInteger(s.sec) ? s.sec : s.sec.toFixed(1);
+          return (
+            <div
+              key={i}
+              className="breathing-rhythm-step"
+              data-active={isActive ? 'true' : 'false'}
+            >
+              <span className="breathing-rhythm-sec">
+                {sec}<span className="breathing-rhythm-unit">s</span>
+              </span>
+              <span className="breathing-rhythm-label">{s.label}</span>
+            </div>
+          );
+        })}
+      </div>
+
       <div className="breathing-stage">
         {isBox && (
           <svg className="breathing-square" viewBox="0 0 240 240" aria-hidden="true">
