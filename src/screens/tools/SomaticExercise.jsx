@@ -180,6 +180,7 @@ export default function SomaticExercise() {
                 value={afterScore}
                 onChange={(e) => setAfterScore(parseInt(e.target.value, 10))}
                 className="score-slider"
+                dir="ltr"
                 style={{ '--slider-tint': tint.main, '--slider-tint-glow': tint.glow }}
                 aria-label="איך אתה עכשיו, מ-1 עד 10"
               />

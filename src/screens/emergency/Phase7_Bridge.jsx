@@ -106,6 +106,7 @@ export default function Phase7Bridge({
               value={score}
               onChange={(e) => handleScoreChange(e.target.value)}
               className="ds3-slider-input"
+              dir="ltr"
               aria-label="כמה רגוע הגוף, מ-1 עד 10"
             />
           </div>

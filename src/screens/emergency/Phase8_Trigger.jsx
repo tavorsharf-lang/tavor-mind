@@ -208,6 +208,7 @@ export default function Phase8Trigger({
                     value={initialActivation}
                     onChange={(e) => update({ initialActivation: parseInt(e.target.value, 10) })}
                     className="score-slider"
+                    dir="ltr"
                     style={{ '--slider-tint': tint.main, '--slider-tint-glow': tint.glow }}
                     aria-label="כמה אתה מופעל עכשיו, מ-1 עד 10"
                   />

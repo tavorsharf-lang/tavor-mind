@@ -10,6 +10,7 @@ export default function EnergySlider({ value, onChange, lowLabel, highLabel, ari
         value={value}
         onChange={(e) => onChange(parseInt(e.target.value, 10))}
         className="score-slider energy-slider"
+        dir="ltr"
         aria-label={ariaLabel}
       />
       <div className="energy-labels">
