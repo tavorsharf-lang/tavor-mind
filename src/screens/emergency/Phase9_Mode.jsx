@@ -108,7 +108,7 @@ export default function Phase9Mode({
         <footer className="ds3-screen-footer ds3-stack-3">
           <button
             type="button"
-            className="ds3-btn ds3-btn-primary"
+            className="ds3-btn ds3-btn-cream"
             onClick={() => {
               if (setIdentificationPath) setIdentificationPath('self_first');
               setStage('self_describe');
@@ -118,13 +118,23 @@ export default function Phase9Mode({
           </button>
           <button
             type="button"
-            className="ds3-btn ds3-btn-outline-terra"
+            className="ds3-btn ds3-btn-cream"
             onClick={() => {
               if (setIdentificationPath) setIdentificationPath('list_first');
               setStage('list');
             }}
           >
             הראה לי את הרשימה
+          </button>
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => {
+              if (setIdentificationPath) setIdentificationPath(null);
+              setStage('list');
+            }}
+          >
+            הלאה
           </button>
         </footer>
       </div>
