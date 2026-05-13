@@ -51,6 +51,14 @@ export default function TriggerTracker() {
     setThoughts(next);
   };
 
+  const addThought = () => {
+    setThoughts([...thoughts, '']);
+    requestAnimationFrame(() => {
+      const last = thoughtRefs.current[thoughts.length];
+      if (last) last.focus();
+    });
+  };
+
   const thoughtRefs = useRef([]);
   const handleThoughtKeyDown = (i) => (e) => {
     if (e.key !== 'Enter') return;
@@ -155,6 +163,9 @@ export default function TriggerTracker() {
                 </li>
               ))}
             </ol>
+            <button type="button" className="link-btn add-thought-btn" onClick={addThought}>
+              + הוסף משפט נוסף
+            </button>
             <h3 className="form-section-label">עיוותי חשיבה אפשריים — סמן אם רלוונטי</h3>
             <div className="emotion-grid">
               {distortions.map((d) => (

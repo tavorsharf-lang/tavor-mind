@@ -71,6 +71,15 @@ export default function Phase8Trigger({
     update({ thoughts: next });
   };
 
+  const addThought = () => {
+    const current = data.thoughts || ['', '', ''];
+    update({ thoughts: [...current, ''] });
+    requestAnimationFrame(() => {
+      const last = thoughtRefs.current[current.length];
+      if (last) last.focus();
+    });
+  };
+
   const thoughtRefs = useRef([]);
   const handleThoughtKeyDown = (i, total) => (e) => {
     if (e.key !== 'Enter') return;
@@ -289,6 +298,9 @@ export default function Phase8Trigger({
                     </li>
                   ))}
                 </ol>
+                <button type="button" className="link-btn add-thought-btn" onClick={addThought}>
+                  + הוסף משפט נוסף
+                </button>
               </>
             )}
             {step === 4 && (
