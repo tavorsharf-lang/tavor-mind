@@ -9,6 +9,7 @@ import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
 import { saveMoodCheckin } from '../../utils/checkinStorage.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
+import { incrementCounts } from '../../utils/optionFrequency.js';
 
 const TOTAL = 4;
 
@@ -37,6 +38,8 @@ export default function MoodCheckin() {
       emotions: Array.from(selectedEmotions),
       factors: Array.from(selectedFactors),
     });
+    incrementCounts('emotions', Array.from(selectedEmotions));
+    incrementCounts('life_factors', Array.from(selectedFactors));
     setSaving(false);
     setSaved(true);
   };

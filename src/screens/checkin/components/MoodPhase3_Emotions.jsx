@@ -1,12 +1,13 @@
 import { useMemo, useState } from 'react';
 import { EMOTIONS, getEmotionsForValence } from '../../../data/emotionsCorpus.js';
+import { sortByFrequency } from '../../../utils/optionFrequency.js';
 
 export default function MoodPhase3Emotions({ valence, value, onChange }) {
   const [showAll, setShowAll] = useState(false);
 
   const visible = useMemo(() => {
-    if (showAll) return EMOTIONS;
-    return getEmotionsForValence(valence);
+    const pool = showAll ? EMOTIONS : getEmotionsForValence(valence);
+    return sortByFrequency(pool, 'emotions');
   }, [valence, showAll]);
 
   const toggle = (id) => {

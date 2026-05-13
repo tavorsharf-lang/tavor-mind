@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import PhaseHeader from './components/PhaseHeader.jsx';
 import SoftButton from './components/SoftButton.jsx';
 import { PhaseTriggers as Phase8TriggerIcon } from '../../components/icons/system.jsx';
@@ -7,6 +7,7 @@ import { dominantSchemas } from '../../data/schemas.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
 import { Modal } from '../../components/ui/Modal.jsx';
+import { incrementCounts, sortByFrequency } from '../../utils/optionFrequency.js';
 
 const STAGE_TOTAL = 10;
 const STAGE_LABEL = 'שלב 2 — לנתח';
@@ -104,6 +105,12 @@ export default function Phase8Trigger({
       return;
     }
     if (step >= LAST_STEP) {
+      incrementCounts('body_sensations', data.sensations);
+      incrementCounts('distortions', data.distortions);
+      incrementCounts(
+        'schemas',
+        (data.schemas || []).filter((id) => id !== OTHER_SCHEMA),
+      );
       onNext();
       return;
     }
@@ -141,6 +148,11 @@ export default function Phase8Trigger({
   const schemaSet = new Set(data.schemas || []);
   const realSchemasSelected = (data.schemas || []).filter((s) => s !== OTHER_SCHEMA);
   const showDominantPicker = realSchemasSelected.length >= 2;
+
+  // Frozen on mount so chips don't reshuffle as the user clicks.
+  const sortedSensations = useMemo(() => sortByFrequency(BODY_SENSATIONS, 'body_sensations'), []);
+  const sortedDistortions = useMemo(() => sortByFrequency(distortions, 'distortions'), []);
+  const sortedSchemas = useMemo(() => sortByFrequency(dominantSchemas, 'schemas'), []);
 
   const initialActivation = data.initialActivation ?? 5;
 
@@ -263,7 +275,7 @@ export default function Phase8Trigger({
                 <h1 className="phase-title">מה קרה בגוף?</h1>
                 <p className="phase-subtitle">סמן הכל שמתאים</p>
                 <div className="emotion-grid">
-                  {BODY_SENSATIONS.map((s) => (
+                  {sortedSensations.map((s) => (
                     <button
                       key={s.id}
                       type="button"
@@ -326,7 +338,7 @@ export default function Phase8Trigger({
                 <h1 className="phase-title">סמן אם רלוונטי</h1>
                 <p className="phase-subtitle">לא חובה לסמן. אם זה לא יושב — דלג.</p>
                 <div className="emotion-grid">
-                  {distortions.map((d) => (
+                  {sortedDistortions.map((d) => (
                     <button
                       key={d.id}
                       type="button"
@@ -346,7 +358,7 @@ export default function Phase8Trigger({
                 <h1 className="phase-title">איזו סכמה פעלה כאן?</h1>
                 <p className="phase-subtitle">בחר אחת או יותר</p>
                 <div className="emotion-grid">
-                  {dominantSchemas.map((s) => (
+                  {sortedSchemas.map((s) => (
                     <button
                       key={s.id}
                       type="button"

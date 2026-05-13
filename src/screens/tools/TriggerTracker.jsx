@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CheckinHeader from '../checkin/components/CheckinHeader.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
@@ -8,6 +8,7 @@ import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { getModeById } from '../../data/modes.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
+import { incrementCounts, sortByFrequency } from '../../utils/optionFrequency.js';
 
 const TOTAL = 5;
 const OTHER_SCHEMA = '__other__';
@@ -30,6 +31,11 @@ export default function TriggerTracker() {
   const [suggestions, setSuggestions] = useState([]);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+
+  // Frozen on mount so chips don't reshuffle as the user clicks.
+  const sortedSensations = useMemo(() => sortByFrequency(BODY_SENSATIONS, 'body_sensations'), []);
+  const sortedDistortions = useMemo(() => sortByFrequency(distortions, 'distortions'), []);
+  const sortedSchemas = useMemo(() => sortByFrequency(dominantSchemas, 'schemas'), []);
 
   const exit = () => navigate('/tools', { replace: true });
 
@@ -98,6 +104,9 @@ export default function TriggerTracker() {
       schemasActivated: finalSchemas,
       healthyResponse: healthyResponse.trim() || null,
     });
+    incrementCounts('body_sensations', Array.from(sensations));
+    incrementCounts('distortions', Array.from(distortionSet));
+    incrementCounts('schemas', Array.from(schemaSet).filter((id) => id !== OTHER_SCHEMA));
     setSaving(false);
     setSaved(true);
   };
@@ -128,7 +137,7 @@ export default function TriggerTracker() {
             <h1 className="phase-title">מה קרה בגוף?</h1>
             <p className="phase-subtitle">סמן הכל שמתאים</p>
             <div className="emotion-grid">
-              {BODY_SENSATIONS.map((s) => (
+              {sortedSensations.map((s) => (
                 <button
                   key={s.id}
                   type="button"
@@ -168,7 +177,7 @@ export default function TriggerTracker() {
             </button>
             <h3 className="form-section-label">עיוותי חשיבה אפשריים — סמן אם רלוונטי</h3>
             <div className="emotion-grid">
-              {distortions.map((d) => (
+              {sortedDistortions.map((d) => (
                 <button
                   key={d.id}
                   type="button"
@@ -188,7 +197,7 @@ export default function TriggerTracker() {
             <h1 className="phase-title">איזו סכמה פעלה כאן?</h1>
             <p className="phase-subtitle">בחר אחת או יותר</p>
             <div className="emotion-grid">
-              {dominantSchemas.map((s) => (
+              {sortedSchemas.map((s) => (
                 <button
                   key={s.id}
                   type="button"
