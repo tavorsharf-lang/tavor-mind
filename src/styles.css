@@ -649,6 +649,12 @@ button:focus-visible {
   margin-bottom: 4px;
 }
 
+.breathing-elapsed-sep,
+.breathing-elapsed-total {
+  color: var(--ink-muted);
+  opacity: 0.7;
+}
+
 /* Rhythm summary — shows each step's seconds so the user can mentally
  * prepare before the orb starts breathing. The active step lights up. */
 .breathing-rhythm {
@@ -8712,6 +8718,12 @@ button:focus-visible {
   font-variant-numeric: tabular-nums;
   margin-bottom: var(--space-1);
   min-height: 1.4em;
+}
+
+.ds2-themed .breathing-elapsed-sep,
+.ds2-themed .breathing-elapsed-total {
+  color: var(--ink-muted);
+  opacity: 0.7;
 }
 
 .ds2-themed .breathing-countdown {

@@ -261,6 +261,9 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
   const remainingMs = Math.max(0, step.sec * 1000 - (renderTime - stepStartedAt));
   const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
   const elapsedTotal = formatElapsed(renderTime - exerciseStartedAt);
+  const cycleSec = steps.reduce((sum, s) => sum + s.sec, 0);
+  const sessionTotalMs = cycleSec * cycles * 1000;
+  const sessionTotal = formatElapsed(sessionTotalMs);
 
   return (
     <div className="breathing">
@@ -301,7 +304,11 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
         </>
       )}
 
-      <div className="breathing-elapsed" aria-hidden="true">{elapsedTotal}</div>
+      <div className="breathing-elapsed" aria-hidden="true">
+        <span>{elapsedTotal}</span>
+        <span className="breathing-elapsed-sep"> / </span>
+        <span className="breathing-elapsed-total">{sessionTotal}</span>
+      </div>
 
       <div className="breathing-rhythm" aria-label="קצב הסשן הנוכחי">
         {steps.map((s, i) => {
