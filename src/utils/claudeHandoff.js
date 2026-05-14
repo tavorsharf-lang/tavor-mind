@@ -166,9 +166,6 @@ export function buildTriggerAnalysisPrompt(session) {
   const initialActivation = (typeof session.initialActivation === 'number')
     ? `${session.initialActivation}/10`
     : null;
-  const closingScore = (session.closingScore != null)
-    ? `${session.closingScore}/10`
-    : null;
   const closingNote = (session.closingNote ?? session.note ?? '').toString().trim();
 
   const lines = [
@@ -248,12 +245,8 @@ export function buildTriggerAnalysisPrompt(session) {
     ? (activationCategory ? `${initialActivation} (${activationCategory})` : initialActivation)
     : (activationCategory || null);
 
-  if (initialActivationLine && closingScore) {
-    metaLines.push(`- הפעלה ראשונית: ${initialActivationLine}  ·  סגירה: ${closingScore}`);
-  } else if (initialActivationLine) {
+  if (initialActivationLine) {
     metaLines.push(`- הפעלה ראשונית: ${initialActivationLine}`);
-  } else if (closingScore) {
-    metaLines.push(`- סגירה: ${closingScore}`);
   }
 
   if (otherModeLabels.length > 0) {
