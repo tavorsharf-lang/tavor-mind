@@ -3,6 +3,7 @@ import CallSomeoneModal from '../../components/ui/CallSomeoneModal.jsx';
 import { VagalAnim, ButterflyAnim, BodyScanAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
 import { PhaseIntegration as Phase7BridgeIcon } from '../../components/icons/system.jsx';
+import { usePointerSlider } from '../../utils/usePointerSlider.js';
 
 const MAX_EXTRA_ROUNDS = 3;
 
@@ -34,13 +35,19 @@ export default function Phase7Bridge({
   const [showCall, setShowCall] = useState(false);
 
   const handleScoreChange = (raw) => {
-    // direction:ltr on the input gives native left=1, right=10. Labels in
-    // RTL flex put "רגוע יחסית" first → on the right, matching score=10
-    // at the right end. No mirror needed.
     const newScore = parseInt(raw, 10);
     setScore(newScore);
     if (!scoreTouched) setScoreTouched(true);
   };
+
+  // .ds3-slider-wrap has 4px horizontal padding. Pointer drag is handled
+  // direction-independently so desktop RTL doesn't reverse it.
+  const { wrapRef, handlers: sliderHandlers } = usePointerSlider({
+    min: 1,
+    max: 10,
+    padding: 4,
+    onChange: (v) => handleScoreChange(String(v)),
+  });
 
   const goToOptions = () => {
     setBodyRegulationScore(score);
@@ -75,7 +82,12 @@ export default function Phase7Bridge({
             </p>
           </div>
 
-          <div className="ds3-slider-wrap">
+          <div
+            className="ds3-slider-wrap"
+            ref={wrapRef}
+            {...sliderHandlers}
+            style={{ touchAction: 'none', cursor: 'pointer' }}
+          >
             <div className="ds3-slider-track" />
             {scoreTouched && (
               <div

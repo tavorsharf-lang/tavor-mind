@@ -970,13 +970,15 @@
   background: linear-gradient(270deg, var(--terra-soft), var(--terra));
 }
 
+/* Kept in the DOM for keyboard a11y only — pointer drag is handled on the
+ * wrapper (usePointerSlider) so RTL ancestors can't reverse the direction. */
 .ds3-slider-input {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  cursor: pointer;
+  pointer-events: none;
   direction: ltr;
   margin: 0;
 }

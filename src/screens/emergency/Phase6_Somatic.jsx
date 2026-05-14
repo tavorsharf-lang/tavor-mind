@@ -3,6 +3,7 @@ import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAni
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { colorForScore } from '../../utils/scoreColor.js';
 import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
+import { usePointerSlider } from '../../utils/usePointerSlider.js';
 
 const BUTTERFLY_DURATION_SEC = 60;
 const VAGAL_DURATION_SEC = 90;
@@ -164,6 +165,13 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
   const [feltIt, setFeltIt] = useState(null); // null | true | false
   const [afterScore, setAfterScore] = useState(5);
 
+  // Pointer drag handled direction-independently — desktop RTL was reversing it.
+  const { wrapRef: scoreWrapRef, handlers: scoreHandlers } = usePointerSlider({
+    min: 1,
+    max: 10,
+    onChange: setAfterScore,
+  });
+
   const ringTint = intensity === 'intense' ? 'var(--terra)' : 'var(--lichen)';
   const ringTintRgba = intensity === 'intense'
     ? 'rgba(255, 106, 79, '
@@ -260,7 +268,11 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
               <span className="ds3-body" style={{ fontWeight: 600 }}>איך עכשיו?</span>
               <span className="ds3-caption" style={{ color: tint.main, fontWeight: 700, transition: 'color 200ms ease' }}>{afterScore}/10</span>
             </div>
-            <div style={{ position: 'relative', height: 28, display: 'flex', alignItems: 'center' }}>
+            <div
+              ref={scoreWrapRef}
+              {...scoreHandlers}
+              style={{ position: 'relative', height: 28, display: 'flex', alignItems: 'center', touchAction: 'none', cursor: 'pointer' }}
+            >
               <div style={{ position: 'absolute', left: 0, right: 0, height: 4, borderRadius: 2, background: 'var(--line-soft)' }} />
               <div style={{
                 position: 'absolute', left: 0, height: 4, borderRadius: 2,
@@ -280,7 +292,7 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
                 value={afterScore}
                 onChange={(e) => setAfterScore(parseInt(e.target.value, 10))}
                 dir="ltr"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', direction: 'ltr' }}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, pointerEvents: 'none', direction: 'ltr' }}
                 aria-label="ציון אחרי"
               />
             </div>
