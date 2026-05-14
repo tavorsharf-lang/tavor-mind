@@ -364,10 +364,9 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
 
   if (stage === 'breathe42_check') {
     const checkItems = [
-      { id: 'right',    label: 'מעורר נכון',       tint: 'var(--lichen)', sub: 'עוד 4 מחזורים' },
-      { id: 'almost',   label: 'כמעט יותר מדי',     tint: 'var(--orange)', sub: 'עוד 6 מחזורים, יותר רכים' },
-      { id: 'too_much', label: 'יותר מדי',           tint: 'var(--heart)',  sub: 'דלג לנשימה המאזנת' },
-      { id: 'stop',     label: 'עצור — צריך משהו אחר', tint: 'var(--ink-muted)', sub: 'צא משלב הנשימה' },
+      { id: 'more4',   label: 'להמשיך — עוד 4 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת' },
+      { id: 'more8',   label: 'להמשיך — עוד 8 מחזורים', tint: 'var(--orange)', sub: 'נשימה מעוררת, קצת יותר' },
+      { id: 'balance', label: 'לעבור לנשימה המאזנת',     tint: 'var(--lichen)', sub: 'מספיק מעורר — הלאה' },
     ];
     return (
       <div className="ds3-screen">
@@ -388,17 +387,13 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
                 key={opt.id}
                 type="button"
                 onClick={() => {
-                  if (opt.id === 'stop') {
-                    onSkip();
-                    return;
-                  }
                   setFelt62(opt.id);
-                  pushResponse(opt.id === 'right' || opt.id === 'almost' || opt.id === 'too_much' ? opt.id : 'right');
-                  if (opt.id === 'too_much') {
-                    setTooMuch(true);
+                  if (opt.id === 'balance') {
+                    pushResponse('right');
                     setStage('transition');
                   } else {
-                    setMoreCycles(opt.id === 'right' ? 4 : 6);
+                    pushResponse(opt.id === 'more4' ? 'right' : 'almost');
+                    setMoreCycles(opt.id === 'more4' ? 4 : 8);
                     setStage('breathe42_more');
                   }
                 }}
