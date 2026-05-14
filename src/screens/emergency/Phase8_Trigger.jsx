@@ -6,6 +6,7 @@ import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
+import { usePointerSlider } from '../../utils/usePointerSlider.js';
 import { Modal } from '../../components/ui/Modal.jsx';
 import { incrementCounts, sortByFrequency } from '../../utils/optionFrequency.js';
 
@@ -41,6 +42,17 @@ export default function Phase8Trigger({
   const effectiveFirstStep = skipInitialActivation ? 1 : FIRST_STEP;
 
   const update = (patch) => setData({ ...data, ...patch });
+
+  // Step-0 activation slider. .ds3-slider-wrap has 4px horizontal padding.
+  // Pointer drag is handled direction-independently so desktop RTL doesn't
+  // reverse it.
+  const { wrapRef: activationSliderRef, handlers: activationSliderHandlers } =
+    usePointerSlider({
+      min: 1,
+      max: 10,
+      padding: 4,
+      onChange: (v) => update({ initialActivation: v }),
+    });
 
   const toggleSet = (key, id) => {
     const next = new Set(data[key] || []);
@@ -216,27 +228,54 @@ export default function Phase8Trigger({
           <>
             {step === 0 && (() => {
               const tint = colorForScore(initialActivation, 'high-bad');
+              const handlePos = ((initialActivation - 1) / 9) * 100;
               return (
               <>
                 <h1 className="phase-title">כמה אתה מופעל עכשיו?</h1>
                 <div className="activation-meter-display" aria-hidden="true" style={{ color: tint.main }}>{initialActivation}</div>
                 <div className="score-slider-wrap">
-                  <input
-                    type="range"
-                    min="1"
-                    max="10"
-                    step="1"
-                    value={initialActivation}
-                    onChange={(e) => update({ initialActivation: parseInt(e.target.value, 10) })}
-                    className="score-slider"
-                    dir="ltr"
-                    style={{ '--slider-tint': tint.main, '--slider-tint-glow': tint.glow }}
-                    aria-label="כמה אתה מופעל עכשיו, מ-1 עד 10"
-                  />
-                  <div className="activation-meter-labels">
-                    <span className="activation-label-calm">1 = רגוע</span>
-                    <span className="activation-label-mid">5 = יש משהו</span>
+                  <div
+                    className="ds3-slider-wrap"
+                    ref={activationSliderRef}
+                    {...activationSliderHandlers}
+                    style={{ touchAction: 'none', cursor: 'pointer' }}
+                  >
+                    <div className="ds3-slider-track" />
+                    <div
+                      className="ds3-slider-fill"
+                      style={{
+                        left: 4, right: 'auto',
+                        width: `calc(${handlePos}% - 8px)`,
+                        background: `linear-gradient(90deg, ${tint.soft}, ${tint.main})`,
+                        transition: 'background 200ms ease, width 150ms ease',
+                      }}
+                    />
+                    <div
+                      className="ds3-slider-handle"
+                      style={{
+                        left: `calc(${handlePos}% - 22px)`, right: 'auto',
+                        boxShadow: `0 0 0 3px ${tint.main}, 0 6px 18px ${tint.glow}`,
+                        transition: 'left 150ms ease, box-shadow 200ms ease',
+                      }}
+                    >
+                      <div className="ds3-slider-handle-dot" style={{ background: tint.main, transition: 'background 200ms ease' }} />
+                    </div>
+                    <input
+                      type="range"
+                      min="1"
+                      max="10"
+                      step="1"
+                      value={initialActivation}
+                      onChange={(e) => update({ initialActivation: parseInt(e.target.value, 10) })}
+                      className="ds3-slider-input"
+                      dir="ltr"
+                      aria-label="כמה אתה מופעל עכשיו, מ-1 עד 10"
+                    />
+                  </div>
+                  <div className="ds3-slider-labels">
                     <span className="activation-label-burning">10 = שורף</span>
+                    <span className="activation-label-mid">5 = יש משהו</span>
+                    <span className="activation-label-calm">1 = רגוע</span>
                   </div>
                 </div>
                 {initialActivation >= ACTIVATION_HIGH_THRESHOLD && (onGoToGrounding || (activation === 'mid' && onGoToContainment)) && (
