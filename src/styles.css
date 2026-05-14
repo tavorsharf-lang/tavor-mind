@@ -11629,3 +11629,8 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .holo-float, .holo-base, .holo-scan { animation: none; }
 }
+
+/* JumpHologram base sits at a slightly different anchor */
+.holo-base--jump {
+  transform-origin: 110px 242px;
+}

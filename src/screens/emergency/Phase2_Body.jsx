@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
 import KapalabhatiExercise from './components/KapalabhatiExercise.jsx';
 import StandUpHologram from './components/StandUpHologram.jsx';
+import JumpHologram from './components/JumpHologram.jsx';
 import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
@@ -220,6 +221,11 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
           {stepIdx === 0 && (
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
               <StandUpHologram size={220} />
+            </div>
+          )}
+          {stepIdx === 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+              <JumpHologram size={220} />
             </div>
           )}
         </main>
