@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import BreathingExercise from './components/BreathingExercise.jsx';
 import KapalabhatiExercise from './components/KapalabhatiExercise.jsx';
+import StandUpHologram from './components/StandUpHologram.jsx';
 import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
@@ -216,6 +217,11 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
             </div>
             <p className="ds3-body" style={{ margin: 0, lineHeight: 1.55 }}>{HYPO_STEPS[stepIdx]}</p>
           </div>
+          {stepIdx === 0 && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+              <StandUpHologram size={220} />
+            </div>
+          )}
         </main>
         <footer className="ds3-screen-footer">
           <button
