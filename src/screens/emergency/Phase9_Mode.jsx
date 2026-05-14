@@ -118,23 +118,13 @@ export default function Phase9Mode({
           </button>
           <button
             type="button"
-            className="ds3-btn ds3-btn-cream"
+            className="ds3-btn ds3-btn-primary"
             onClick={() => {
               if (setIdentificationPath) setIdentificationPath('list_first');
               setStage('list');
             }}
           >
-            הראה לי את הרשימה
-          </button>
-          <button
-            type="button"
-            className="ds3-btn ds3-btn-primary"
-            onClick={() => {
-              if (setIdentificationPath) setIdentificationPath(null);
-              setStage('list');
-            }}
-          >
-            הלאה
+            הלאה, אבחר מהרשימה
           </button>
         </footer>
       </div>
