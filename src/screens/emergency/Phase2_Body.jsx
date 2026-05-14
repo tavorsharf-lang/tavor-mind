@@ -311,7 +311,14 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             onComplete={() => setStage('breathe42_check')}
           />
         </main>
-        <footer className="ds3-screen-footer" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <footer className="ds3-screen-footer ds3-stack-3">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => setStage('breathe42_check')}
+          >
+            הלאה
+          </button>
           <button
             type="button"
             onClick={() => setStage('kapalabhati')}
@@ -321,6 +328,7 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
               fontSize: 13, fontWeight: 600,
               textDecoration: 'underline',
               padding: '6px 8px',
+              alignSelf: 'center',
             }}
           >
             דיסוציאציה עמוקה? להחליף ל-Kapalabhati אגרסיבי
@@ -341,6 +349,15 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             onAbort={() => setStage('breathe42_initial')}
           />
         </main>
+        <footer className="ds3-screen-footer">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => setStage('transition')}
+          >
+            הלאה
+          </button>
+        </footer>
       </div>
     );
   }
@@ -437,7 +454,14 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             onComplete={() => setStage('transition')}
           />
         </main>
-        <footer className="ds3-screen-footer" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <footer className="ds3-screen-footer ds3-stack-3">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => setStage('transition')}
+          >
+            הלאה
+          </button>
           <button
             type="button"
             onClick={() => { setTooMuch(true); setStage('transition'); }}
@@ -445,6 +469,7 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
               background: 'none', border: 'none', cursor: 'pointer',
               color: 'var(--heart)', fontFamily: 'inherit',
               fontSize: 14, fontWeight: 600, padding: '6px 8px',
+              alignSelf: 'center',
             }}
           >
             זה יותר מדי
@@ -508,7 +533,14 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             onComplete={() => setStage('feedback')}
           />
         </main>
-        <footer className="ds3-screen-footer" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+        <footer className="ds3-screen-footer ds3-stack-3">
+          <button
+            type="button"
+            className="ds3-btn ds3-btn-primary"
+            onClick={() => setStage('feedback')}
+          >
+            הלאה
+          </button>
           {/* "זה יותר מדי" — same escape as stage 1 but smaller/dimmer per design */}
           <button
             type="button"
@@ -518,6 +550,7 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
               color: 'var(--heart)', fontFamily: 'inherit',
               fontSize: 13, fontWeight: 500,
               opacity: 0.75, padding: '6px 8px',
+              alignSelf: 'center',
             }}
           >
             זה יותר מדי
