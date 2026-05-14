@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import CheckinHeader from './components/CheckinHeader.jsx';
 import MoodPhase1Scope from './components/MoodPhase1_Scope.jsx';
 import MoodPhase2Slider from './components/MoodPhase2_Slider.jsx';
@@ -11,12 +11,16 @@ import { saveMoodCheckin } from '../../utils/checkinStorage.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 import { incrementCounts } from '../../utils/optionFrequency.js';
 
-const TOTAL = 4;
+const MAX_PHASE = 4;
 
 export default function MoodCheckin() {
   const navigate = useNavigate();
-  const [phase, setPhase] = useState(1);
-  const [scope, setScope] = useState(null);
+  const location = useLocation();
+  const presetScope = location.state?.scope ?? null;
+  const minPhase = presetScope ? 2 : 1;
+  const total = presetScope ? 3 : MAX_PHASE;
+  const [phase, setPhase] = useState(minPhase);
+  const [scope, setScope] = useState(presetScope);
   const [valence, setValence] = useState(3);
   const [selectedEmotions, setSelectedEmotions] = useState(() => new Set());
   const [selectedFactors, setSelectedFactors] = useState(() => new Set());
@@ -26,7 +30,7 @@ export default function MoodCheckin() {
   const exit = () => navigate('/checkin', { replace: true });
 
   useBackHandler(() => {
-    if (phase > 1) setPhase(phase - 1);
+    if (phase > minPhase) setPhase(phase - 1);
     else navigate(-1);
   });
 
@@ -48,7 +52,7 @@ export default function MoodCheckin() {
 
   return (
     <div className="phase ck-step mood-checkin ds2-themed">
-      <CheckinHeader step={phase} total={TOTAL} onExit={exit} />
+      <CheckinHeader step={presetScope ? phase - 1 : phase} total={total} onExit={exit} />
       <main className="phase-content">
         {phase === 1 && <MoodPhase1Scope value={scope} onChange={setScope} />}
         {phase === 2 && <MoodPhase2Slider scope={scope} value={valence} onChange={setValence} />}
@@ -67,12 +71,12 @@ export default function MoodCheckin() {
         )}
       </main>
       <footer className="phase-footer">
-        {phase < TOTAL && (
+        {phase < MAX_PHASE && (
           <SoftButton onClick={() => setPhase(phase + 1)} disabled={!canAdvance}>
             הבא
           </SoftButton>
         )}
-        {phase === TOTAL && (
+        {phase === MAX_PHASE && (
           <SoftButton onClick={handleSave} disabled={saving || saved}>
             {saving ? 'שומר…' : 'שמור'}
           </SoftButton>
