@@ -496,16 +496,19 @@ export default function EmergencyFlow() {
       {phase === 11 && (
         <PhaseSummary
           session={{
+            analyzed,
             activation,
             breathingFelt62,
+            breathingNote: breathingNote.trim() || null,
+            bodyRegulationScore,
             modesIdentified: Array.from(selectedModes).map(resolveModeId).filter(Boolean),
-            dominantSchema: trigger.dominantSchema,
-            closingScore: score,
             somaticRan: activation === 'hypo',
             hrSessionId: ensureHrSessionId(),
             startedAtMs: startedAtRef.current,
             endedAtMs: endedAtMsRef.current,
+            trigger: analyzed ? buildTriggerPayload() : null,
           }}
+          onShowRecords={() => navigate('/emergency/history')}
           onClose={() => navigate('/', { replace: true })}
         />
       )}
