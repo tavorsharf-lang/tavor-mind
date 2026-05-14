@@ -71,7 +71,7 @@ export default function Phase2Body({
   const felt62Props = { felt62: breathingFelt62, setFelt62: setBreathingFelt62 };
   const common = { onNext, onSkip, onExit, onRestart };
   if (activation === 'hyper') return <HyperBranch {...common} />;
-  if (activation === 'hypo')  return <HypoBranch {...common} {...noteProps} {...felt62Props} />;
+  if (activation === 'hypo')  return <HypoBranch {...common} {...felt62Props} />;
   return <MidBranch {...common} {...noteProps} />;
 }
 
@@ -188,7 +188,7 @@ function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
   );
 }
 
-function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, setFelt62 }) {
+function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
   const [stepIdx, setStepIdx] = useState(0);
   const [stage, setStage] = useState('activate');
   const [round, setRound] = useState(1);
@@ -526,14 +526,14 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
             defaultPace="slow"
             cycles={cycles55}
             lockPattern={true}
-            onComplete={() => setStage('feedback')}
+            onComplete={onNext}
           />
         </main>
         <footer className="ds3-screen-footer ds3-stack-3">
           <button
             type="button"
             className="ds3-btn ds3-btn-primary"
-            onClick={() => setStage('feedback')}
+            onClick={onNext}
           >
             הלאה
           </button>
@@ -556,24 +556,8 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
     );
   }
 
-  // After breathe55 completes → end-of-flow prompt rendered on the same screen layout.
-  return (
-    <div className="ds3-screen">
-      <Topbar onExit={onExit} />
-      <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        <h1 className="ds3-h1">הנשימה הספיקה?</h1>
-        <button type="button" className="ds3-btn-quiet" onClick={onRestart}>
-          צריך משהו אחר
-        </button>
-        <NoteField note={note} setNote={setNote} />
-      </main>
-      <footer className="ds3-screen-footer">
-        <button type="button" className="ds3-btn ds3-btn-primary" onClick={onNext}>
-          הלאה
-        </button>
-      </footer>
-    </div>
-  );
+  // breathe55 completion advances straight to the next phase — no end-of-flow prompt.
+  return null;
 }
 
 function MidBranch({ onNext, onSkip, onExit, onRestart, note, setNote }) {
