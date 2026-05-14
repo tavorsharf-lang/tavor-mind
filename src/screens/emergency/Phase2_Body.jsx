@@ -365,8 +365,8 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
   if (stage === 'breathe42_check') {
     const checkItems = [
       { id: 'more4',   label: 'להמשיך — עוד 4 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת' },
-      { id: 'more8',   label: 'להמשיך — עוד 8 מחזורים', tint: 'var(--orange)', sub: 'נשימה מעוררת, קצת יותר' },
-      { id: 'balance', label: 'לעבור לנשימה המאזנת',     tint: 'var(--lichen)', sub: 'מספיק מעורר — הלאה' },
+      { id: 'more8',   label: 'להמשיך — עוד 8 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת, קצת יותר' },
+      { id: 'balance', label: 'לעבור לנשימה המאזנת',     tint: 'var(--orange)', sub: 'מספיק מעורר — הלאה', filled: true },
     ];
     return (
       <div className="ds3-screen">
@@ -399,7 +399,8 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
                 }}
                 style={{
                   width: '100%', minHeight: 64, borderRadius: 24,
-                  background: 'var(--surface)', color: 'var(--ink)',
+                  background: opt.filled ? opt.tint : 'var(--surface)',
+                  color: opt.filled ? '#FFFFFF' : 'var(--ink)',
                   border: `1.5px solid ${opt.tint}`,
                   display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
                   padding: '10px 22px', gap: 2,
@@ -409,7 +410,7 @@ function HypoBranch({ onNext, onSkip, onExit, onRestart, note, setNote, felt62, 
                 }}
               >
                 <span style={{ fontSize: 17, fontWeight: 600 }}>{opt.label}</span>
-                <span style={{ fontSize: 13, color: 'var(--ink-muted)', fontWeight: 500 }}>{opt.sub}</span>
+                <span style={{ fontSize: 13, color: opt.filled ? 'rgba(255,255,255,0.85)' : 'var(--ink-muted)', fontWeight: 500 }}>{opt.sub}</span>
               </button>
             ))}
           </div>
