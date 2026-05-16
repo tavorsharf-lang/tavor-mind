@@ -14,8 +14,8 @@ function sizeClassFromCount(c) {
 
 function categoryClass(valence) {
   if (valence == null) return 'is-neutral';
-  if (valence <= 2) return 'is-warm';
-  if (valence >= 4) return 'is-cool';
+  if (valence <= 3) return 'is-cool';
+  if (valence >= 5) return 'is-warm';
   return 'is-neutral';
 }
 

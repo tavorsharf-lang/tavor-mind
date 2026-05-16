@@ -9736,6 +9736,157 @@ button:focus-visible {
   transition: color 300ms var(--ease-out);
 }
 
+/* ── Mood slider v2 — pulsing bloom + RTL 1-7 scale ───────────────── */
+
+.mood-bloom-holo {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mood-bloom-ring,
+.mood-bloom-core {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--mood-color, var(--lichen));
+  transition: background 360ms var(--ease-out);
+}
+
+.mood-bloom-ring-3 {
+  width: 156px; height: 156px;
+  opacity: 0.16;
+  animation: mood-bloom-pulse 2.8s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+.mood-bloom-ring-2 {
+  width: 112px; height: 112px;
+  opacity: 0.28;
+  animation: mood-bloom-pulse 2.8s ease-in-out infinite;
+  animation-delay: 0.35s;
+}
+
+.mood-bloom-ring-1 {
+  width: 78px; height: 78px;
+  opacity: 0.45;
+  animation: mood-bloom-pulse 2.8s ease-in-out infinite;
+  animation-delay: 0.7s;
+}
+
+.mood-bloom-core {
+  width: 56px; height: 56px;
+  opacity: 0.95;
+  box-shadow: 0 0 24px var(--mood-color, var(--lichen));
+  animation: mood-bloom-core-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes mood-bloom-pulse {
+  0%, 100% { transform: scale(0.92); opacity: var(--from-opacity, 0.18); }
+  50% { transform: scale(1.08); opacity: var(--to-opacity, 0.42); }
+}
+
+.mood-bloom-ring-3 { --from-opacity: 0.10; --to-opacity: 0.22; }
+.mood-bloom-ring-2 { --from-opacity: 0.20; --to-opacity: 0.36; }
+.mood-bloom-ring-1 { --from-opacity: 0.36; --to-opacity: 0.58; }
+
+@keyframes mood-bloom-core-pulse {
+  0%, 100% { transform: scale(0.96); }
+  50% { transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mood-bloom-ring,
+  .mood-bloom-core {
+    animation: none;
+  }
+}
+
+/* The slider track: gradient runs right (1=red) → left (7=warm orange). */
+.mood-slider-v2 {
+  position: relative;
+  width: 100%;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.mood-slider-v2-track {
+  position: absolute;
+  left: 0; right: 0;
+  height: 12px;
+  border-radius: 99px;
+  background: linear-gradient(
+    to left,
+    #FF3B30 0%,
+    #AF52DE 16.66%,
+    #0A84FF 33.33%,
+    #34A86A 50%,
+    #A8C547 66.66%,
+    #FFB347 83.33%,
+    #FF7A1F 100%
+  );
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+.mood-slider-v2-handle {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid var(--lichen);
+  transition:
+    left 160ms var(--ease-out),
+    border-color 240ms var(--ease-out),
+    box-shadow 240ms var(--ease-out);
+  pointer-events: none;
+}
+
+.mood-slider-v2-input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  pointer-events: none;
+}
+
+.mood-slider-v2-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 18px;
+  margin-top: 2px;
+}
+
+.mood-tick-v2 {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: background 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+
+.mood-tick-v2.is-active {
+  transform: scale(1.5);
+}
+
+.mood-slider-v2-label {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  margin-top: 10px;
+  transition: color 300ms var(--ease-out);
+}
+
 /* Phase 3 — emotion chips */
 
 .mood-emotion-grid {
@@ -9970,6 +10121,11 @@ button:focus-visible {
 
 @media (max-width: 480px) {
   .mood-bloom { width: 140px; height: 140px; }
+  .mood-bloom-holo { width: 150px; height: 150px; }
+  .mood-bloom-ring-3 { width: 130px; height: 130px; }
+  .mood-bloom-ring-2 { width: 92px; height: 92px; }
+  .mood-bloom-ring-1 { width: 62px; height: 62px; }
+  .mood-bloom-core { width: 46px; height: 46px; }
   .mood-scope-card { padding: 18px 16px; min-height: 96px; }
   .mood-scope-title { font-size: 16px; }
 }

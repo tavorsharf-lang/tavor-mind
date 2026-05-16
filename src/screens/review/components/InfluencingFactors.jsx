@@ -4,8 +4,8 @@ import { VALENCE_LABELS } from '../../../data/emotionsCorpus.js';
 
 function valenceTone(avg) {
   if (avg == null) return 'is-neutral';
-  if (avg <= 2.4) return 'is-warm';
-  if (avg >= 3.6) return 'is-cool';
+  if (avg <= 3.4) return 'is-cool';
+  if (avg >= 4.6) return 'is-warm';
   return 'is-neutral';
 }
 

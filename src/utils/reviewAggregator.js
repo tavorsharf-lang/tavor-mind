@@ -1,7 +1,7 @@
 import { ref, get } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { getIsraelDateString, lastNDateStrings } from './dateHelpers.js';
-import { EMOTIONS as EMOTION_VOCAB, emotionLabelById } from '../data/emotionsCorpus.js';
+import { EMOTIONS as EMOTION_VOCAB, emotionLabelById, normalizeEntryValence } from '../data/emotionsCorpus.js';
 import { LIFE_FACTORS, factorLabelById, factorColorById } from '../data/lifeFactors.js';
 import { resolveModeId, modes as ALL_MODES } from '../data/modes.js';
 import { SCHEMA_LABELS } from '../data/analysisSchemas.js';
@@ -147,7 +147,7 @@ export async function aggregateReview(scope = 'week') {
       if (!/^\d+$/.test(k) || !v || typeof v !== 'object') continue;
       if (v.valence == null) continue;
       if (isSoftDeleted(v)) continue;
-      entries.push({ ...v, _ts: Number(k) });
+      entries.push({ ...normalizeEntryValence(v), _ts: Number(k) });
     }
     if (entries.length) checkinsInScope.push({ date: dateKey, entries });
   }

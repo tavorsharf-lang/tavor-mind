@@ -25,7 +25,7 @@ function Sparkline({ points }) {
   const xs = points.length - 1;
   const path = points.map((p, i) => {
     const x = padX + (i / xs) * (w - 2 * padX);
-    const y = h - padY - ((p.score - 1) / 4) * (h - 2 * padY);
+    const y = h - padY - ((p.score - 1) / 6) * (h - 2 * padY);
     return `${i === 0 ? 'M' : 'L'} ${x.toFixed(1)} ${y.toFixed(1)}`;
   }).join(' ');
   return (
@@ -37,7 +37,7 @@ function Sparkline({ points }) {
 
 function colorForAvg(avg) {
   if (avg == null) return null;
-  const rounded = Math.max(1, Math.min(5, Math.round(avg)));
+  const rounded = Math.max(1, Math.min(7, Math.round(avg)));
   return VALENCE_COLORS[rounded];
 }
 

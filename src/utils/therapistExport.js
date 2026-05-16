@@ -1,6 +1,6 @@
 import { ref, get } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
-import { emotionLabelById, VALENCE_LABELS } from '../data/emotionsCorpus.js';
+import { emotionLabelById, VALENCE_LABELS, migrateValence } from '../data/emotionsCorpus.js';
 import { getModeById } from '../data/modes.js';
 import { ANALYSIS_TYPES, SCHEMA_LABELS, MODE_LABELS } from '../data/analysisSchemas.js';
 import { isSoftDeleted } from './softDelete.js';
@@ -86,7 +86,8 @@ function formatCheckins(checkinsRaw, sinceMs) {
       if (v.valence == null) continue;
       const ts = Number(k);
       if (ts <= sinceMs) continue;
-      const valenceLabel = VALENCE_LABELS[v.valence] || `${v.valence}`;
+      const normValence = migrateValence(v.valence, v.valenceVersion);
+      const valenceLabel = VALENCE_LABELS[normValence] || `${normValence}`;
       const emotions = Array.isArray(v.emotions) ? v.emotions.map(emotionLabelById).join(', ') : '';
       const scopeLabel = v.scope === 'morning' ? 'בוקר' : v.scope === 'evening' ? 'ערב' : '';
       const parts = [`${fmtDateTime(ts)}${scopeLabel ? ' · ' + scopeLabel : ''} — ${valenceLabel}`];

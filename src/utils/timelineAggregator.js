@@ -2,6 +2,7 @@ import { ref, get } from 'firebase/database';
 import { db, auth, ROOM } from '../firebase.js';
 import { getIsraelDateString, lastNDateStrings } from './dateHelpers.js';
 import { isSoftDeleted } from './softDelete.js';
+import { normalizeEntryValence } from '../data/emotionsCorpus.js';
 
 const SCOPE_DAYS = { week: 7, month: 30, '90d': 90 };
 
@@ -37,13 +38,9 @@ export async function aggregateTimeline(scope = 'week') {
   const days = SCOPE_DAYS[scope] || SCOPE_DAYS.week;
   const dateSet = new Set(lastNDateStrings(days));
 
-  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, somaticRaw, analysesRaw] = await Promise.all([
+  const [emergencyRaw, checkinsRaw, analysesRaw] = await Promise.all([
     readNode(uid, 'emergency_sessions'),
     readNode(uid, 'checkins'),
-    readNode(uid, 'triggers'),
-    readNode(uid, 'mode_checks'),
-    readNode(uid, 'catastrophe_checks'),
-    readNode(uid, 'somatic_sessions'),
     readNode(uid, 'analyses'),
   ]);
 
@@ -67,25 +64,7 @@ export async function aggregateTimeline(scope = 'week') {
       if (entry.valence == null) continue;
       if (isSoftDeleted(entry)) continue;
       const ts = Number(tsKey);
-      out.push({ kind: 'mood', ts, refDate: dateKey, refTs: ts, data: entry });
-    }
-  }
-
-  // Tools: keyed by ts
-  const toolMap = [
-    { raw: triggersRaw, kind: 'trigger', category: 'triggers' },
-    { raw: modeChecksRaw, kind: 'mode_check', category: 'mode_checks' },
-    { raw: catastropheRaw, kind: 'catastrophe', category: 'catastrophe_checks' },
-    { raw: somaticRaw, kind: 'somatic', category: 'somatic_sessions' },
-  ];
-  for (const { raw, kind, category } of toolMap) {
-    for (const [tsKey, data] of Object.entries(raw || {})) {
-      if (!data || typeof data !== 'object') continue;
-      if (isSoftDeleted(data)) continue;
-      const ts = parseInt(tsKey, 10) || data.clientTs || 0;
-      if (!ts) continue;
-      if (!dateSet.has(toIsraelDateFromMs(ts))) continue;
-      out.push({ kind, ts, refId: tsKey, refCategory: category, data });
+      out.push({ kind: 'mood', ts, refDate: dateKey, refTs: ts, data: normalizeEntryValence(entry) });
     }
   }
 

@@ -3,6 +3,7 @@ import { db, auth, ROOM } from '../firebase.js';
 import { getIsraelDateString, lastNDateStrings } from './dateHelpers.js';
 import { decorateOnQueue, decorateFailure, markFailureForType } from './syncQueue.js';
 import { isSoftDeleted, isPurgeable } from './softDelete.js';
+import { normalizeEntryValence } from '../data/emotionsCorpus.js';
 
 const PENDING_KEY = 'tavor_mind_pending_checkins';
 
@@ -33,6 +34,7 @@ export async function saveMoodCheckin({ scope, valence, emotions, factors }) {
   const localPayload = {
     scope,
     valence,
+    valenceVersion: 2,
     emotions: Array.isArray(emotions) ? emotions : [],
     factors: Array.isArray(factors) ? factors : [],
     createdAt: timestamp,
@@ -69,7 +71,7 @@ function entriesFromDayObject(dayObj) {
   if (!dayObj || typeof dayObj !== 'object') return [];
   return Object.entries(dayObj)
     .filter(([key, val]) => /^\d+$/.test(key) && val && typeof val === 'object' && val.valence != null && !isSoftDeleted(val))
-    .map(([key, val]) => ({ ...val, _ts: Number(key) }));
+    .map(([key, val]) => ({ ...normalizeEntryValence(val), _ts: Number(key) }));
 }
 
 // Throttle: every list/range call would otherwise dispatch dozens of remove()
@@ -131,7 +133,7 @@ export async function listAllMoodCheckins() {
         for (const [k, v] of Object.entries(dayObj)) {
           if (!/^\d+$/.test(k) || !v || typeof v !== 'object' || v.valence == null) continue;
           if (isSoftDeleted(v)) continue;
-          out.push({ ...v, _ts: Number(k), _date: date });
+          out.push({ ...normalizeEntryValence(v), _ts: Number(k), _date: date });
         }
       }
     } catch (err) {
@@ -222,7 +224,7 @@ export async function listDeletedMoodCheckins() {
       for (const [k, v] of Object.entries(dayObj)) {
         if (!/^\d+$/.test(k) || !v || typeof v !== 'object') continue;
         if (!isSoftDeleted(v)) continue;
-        out.push({ ...v, _ts: Number(k), _date: date });
+        out.push({ ...normalizeEntryValence(v), _ts: Number(k), _date: date });
       }
     }
     out.sort((a, b) => (b.deletedAt || 0) - (a.deletedAt || 0));

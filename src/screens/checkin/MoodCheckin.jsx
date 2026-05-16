@@ -21,7 +21,7 @@ export default function MoodCheckin() {
   const total = presetScope ? 3 : MAX_PHASE;
   const [phase, setPhase] = useState(minPhase);
   const [scope, setScope] = useState(presetScope);
-  const [valence, setValence] = useState(3);
+  const [valence, setValence] = useState(4);
   const [selectedEmotions, setSelectedEmotions] = useState(() => new Set());
   const [selectedFactors, setSelectedFactors] = useState(() => new Set());
   const [saving, setSaving] = useState(false);

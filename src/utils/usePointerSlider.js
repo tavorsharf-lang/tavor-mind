@@ -9,7 +9,7 @@ import { useRef } from 'react';
 // Instead of fighting the native input, we read the pointer X directly and
 // map it ourselves: left edge = min, right edge = max, always. The native
 // input stays in the DOM (pointer-events: none) purely for keyboard a11y.
-export function usePointerSlider({ min, max, onChange, padding = 0 }) {
+export function usePointerSlider({ min, max, onChange, padding = 0, inverted = false }) {
   const wrapRef = useRef(null);
 
   const valueFromClientX = (clientX) => {
@@ -17,7 +17,8 @@ export function usePointerSlider({ min, max, onChange, padding = 0 }) {
     const usable = rect.width - padding * 2;
     const x = clientX - rect.left - padding;
     const frac = usable > 0 ? Math.min(1, Math.max(0, x / usable)) : 0;
-    return Math.round(frac * (max - min)) + min;
+    const eff = inverted ? 1 - frac : frac;
+    return Math.round(eff * (max - min)) + min;
   };
 
   const apply = (e) => onChange(valueFromClientX(e.clientX));
