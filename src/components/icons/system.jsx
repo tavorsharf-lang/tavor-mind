@@ -1,16 +1,20 @@
 /* tavor-mind icon system — single source of truth.
  *
  * Every icon is a 24×24 viewBox, drawn with 1.5px stroke, round caps & joins,
- * fill="none" by default, currentColor everywhere. Filled accents are explicit.
+ * fill="none" by default, currentColor everywhere. Filled accents inside a
+ * body use explicit fill="currentColor" stroke="none" on the inner element.
  *
  * Categories: util / phase / schema / trigger / status / action / home
  *
- * Chevrons are drawn directly for RTL (the project's default direction):
- *   ChevronStart (back)    → points right
- *   ChevronEnd   (forward) → points left
+ * Bodies are the variants picked by the user in the Design Sandbox icon picker
+ * (48/48 picked). Geometries are kept in sync with svgs/<Name>.svg.
  *
- * Mirrors window.ICONS in design-snapshot.html.
+ * Chevrons: ChevronStart points to the logical-previous direction (right in
+ * RTL, left in LTR). ChevronEnd is the inverse. Direction is read from
+ * document.documentElement.dir at render time and flips automatically.
  */
+
+import { useEffect, useState } from 'react';
 
 const STROKE = {
   fill: 'none',
@@ -26,6 +30,7 @@ function Svg({ size = 22, title, children, ...rest }) {
     : { 'aria-hidden': true };
   return (
     <svg
+      xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
       viewBox="0 0 24 24"
@@ -37,6 +42,25 @@ function Svg({ size = 22, title, children, ...rest }) {
       {children}
     </svg>
   );
+}
+
+/** Read document dir reactively so chevrons flip on devtools toggles too. */
+function useDocDir() {
+  const read = () =>
+    typeof document !== 'undefined'
+      ? document.documentElement.dir || 'rtl'
+      : 'rtl';
+  const [dir, setDir] = useState(read);
+  useEffect(() => {
+    if (typeof MutationObserver === 'undefined') return;
+    const obs = new MutationObserver(() => setDir(read()));
+    obs.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['dir'],
+    });
+    return () => obs.disconnect();
+  }, []);
+  return dir;
 }
 
 export const ICON_CATEGORIES = [
@@ -60,24 +84,42 @@ export const ICON_CATEGORIES = [
  * UTILITY & NAVIGATION (12)
  * ============================================================ */
 
-/** חזור — back (logical start), points right in RTL */
+/** חזור — back (logical-start). In RTL points right; flips in LTR. */
 export function ChevronStart({ size, title }) {
-  return <Svg size={size} title={title}><path d="M9.5 6.5L15 12l-5.5 5.5" /></Svg>;
+  const dir = useDocDir();
+  const d = dir === 'ltr'
+    ? 'M19 12H6M11 7l-5 5 5 5'
+    : 'M5 12h13M13 7l5 5-5 5';
+  return <Svg size={size} title={title}><path d={d} /></Svg>;
 }
 
-/** הבא — forward (logical end), points left in RTL */
+/** הבא — forward (logical-end). In RTL points left; flips in LTR. */
 export function ChevronEnd({ size, title }) {
-  return <Svg size={size} title={title}><path d="M14.5 6.5L9 12l5.5 5.5" /></Svg>;
+  const dir = useDocDir();
+  const d = dir === 'ltr'
+    ? 'M5 12h13M13 7l5 5-5 5'
+    : 'M19 12H6M11 7l-5 5 5 5';
+  return <Svg size={size} title={title}><path d={d} /></Svg>;
 }
 
 /** סגירה */
 export function Close({ size, title }) {
-  return <Svg size={size} title={title}><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" /></Svg>;
+  return (
+    <Svg size={size} title={title}>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M9 9l6 6M15 9l-6 6" />
+    </Svg>
+  );
 }
 
 /** הוספה */
 export function Plus({ size, title }) {
-  return <Svg size={size} title={title}><path d="M12 5.5v13M5.5 12h13" /></Svg>;
+  return (
+    <Svg size={size} title={title}>
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 8.5v7M8.5 12h7" />
+    </Svg>
+  );
 }
 
 /** תפריט */
@@ -98,7 +140,11 @@ export function More({ size, title }) {
 
 /** סינון */
 export function Filter({ size, title }) {
-  return <Svg size={size} title={title}><path d="M4 7h16M7 12h10M10 17h4" /></Svg>;
+  return (
+    <Svg size={size} title={title}>
+      <path d="M4 5h16l-6 8v6l-4-2v-4z" />
+    </Svg>
+  );
 }
 
 /** חיפוש */
@@ -106,7 +152,7 @@ export function Search({ size, title }) {
   return (
     <Svg size={size} title={title}>
       <circle cx="11" cy="11" r="5.5" />
-      <path d="M11 16.5v3.5" />
+      <path d="M15 15l4 4" />
     </Svg>
   );
 }
@@ -128,8 +174,8 @@ export function Info({ size, title }) {
   return (
     <Svg size={size} title={title}>
       <circle cx="12" cy="12" r="8" />
-      <path d="M12 11.5v5" />
-      <circle cx="12" cy="8.5" r="0.6" fill="currentColor" stroke="none" />
+      <path d="M12 7.5l-2.5 5h5z" />
+      <circle cx="12" cy="16" r="0.85" fill="currentColor" stroke="none" />
     </Svg>
   );
 }
@@ -158,23 +204,23 @@ export function Calendar({ size, title }) {
  * EMERGENCY-FLOW PHASES (8) — body → mind → integration
  * ============================================================ */
 
-/** פאזה 1 · התעוררות — first awareness, a point inside a ring */
+/** פאזה 1 · התעוררות — sun */
 export function PhaseActivation({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="7.5" />
+      <path d="M12 2.5v2.5M12 19v2.5M2.5 12h2.5M19 12h2.5M5.1 5.1l1.8 1.8M17.1 17.1l1.8 1.8M18.9 5.1l-1.8 1.8M5.1 18.9l1.8-1.8" />
+      <circle cx="12" cy="12" r="4" />
     </Svg>
   );
 }
 
-/** פאזה 2 · הקרקעה — body lands on the ground */
+/** פאזה 2 · הקרקעה — person on chair */
 export function PhaseGrounding({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M4 19h16" />
-      <circle cx="12" cy="8" r="3" />
-      <path d="M12 11v8" />
+      <path d="M16 4v16M16 14h-9v6" />
+      <circle cx="10" cy="6" r="2" />
+      <path d="M10 8v4l3 2" />
     </Svg>
   );
 }
@@ -189,54 +235,52 @@ export function PhaseBreath({ size, title }) {
   );
 }
 
-/** פאזה 4 · סומטי — body axis with somatic anchors */
+/** פאזה 4 · סומטי — small figure */
 export function PhaseSomatic({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M12 4v16" />
-      <circle cx="12" cy="8" r="2" />
-      <circle cx="12" cy="15" r="2" />
+      <circle cx="12" cy="6" r="2" />
+      <path d="M12 8v6M8 11h8M9 19l3-5 3 5" />
     </Svg>
   );
 }
 
-/** פאזה 5 · טריגרים — concentric awareness */
+/** פאזה 5 · טריגרים — arrows pointing inward to a center */
 export function PhaseTriggers({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="6.5" />
-      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <path d="M12 4v3M12 17v3M4 12h3M17 12h3" />
     </Svg>
   );
 }
 
-/** פאזה 6 · עיוותים — a shape that does not fit its frame */
+/** פאזה 6 · עיוותים — warped grid */
 export function PhaseDistortion({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <path d="M12 8l-4 8h8z" />
+      <path d="M4 4h16M4 12c4-3 12 3 16 0M4 20h16" />
+      <path d="M4 4v16M12 4c-3 4 3 12 0 16M20 4v16" />
     </Svg>
   );
 }
 
-/** פאזה 7 · בדיקת מציאות — framed mirror */
+/** פאזה 7 · בדיקת מציאות — open eye */
 export function PhaseReality({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <path d="M12 4v16" />
+      <path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" />
+      <circle cx="12" cy="12" r="3" />
     </Svg>
   );
 }
 
-/** פאזה 8 · אינטגרציה — two arcs become one shape */
+/** פאזה 8 · אינטגרציה — two clasped arcs */
 export function PhaseIntegration({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="9" cy="12" r="5" />
-      <circle cx="15" cy="12" r="5" />
+      <path d="M5 5c5 0 8 3 8 7s-3 7-8 7" />
+      <path d="M19 5c-5 0-8 3-8 7s3 7 8 7" />
     </Svg>
   );
 }
@@ -245,96 +289,104 @@ export function PhaseIntegration({ size, title }) {
  * SCHEMA MODES (9) — states of being, not symptoms
  * ============================================================ */
 
-/** ילד פגיע — small enclosed self under a shelter arc */
+/** ילד פגיע — face, soft eyes, gentle frown */
 export function SchemaVulnerable({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M4 13c0-4.5 3.5-8 8-8s8 3.5 8 8" />
-      <circle cx="12" cy="16" r="2.5" />
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="9.5" cy="11" r="1" />
+      <circle cx="14.5" cy="11" r="1" />
+      <path d="M9.5 16q2.5 -1.8 5 0" />
     </Svg>
   );
 }
 
-/** ילד כועס — contained intensity, concentric squares */
+/** ילד כועס — face, angry brows + frown */
 export function SchemaAngry({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <rect x="5" y="5" width="14" height="14" rx="1" />
-      <rect x="9.5" y="9.5" width="5" height="5" rx="0.5" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M7.5 9.5l3 1M16.5 9.5l-3 1" />
+      <circle cx="10" cy="12" r="0.75" fill="currentColor" stroke="none" />
+      <circle cx="14" cy="12" r="0.75" fill="currentColor" stroke="none" />
+      <path d="M9.5 16q2.5 -1.5 5 0" />
     </Svg>
   );
 }
 
-/** ילד אימפולסיבי — scattered points, energy without spine */
+/** ילד אימפולסיבי — running figure */
 export function SchemaImpulsive({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="13" cy="5.5" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="18" cy="10" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="6.5" cy="14.5" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="14" cy="17" r="1.4" fill="currentColor" stroke="none" />
-      <circle cx="19" cy="16" r="1.4" fill="currentColor" stroke="none" />
+      <circle cx="14" cy="5" r="2" />
+      <path d="M5 10l3-2l4 5l5-1M12 13l-2 3l-2 4M12 13l3 3l-1 4" />
     </Svg>
   );
 }
 
-/** ילד מאושר — open form, petals around the center */
+/** ילד מאושר — face, smile */
 export function SchemaHappy({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 5.5c1.5 2 1.5 4 0 5.5M12 18.5c1.5-2 1.5-4 0-5.5M5.5 12c2-1.5 4-1.5 5.5 0M18.5 12c-2 1.5-4 1.5-5.5 0" />
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="9.5" cy="11" r="0.75" fill="currentColor" stroke="none" />
+      <circle cx="14.5" cy="11" r="0.75" fill="currentColor" stroke="none" />
+      <path d="M9 14.5q3 2.5 6 0" />
     </Svg>
   );
 }
 
-/** הכניע — straight line above, bowing curve below */
+/** הכניע — submissive face, eyes down, small mouth */
 export function SchemaCompliant({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M4 6h16" />
-      <path d="M5 12c2 5 12 5 14 0" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M8.5 11.2h2M13.5 11.2h2" />
+      <path d="M10.5 15.7h3" />
     </Svg>
   );
 }
 
-/** המגן המנותק — hex shield wrapping a contained core */
+/** המגן המנותק — protective shield around a hidden core */
 export function SchemaDetached({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M12 4l7 4v8l-7 4-7-4V8z" />
-      <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
+      <path d="M5 7c0-3 3-4 7-4s7 1 7 4v10c0 3-3 4-7 4s-7-1-7-4z" />
+      <path d="M12 3v18M5 12h14" />
     </Svg>
   );
 }
 
-/** ההורה הביקורתי — inverted triangle, pressure from above */
+/** ההורה הביקורתי — yelling figure aimed at a smaller one */
 export function SchemaPunitive({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M4 5h16l-8 14z" />
+      <circle cx="7" cy="5" r="2" />
+      <path d="M7 7v5l8 3M4 20l3 -7l2 7" />
+      <circle cx="19" cy="13" r="1.4" />
+      <path d="M19 14.4v2.5M17 20l2 -3l2 3" />
     </Svg>
   );
 }
 
-/** ההורה התובעני — high bar with a self reaching upward */
+/** ההורה התובעני — pointing figure */
 export function SchemaDemanding({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M4 6h16" />
-      <path d="M12 12v-3" />
-      <circle cx="12" cy="15" r="3" />
+      <circle cx="9" cy="7" r="2" />
+      <path d="M9 9v6M9 12h6l3 -3" />
     </Svg>
   );
 }
 
-/** מבוגר בריא — a circle with its own centered axis */
+/** מבוגר בריא — calm steady face */
 export function SchemaHealthyAdult({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="7.5" />
-      <path d="M4.5 12h15M12 4.5v15" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M8.5 11.5q1 -1 2 0M13.5 11.5q1 -1 2 0" />
+      <path d="M9.5 14.8q2.5 2 5 0" />
     </Svg>
   );
 }
@@ -343,53 +395,53 @@ export function SchemaHealthyAdult({ size, title }) {
  * TRIGGERS (5) — neutral, observational
  * ============================================================ */
 
-/** בין-אישי */
+/** בין-אישי — two small figures */
 export function TriggerRelational({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="9" cy="12" r="3.5" />
-      <circle cx="15" cy="12" r="3.5" />
+      <circle cx="8" cy="9" r="2" />
+      <circle cx="16" cy="9" r="2" />
+      <path d="M4 19c0-3 2-5 4-5s4 2 4 5M12 19c0-3 2-5 4-5s4 2 4 5" />
     </Svg>
   );
 }
 
-/** סביבתי */
+/** סביבתי — globe / earth */
 export function TriggerEnvironmental({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <rect x="4" y="4" width="16" height="16" rx="2" />
-      <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M4 12h16M9 4.5c-1.5 4-1.5 11 0 15M15 4.5c1.5 4 1.5 11 0 15" />
     </Svg>
   );
 }
 
-/** זיכרון — dashed ring echoing a present point */
+/** זיכרון — thought bubble */
 export function TriggerMemory({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="2" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="7.5" strokeDasharray="2 2.5" />
+      <circle cx="8" cy="17" r="3" />
+      <circle cx="17" cy="8" r="4" />
+      <circle cx="12.5" cy="12.5" r="1" />
     </Svg>
   );
 }
 
-/** מחשבתי — sequence, a thought picking up a thought */
+/** מחשבתי — brain */
 export function TriggerCognitive({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="6" cy="12" r="2" />
-      <circle cx="12" cy="12" r="2" />
-      <circle cx="18" cy="12" r="2" />
+      <path d="M9 4c-2 0-4 1-4 3s-2 1-2 4 2 3 2 5 1 4 4 4M15 4c2 0 4 1 4 3s2 1 2 4-2 3-2 5-1 4-4 4M12 4v16" />
     </Svg>
   );
 }
 
-/** גופני */
+/** גופני — body diagram */
 export function TriggerPhysical({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M12 4v16" />
-      <circle cx="12" cy="12" r="3.5" />
+      <circle cx="12" cy="6" r="2" />
+      <path d="M12 8v7M8 12h8M9 19l3-4 3 4" />
     </Svg>
   );
 }
@@ -398,16 +450,17 @@ export function TriggerPhysical({ size, title }) {
  * STATUS (4)
  * ============================================================ */
 
-/** נבחר */
+/** נבחר — ring + check */
 export function StatusSelected({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M5 12.5l4.5 4.5L19 7.5" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M8 12l3 3 5-5.5" />
     </Svg>
   );
 }
 
-/** פעיל */
+/** פעיל — filled disc */
 export function StatusActive({ size, title }) {
   return (
     <Svg size={size} title={title}>
@@ -416,21 +469,23 @@ export function StatusActive({ size, title }) {
   );
 }
 
-/** ממתין */
+/** ממתין — clock */
 export function StatusAmbient({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="7" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M12 8v4l3 2" />
     </Svg>
   );
 }
 
-/** דחוף */
+/** דחוף — triangle warning */
 export function StatusCritical({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <circle cx="12" cy="12" r="8" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none" />
+      <path d="M12 4l9 16H3z" />
+      <circle cx="12" cy="16" r="1" fill="currentColor" stroke="none" />
+      <path d="M12 10v4" />
     </Svg>
   );
 }
@@ -439,34 +494,36 @@ export function StatusCritical({ size, title }) {
  * ACTIONS (6)
  * ============================================================ */
 
-/** נגן — universal play convention, kept right-pointing */
+/** נגן — play in a circle */
 export function ActionPlay({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M8 5.5v13l11-6.5z" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M10 9v6l5-3z" />
     </Svg>
   );
 }
 
-/** השהיה */
+/** השהיה — pause in a circle */
 export function ActionPause({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M9.5 6v12M14.5 6v12" />
+      <circle cx="12" cy="12" r="8" />
+      <path d="M10 9v6M14 9v6" />
     </Svg>
   );
 }
 
-/** עוגן — bookmark / save, symmetric vertical */
+/** עוגן — ship's anchor */
 export function ActionAnchor({ size, title }) {
   return (
     <Svg size={size} title={title}>
-      <path d="M6.5 4h11v16l-5.5-4-5.5 4z" />
+      <path d="M10 5a2 2 0 1 0 4 0 2 2 0 1 0-4 0M12 7v13M9 10h6M5 16c0 3 3 4 7 4s7-1 7-4" />
     </Svg>
   );
 }
 
-/** יצוא */
+/** יצוא — out of tray */
 export function ActionExport({ size, title }) {
   return (
     <Svg size={size} title={title}>
@@ -476,7 +533,7 @@ export function ActionExport({ size, title }) {
   );
 }
 
-/** עריכה */
+/** עריכה — pencil */
 export function ActionEdit({ size, title }) {
   return (
     <Svg size={size} title={title}>
@@ -486,7 +543,7 @@ export function ActionEdit({ size, title }) {
   );
 }
 
-/** שיתוף */
+/** שיתוף — three nodes */
 export function ActionShare({ size, title }) {
   return (
     <Svg size={size} title={title}>
@@ -502,7 +559,7 @@ export function ActionShare({ size, title }) {
  * HOME / TOOLS (4)
  * ============================================================ */
 
-/** מודד — heartbeat trace, replaces literal hearts */
+/** מודד — heartbeat trace */
 export function HomePulse({ size, title }) {
   return (
     <Svg size={size} title={title}>
@@ -511,17 +568,18 @@ export function HomePulse({ size, title }) {
   );
 }
 
-/** מראה — review surface, oval frame with a soft highlight */
+/** מראה — face inside an oval frame */
 export function HomeMirror({ size, title }) {
   return (
     <Svg size={size} title={title}>
       <ellipse cx="12" cy="12" rx="6" ry="8" />
-      <path d="M8 8c1.5 0 2.5 1 2.5 2.5" />
+      <circle cx="12" cy="9.5" r="1.6" />
+      <path d="M8 17c1-2.5 2.4-3.5 4-3.5s3 1 4 3.5" />
     </Svg>
   );
 }
 
-/** ארגז כלים */
+/** ארגז כלים — box + handle */
 export function HomeToolbox({ size, title }) {
   return (
     <Svg size={size} title={title}>
