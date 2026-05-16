@@ -5,6 +5,7 @@ import { getSomaticExercise } from '../../data/somatic.js';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { SomaticAnimation } from './components/somatic/SomaticAnimations.jsx';
 import VagalHummingHologram from '../emergency/components/VagalHummingHologram.jsx';
+import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
 
 function moodForScore(s) {
@@ -178,22 +179,14 @@ export default function SomaticExercise() {
             </div>
             <div className="score-display" aria-hidden="true" style={{ color: tint.main }}>{afterScore}</div>
             <div className="score-slider-wrap">
-              <input
-                type="range"
-                min="1"
-                max="10"
-                step="1"
+              <ScoreSlider
                 value={afterScore}
-                onChange={(e) => setAfterScore(parseInt(e.target.value, 10))}
-                className="score-slider"
-                dir="ltr"
-                style={{ '--slider-tint': tint.main, '--slider-tint-glow': tint.glow }}
-                aria-label="איך אתה עכשיו, מ-1 עד 10"
+                onChange={setAfterScore}
+                polarity="high-good"
+                showValue={false}
+                labels={['עדיין קשה', 'טוב יותר']}
+                ariaLabel="איך אתה עכשיו, מ-1 עד 10"
               />
-              <div className="score-labels">
-                <span className="score-label-low">עדיין קשה</span>
-                <span className="score-label-high">טוב יותר</span>
-              </div>
             </div>
 
             {id === 'vagal_humming' && completedFully && (

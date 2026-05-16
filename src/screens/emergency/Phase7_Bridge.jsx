@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import CallSomeoneModal from '../../components/ui/CallSomeoneModal.jsx';
 import { VagalAnim, ButterflyAnim, BodyScanAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
-import { colorForScore } from '../../utils/scoreColor.js';
 import { PhaseIntegration as Phase7BridgeIcon } from '../../components/icons/system.jsx';
-import { usePointerSlider } from '../../utils/usePointerSlider.js';
+import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
 
 const MAX_EXTRA_ROUNDS = 3;
 
@@ -34,20 +33,10 @@ export default function Phase7Bridge({
   const [roundsCompleted, setRoundsCompleted] = useState(0);
   const [showCall, setShowCall] = useState(false);
 
-  const handleScoreChange = (raw) => {
-    const newScore = parseInt(raw, 10);
+  const handleScoreChange = (newScore) => {
     setScore(newScore);
     if (!scoreTouched) setScoreTouched(true);
   };
-
-  // .ds3-slider-wrap has 4px horizontal padding. Pointer drag is handled
-  // direction-independently so desktop RTL doesn't reverse it.
-  const { wrapRef, handlers: sliderHandlers } = usePointerSlider({
-    min: 1,
-    max: 10,
-    padding: 4,
-    onChange: (v) => handleScoreChange(String(v)),
-  });
 
   const goToOptions = () => {
     setBodyRegulationScore(score);
@@ -60,8 +49,6 @@ export default function Phase7Bridge({
 
   // ── STAGE: rate ──────────────────────────────────────────────────────
   if (stage === 'rate') {
-    const handlePos = ((score - 1) / 9) * 100;
-    const tint = colorForScore(score, 'high-good');
     return (
       <div className="ds3-screen">
         <div className="ds3-breath-bg" aria-hidden="true" />
@@ -82,57 +69,17 @@ export default function Phase7Bridge({
             </p>
           </div>
 
-          <div
-            className="ds3-slider-wrap"
-            ref={wrapRef}
-            {...sliderHandlers}
-            style={{ touchAction: 'none', cursor: 'pointer' }}
-          >
-            <div className="ds3-slider-track" />
-            {scoreTouched && (
-              <div
-                className="ds3-slider-fill"
-                style={{
-                  left: 4, right: 'auto',
-                  width: `calc(${handlePos}% - 8px)`,
-                  background: `linear-gradient(90deg, ${tint.soft}, ${tint.main})`,
-                  transition: 'background 200ms ease, width 150ms ease',
-                }}
-              />
-            )}
-            <div
-              className="ds3-slider-handle"
-              style={{
-                left: `calc(${handlePos}% - 22px)`, right: 'auto',
-                boxShadow: `0 0 0 3px ${tint.main}, 0 6px 18px ${tint.glow}`,
-                transition: 'left 150ms ease, box-shadow 200ms ease',
-              }}
-            >
-              <div className="ds3-slider-handle-dot" style={{ background: tint.main, transition: 'background 200ms ease' }} />
-            </div>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              step="1"
-              value={score}
-              onChange={(e) => handleScoreChange(e.target.value)}
-              className="ds3-slider-input"
-              dir="ltr"
-              aria-label="כמה רגוע הגוף, מ-1 עד 10"
-            />
-          </div>
-
-          <div className="ds3-slider-labels">
-            <span className="ds3-slider-label-calm">רגוע יחסית</span>
-            <span className="ds3-slider-label-overwhelmed">עדיין מוצף</span>
-          </div>
-
-          {scoreTouched && (
-            <div className="ds3-slider-value" style={{ marginTop: 20, color: tint.main, transition: 'color 200ms ease' }}>
-              {score}/10
-            </div>
-          )}
+          <ScoreSlider
+            value={score}
+            onChange={handleScoreChange}
+            polarity="high-good"
+            touched={scoreTouched}
+            labels={[
+              { text: 'רגוע יחסית', className: 'ds3-slider-label-calm' },
+              { text: 'עדיין מוצף', className: 'ds3-slider-label-overwhelmed' },
+            ]}
+            ariaLabel="כמה רגוע הגוף, מ-1 עד 10"
+          />
 
           <div className="ds3-grow" />
         </main>

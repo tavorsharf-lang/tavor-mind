@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { saveToolSession } from '../../utils/toolsStorage.js';
-import { colorForScore } from '../../utils/scoreColor.js';
 import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
-import { usePointerSlider } from '../../utils/usePointerSlider.js';
 import VagalHummingHologram from './components/VagalHummingHologram.jsx';
+import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
 
 const BUTTERFLY_DURATION_SEC = 60;
 const VAGAL_DURATION_SEC = 90;
@@ -166,13 +165,6 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
   const [feltIt, setFeltIt] = useState(null); // null | true | false
   const [afterScore, setAfterScore] = useState(5);
 
-  // Pointer drag handled direction-independently — desktop RTL was reversing it.
-  const { wrapRef: scoreWrapRef, handlers: scoreHandlers } = usePointerSlider({
-    min: 1,
-    max: 10,
-    onChange: setAfterScore,
-  });
-
   const ringTint = intensity === 'intense' ? 'var(--terra)' : 'var(--lichen)';
   const ringTintRgba = intensity === 'intense'
     ? 'rgba(255, 106, 79, '
@@ -213,8 +205,6 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
 
   // ── AFTER — score + "did you feel it?" ─────────────────────────────
   if (stage === 'after') {
-    const handlePos = ((afterScore - 1) / 9) * 100;
-    const tint = colorForScore(afterScore, 'high-good');
     return (
       <div className="ds3-screen">
         <Topbar onExit={onExit} label="רטט קולי" />
@@ -267,40 +257,14 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 12 }}>
               <span className="ds3-body" style={{ fontWeight: 600 }}>איך עכשיו?</span>
-              <span className="ds3-caption" style={{ color: tint.main, fontWeight: 700, transition: 'color 200ms ease' }}>{afterScore}/10</span>
             </div>
-            <div
-              ref={scoreWrapRef}
-              {...scoreHandlers}
-              style={{ position: 'relative', height: 28, display: 'flex', alignItems: 'center', touchAction: 'none', cursor: 'pointer' }}
-            >
-              <div style={{ position: 'absolute', left: 0, right: 0, height: 4, borderRadius: 2, background: 'var(--line-soft)' }} />
-              <div style={{
-                position: 'absolute', left: 0, height: 4, borderRadius: 2,
-                background: `linear-gradient(90deg, ${tint.soft}, ${tint.main})`,
-                width: `${handlePos}%`,
-                transition: 'background 200ms ease, width 150ms ease',
-              }} />
-              <div style={{
-                position: 'absolute', left: `calc(${handlePos}% - 11px)`,
-                width: 22, height: 22, borderRadius: '50%',
-                background: '#fff',
-                boxShadow: `0 0 0 1.5px ${tint.main}, 0 1px 3px ${tint.glow}`,
-                transition: 'left 150ms ease, box-shadow 200ms ease',
-              }} />
-              <input
-                type="range" min="1" max="10" step="1"
-                value={afterScore}
-                onChange={(e) => setAfterScore(parseInt(e.target.value, 10))}
-                dir="ltr"
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0, pointerEvents: 'none', direction: 'ltr' }}
-                aria-label="ציון אחרי"
-              />
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-              <span className="ds3-micro ds3-text-muted">קל יותר</span>
-              <span className="ds3-micro ds3-text-muted">כבד</span>
-            </div>
+            <ScoreSlider
+              value={afterScore}
+              onChange={setAfterScore}
+              polarity="high-good"
+              labels={['קל יותר', 'כבד']}
+              ariaLabel="ציון אחרי"
+            />
           </div>
         </main>
         <footer className="ds3-screen-footer">
