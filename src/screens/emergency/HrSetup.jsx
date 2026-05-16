@@ -14,6 +14,7 @@ import {
   SHORTCUT_NAME,
   SHORTCUT_NAME_START,
 } from '../../utils/liveHr.js';
+import { ChevronStart } from '../../components/icons/system.jsx';
 
 const TEST_TIMEOUT_MS = 90000;
 
@@ -94,9 +95,7 @@ export default function HrSetup() {
           aria-label="חזרה"
           onClick={() => navigate(-1)}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       </div>
 

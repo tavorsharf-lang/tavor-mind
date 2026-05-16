@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getSchemaModesMapping, HELPER_QUESTIONS } from '../../data/schemaToModes.js';
 import { dominantSchemas, hypothesisSchemas } from '../../data/schemas.js';
+import { ChevronStart } from '../../components/icons/system.jsx';
 
 const ALL_SCHEMAS = [...dominantSchemas, ...hypothesisSchemas];
 
@@ -93,9 +94,7 @@ export default function PhaseSchemaModeBridge({
             Per design 3 — no centered label, no skip on right. */}
         <div className="ds3-topbar">
           <button type="button" className="ds3-topbar-back" aria-label="חזור" onClick={() => setView('main')}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <ChevronStart size={22} />
           </button>
           <span className="ds3-topbar-label" />
           <span className="ds3-topbar-spacer" />
@@ -305,18 +304,14 @@ function Topbar({ onExit, onBack, label }) {
     <div className="ds3-topbar">
       {onBack ? (
         <button type="button" className="ds3-topbar-back" onClick={onBack} aria-label="חזור">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M15 6l-6 6 6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       ) : (
         <span className="ds3-topbar-spacer" />
       )}
       <span className="ds3-topbar-label">{label}</span>
       <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PhaseGrounding as Phase3GroundingIcon } from '../../components/icons/system.jsx';
+import { PhaseGrounding as Phase3GroundingIcon, ChevronStart } from '../../components/icons/system.jsx';
 import {
   SENSES_54321,
   COLOR_SCAN,
@@ -76,9 +76,7 @@ export default function Phase3Grounding({ activation, onNext, onExit }) {
           שלב 1 · להירגע · גראונדינג
         </span>
         <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       </div>
 

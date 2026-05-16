@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PhaseActivation as Phase1ActivationIcon } from '../../components/icons/system.jsx';
+import { PhaseActivation as Phase1ActivationIcon, ChevronStart } from '../../components/icons/system.jsx';
 import { buildStartShortcutUrl, isWearingWatch, setWearingWatch } from '../../utils/liveHr.js';
 
 const OPTIONS = [
@@ -96,9 +96,7 @@ export default function Phase1Activation({ onPick, onSkip, onExit }) {
           aria-label="צא"
           onClick={onExit}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       </div>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
-import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
+import { PhaseSomatic as Phase6SomaticIcon, ChevronStart } from '../../components/icons/system.jsx';
 import VagalHummingHologram from './components/VagalHummingHologram.jsx';
 import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
 
@@ -31,9 +31,7 @@ function Topbar({ onExit, label = 'שלב 1 · להירגע · סומאטי' }) 
         {label}
       </span>
       <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );
@@ -272,9 +270,7 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
         </button>
         <span className="ds3-topbar-label" />
         <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       </div>
 

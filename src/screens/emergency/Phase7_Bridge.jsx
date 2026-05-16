@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import CallSomeoneModal from '../../components/ui/CallSomeoneModal.jsx';
 import { VagalAnim, ButterflyAnim, BodyScanAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
-import { PhaseIntegration as Phase7BridgeIcon } from '../../components/icons/system.jsx';
+import { PhaseIntegration as Phase7BridgeIcon, ChevronStart } from '../../components/icons/system.jsx';
 import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
 
 const MAX_EXTRA_ROUNDS = 3;
@@ -344,9 +344,7 @@ function Topbar({ onExit }) {
         שלב 1 · להירגע
       </span>
       <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );

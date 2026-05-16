@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from '../../components/ui/Modal.jsx';
 import { anchors } from '../../data/anchors.js';
-import { ActionAnchor as Phase5AnchorIcon } from '../../components/icons/system.jsx';
+import { ActionAnchor as Phase5AnchorIcon, ChevronStart } from '../../components/icons/system.jsx';
 
 export default function Phase5Anchor({ onNext, onExit }) {
   const [openImage, setOpenImage] = useState(null);
@@ -15,9 +15,7 @@ export default function Phase5Anchor({ onNext, onExit }) {
           שלב 1 · להירגע · עוגנים
         </span>
         <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronStart size={22} />
         </button>
       </div>
 

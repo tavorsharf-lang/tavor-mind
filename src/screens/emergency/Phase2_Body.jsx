@@ -5,7 +5,7 @@ import StandUpHologram from './components/StandUpHologram.jsx';
 import JumpHologram from './components/JumpHologram.jsx';
 import ShakeHologram from './components/ShakeHologram.jsx';
 import HeartBellyHologram from './components/HeartBellyHologram.jsx';
-import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
+import { PhaseBreath as Phase2BreathingIcon, ChevronStart } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
   markOnboardingSeen,
@@ -88,9 +88,7 @@ function Topbar({ onExit }) {
         שלב 1 · להירגע
       </span>
       <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { saveWaitingItem } from '../../utils/somethingWaitingStorage.js';
+import { ChevronStart } from '../../components/icons/system.jsx';
 
 const ONBOARD_KEY = 'tavor_mind_containment_onboarded_v1';
 
@@ -379,9 +380,7 @@ function Topbar({ onExit, label }) {
       <span className="ds3-topbar-spacer" />
       <span className="ds3-topbar-label">{label}</span>
       <button type="button" className="ds3-topbar-back" aria-label="צא" onClick={onExit}>
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        <ChevronStart size={22} />
       </button>
     </div>
   );
