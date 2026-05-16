@@ -11634,3 +11634,31 @@ button:focus-visible {
 .holo-base--jump {
   transform-origin: 110px 242px;
 }
+
+/* Slow drifting float for HeartBellyHologram (calm breath rhythm) */
+.holo-float-slow {
+  animation: holoFloatSlow 5.5s ease-in-out infinite;
+}
+@keyframes holoFloatSlow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Heartbeat pulse — lub-dub */
+.hb-heart-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hbHeartBeat 1.05s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(255, 59, 48, 0.55));
+}
+@keyframes hbHeartBeat {
+  0%   { transform: translate(118px, 84px) scale(1); }
+  14%  { transform: translate(118px, 84px) scale(1.22); }
+  28%  { transform: translate(118px, 84px) scale(1); }
+  40%  { transform: translate(118px, 84px) scale(1.10); }
+  54%  { transform: translate(118px, 84px) scale(1); }
+  100% { transform: translate(118px, 84px) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .holo-float-slow, .hb-heart-pulse { animation: none; }
+}

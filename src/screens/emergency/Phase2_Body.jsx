@@ -4,6 +4,7 @@ import KapalabhatiExercise from './components/KapalabhatiExercise.jsx';
 import StandUpHologram from './components/StandUpHologram.jsx';
 import JumpHologram from './components/JumpHologram.jsx';
 import ShakeHologram from './components/ShakeHologram.jsx';
+import HeartBellyHologram from './components/HeartBellyHologram.jsx';
 import { PhaseBreath as Phase2BreathingIcon } from '../../components/icons/system.jsx';
 import {
   hasSeenOnboarding,
@@ -232,6 +233,11 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
           {stepIdx === 2 && (
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
               <ShakeHologram size={220} />
+            </div>
+          )}
+          {stepIdx === 3 && (
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+              <HeartBellyHologram size={220} />
             </div>
           )}
         </main>
