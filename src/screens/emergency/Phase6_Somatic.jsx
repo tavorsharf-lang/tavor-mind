@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
 import VagalHummingHologram from './components/VagalHummingHologram.jsx';
 import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
@@ -126,11 +125,6 @@ function ButterflyExercise({ onDone, onBack, onExit }) {
   const [done, setDone] = useState(false);
   const handleComplete = () => {
     setDone(true);
-    saveToolSession('somatic_sessions', {
-      exerciseId: 'butterfly_hug', exerciseTitle: 'חיבוק פרפר',
-      variant: 'short', completedFully: true, afterScore: null,
-      durationSec: BUTTERFLY_DURATION_SEC, context: 'emergency_phase6',
-    }).catch(() => {});
   };
   return (
     <div className="ds3-screen">
@@ -171,12 +165,6 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
     : 'rgba(10, 132, 255, ';
 
   const handleAnimComplete = () => {
-    saveToolSession('somatic_sessions', {
-      exerciseId: 'vagal_humming', exerciseTitle: 'רטט קולי',
-      variant: silent ? 'silent' : intensity,
-      completedFully: true, afterScore: null,
-      durationSec: VAGAL_DURATION_SEC, context: 'emergency_phase6',
-    }).catch(() => {});
     setStage('after');
   };
 
@@ -442,14 +430,7 @@ function ColdAnchorExercise({ activation, onDone, onBack, onExit }) {
         <button
           type="button"
           className="ds3-btn ds3-btn-primary"
-          onClick={() => {
-            saveToolSession('somatic_sessions', {
-              exerciseId: 'cold_anchor', exerciseTitle: 'עיגון קר',
-              variant: 'short', completedFully: true, afterScore: null,
-              durationSec: 30, context: 'emergency_phase6',
-            }).catch(() => {});
-            onDone();
-          }}
+          onClick={onDone}
         >
           סיימתי
         </button>

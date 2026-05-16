@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import { modes, getModeById, resolveModeId } from '../../data/modes.js';
 
 export default function ModeCheck() {
@@ -26,12 +25,8 @@ export default function ModeCheck() {
     setSelected(next);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setSaving(true);
-    await saveToolSession('mode_checks', {
-      modesActive: Array.from(selected),
-      note: note.trim() || null,
-    });
     setSaving(false);
     setSaved(true);
   };

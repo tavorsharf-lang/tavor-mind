@@ -51,12 +51,6 @@ function pushUnique(map, key, value) {
   map.get(key).add(value);
 }
 
-function normalizeTriggerName(s) {
-  if (typeof s !== 'string') return '';
-  const trimmed = s.trim().replace(/\s+/g, ' ');
-  return trimmed.length > 50 ? trimmed.slice(0, 50) + '…' : trimmed;
-}
-
 function countOccurrences(haystack, needle) {
   if (!haystack || typeof haystack !== 'string') return 0;
   let count = 0;
@@ -121,13 +115,9 @@ export async function aggregateReview(scope = 'week') {
 
   if (!uid) return empty;
 
-  const [emergencyRaw, checkinsRaw, triggersRaw, modeChecksRaw, catastropheRaw, somaticRaw, analysesRaw] = await Promise.all([
+  const [emergencyRaw, checkinsRaw, analysesRaw] = await Promise.all([
     readNode(uid, 'emergency_sessions'),
     readNode(uid, 'checkins'),
-    readNode(uid, 'triggers'),
-    readNode(uid, 'mode_checks'),
-    readNode(uid, 'catastrophe_checks'),
-    readNode(uid, 'somatic_sessions'),
     readNode(uid, 'analyses'),
   ]);
 
@@ -152,10 +142,6 @@ export async function aggregateReview(scope = 'week') {
     if (entries.length) checkinsInScope.push({ date: dateKey, entries });
   }
 
-  const triggersInScope = valuesOf(triggersRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
-  const modeChecksInScope = valuesOf(modeChecksRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
-  const catastropheInScope = valuesOf(catastropheRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
-  const somaticInScope = valuesOf(somaticRaw).filter((t) => inScopeByMs(t.clientTs || t.createdAt));
   const emergencyInScope = valuesOf(emergencyRaw).filter((s) => inScopeByMs(s.clientTs || s.startedAtClient));
 
   // Analyses: prefer occurredAt (in scope) then dedupe by date — count once per day per type if many on same day
@@ -302,28 +288,7 @@ export async function aggregateReview(scope = 'week') {
   const factorsAbsent = LIFE_FACTORS.filter((f) => !factorMap.has(f.id)).map((f) => f.id);
 
   // ── Triggers ─────────────────────────────────────────────────────
-  const triggerMap = new Map(); // normalized name → { count, contexts:Set, schemas:Set, raw:[] }
-  for (const t of triggersInScope) {
-    const name = normalizeTriggerName(t.event || '') || 'טריגר ללא תיאור';
-    if (!triggerMap.has(name)) triggerMap.set(name, { count: 0, contexts: new Set(), schemas: new Set() });
-    const slot = triggerMap.get(name);
-    slot.count += 1;
-    if (t.event) slot.contexts.add(t.event.trim());
-    if (Array.isArray(t.schemasActivated)) {
-      for (const s of t.schemasActivated) {
-        if (typeof s === 'string' && SCHEMA_LABELS[s]) slot.schemas.add(s);
-      }
-    }
-  }
-  const triggers = Array.from(triggerMap.entries())
-    .map(([name, slot]) => ({
-      name,
-      count: slot.count,
-      contexts: Array.from(slot.contexts),
-      schemas: Array.from(slot.schemas),
-    }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5);
+  const triggers = [];
 
   // ── Patterns ─────────────────────────────────────────────────────
   const totalAnalyses = analysesInScope.length;
@@ -351,11 +316,6 @@ export async function aggregateReview(scope = 'week') {
     modeMap.get(canonical).count += 1;
     modeMap.get(canonical).sources.add(source);
   };
-  for (const m of modeChecksInScope) {
-    if (Array.isArray(m.modesActive)) {
-      for (const id of new Set(m.modesActive)) bumpMode(id, 'mode_check');
-    }
-  }
   for (const e of emergencyInScope) {
     // Partial sessions (saved mid-flow) are tracked for rhythm but must not
     // pollute mode counts — the user may have selected modes and abandoned.
@@ -386,11 +346,6 @@ export async function aggregateReview(scope = 'week') {
     schemaMap.get(id).count += 1;
     schemaMap.get(id).sources.add(source);
   };
-  for (const t of triggersInScope) {
-    if (Array.isArray(t.schemasActivated)) {
-      for (const s of new Set(t.schemasActivated)) bumpSchema(s, 'trigger');
-    }
-  }
   for (const a of analysesInScope) {
     if (Array.isArray(a.schemas_activated)) {
       for (const s of new Set(a.schemas_activated)) bumpSchema(s, 'analysis');
@@ -425,10 +380,6 @@ export async function aggregateReview(scope = 'week') {
   const totalCheckinEntries = checkinsInScope.reduce((s, ci) => s + ci.entries.length, 0);
   const totalDataPoints =
     totalCheckinEntries +
-    triggersInScope.length +
-    modeChecksInScope.length +
-    catastropheInScope.length +
-    somaticInScope.length +
     emergencyInScope.length +
     analysesInScope.length;
   const hasEnoughData = totalDataPoints >= 3;

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { aggregateTimeline } from '../../../utils/timelineAggregator.js';
 import { deleteEmergencySession, restoreEmergencySession } from '../../../utils/emergencyLog.js';
-import { deleteToolEntry, restoreToolEntry } from '../../../utils/toolsStorage.js';
 import { deleteCheckinEntry, restoreCheckinEntry } from '../../../utils/checkinStorage.js';
 import { deleteAnalysis, restoreAnalysis } from '../../../utils/analysisStorage.js';
 import UndoToast from '../../../components/ui/UndoToast.jsx';
@@ -10,34 +9,23 @@ import { formatHebrewDate, relativeDay, formatTimeOfDay, getIsraelDateString } f
 import { emotionLabelById, VALENCE_LABELS, VALENCE_COLORS } from '../../../data/emotionsCorpus.js';
 import { factorLabelById } from '../../../data/lifeFactors.js';
 import { getModeById } from '../../../data/modes.js';
-import { dominantSchemas } from '../../../data/schemas.js';
-import { distortionLabel, sensationLabel } from '../../../data/distortions.js';
 import { typeMeta } from '../../../data/analysisSchemas.js';
 
 const KIND_LABEL = {
   emergency: 'עכשיו קשה לי',
   mood: 'צ׳ק־אין רגשי',
-  trigger: 'מאתר טריגרים',
-  mode_check: 'מצב סכמה',
-  catastrophe: 'בדיקת מציאות',
-  somatic: 'תרגיל גוף',
   analysis: 'ניתוח',
 };
 
 const KIND_FILTERS = [
   { id: 'emergency', label: 'עכשיו קשה לי' },
   { id: 'checkin', label: 'צ׳ק־אין' },
-  { id: 'tools', label: 'כלים פנימיים' },
   { id: 'analysis', label: 'ניתוחים' },
 ];
 
 const KIND_TO_GROUP = {
   emergency: 'emergency',
   mood: 'checkin',
-  trigger: 'tools',
-  mode_check: 'tools',
-  catastrophe: 'tools',
-  somatic: 'tools',
   analysis: 'analysis',
 };
 
@@ -52,10 +40,6 @@ const ACTIVATION_LABEL = {
   mid: 'על הסף',
 };
 
-const schemaName = (id) => {
-  if (id?.startsWith?.('other:')) return id.slice(6);
-  return dominantSchemas.find((s) => s.id === id)?.name ?? id;
-};
 const modeLabelOf = (id) => getModeById(id)?.label ?? id;
 
 export default function Timeline({ scope }) {
@@ -93,10 +77,6 @@ export default function Timeline({ scope }) {
     try {
       if (item.kind === 'emergency') res = await deleteEmergencySession(item.ts);
       else if (item.kind === 'mood') res = await deleteCheckinEntry(item.refDate, item.refTs);
-      else if (item.kind === 'trigger') res = await deleteToolEntry('triggers', item.ts);
-      else if (item.kind === 'mode_check') res = await deleteToolEntry('mode_checks', item.ts);
-      else if (item.kind === 'catastrophe') res = await deleteToolEntry('catastrophe_checks', item.ts);
-      else if (item.kind === 'somatic') res = await deleteToolEntry('somatic_sessions', item.ts);
       else if (item.kind === 'analysis') res = await deleteAnalysis(item.refId);
     } finally {
       setPendingDelete(null);
@@ -113,10 +93,6 @@ export default function Timeline({ scope }) {
     const { kind } = undoInfo;
     if (kind === 'emergency') await restoreEmergencySession(undoInfo.ts);
     else if (kind === 'mood') await restoreCheckinEntry(undoInfo.refDate, undoInfo.refTs);
-    else if (kind === 'trigger') await restoreToolEntry('triggers', undoInfo.ts);
-    else if (kind === 'mode_check') await restoreToolEntry('mode_checks', undoInfo.ts);
-    else if (kind === 'catastrophe') await restoreToolEntry('catastrophe_checks', undoInfo.ts);
-    else if (kind === 'somatic') await restoreToolEntry('somatic_sessions', undoInfo.ts);
     else if (kind === 'analysis') await restoreAnalysis(undoInfo.refId);
     load();
   };
@@ -265,16 +241,6 @@ function summaryFor(item) {
     }
     return parts.join(' · ') || 'רישום';
   }
-  if (kind === 'trigger') return data.event || 'טריגר';
-  if (kind === 'mode_check') {
-    return (data.modesActive || []).map(modeLabelOf).join(', ') || 'מצב';
-  }
-  if (kind === 'catastrophe') return data.thought || 'מחשבה';
-  if (kind === 'somatic') {
-    const parts = [data.exerciseTitle || 'תרגיל גוף'];
-    if (typeof data.afterScore === 'number') parts.push(`${data.afterScore}/10`);
-    return parts.join(' · ');
-  }
   if (kind === 'analysis') return data.title || data.summary || typeMeta(data.type)?.label || 'ניתוח';
   return '';
 }
@@ -283,26 +249,8 @@ function DetailFor({ item }) {
   const { kind, data } = item;
   if (kind === 'emergency') return <EmergencyDetail data={data} />;
   if (kind === 'mood') return <MoodDetail data={data} />;
-  if (kind === 'trigger') return <TriggerDetail data={data} />;
-  if (kind === 'mode_check') return <ModeCheckDetail data={data} />;
-  if (kind === 'catastrophe') return <CatastropheDetail data={data} />;
-  if (kind === 'somatic') return <SomaticDetail data={data} />;
   if (kind === 'analysis') return <AnalysisDetail item={item} />;
   return null;
-}
-
-function SomaticDetail({ data }) {
-  const minutes = data.durationSec ? Math.max(1, Math.round(data.durationSec / 60)) : null;
-  return (
-    <section className="day-detail-section">
-      {data.exerciseTitle && <p><strong>תרגיל:</strong> {data.exerciseTitle}</p>}
-      {data.variant && <p><strong>וריאנט:</strong> {data.variant}</p>}
-      {typeof data.afterScore === 'number' && (
-        <p><strong>אחרי:</strong> {data.afterScore} / 10</p>
-      )}
-      {minutes && <p><strong>משך:</strong> {minutes} דק׳</p>}
-    </section>
-  );
 }
 
 function EmergencyDetail({ data }) {
@@ -344,55 +292,6 @@ function MoodDetail({ data }) {
       {Array.isArray(data.factors) && data.factors.length > 0 && (
         <p><strong>השפיע:</strong> {data.factors.map((id) => factorLabelById(id)).join(', ')}</p>
       )}
-    </section>
-  );
-}
-
-function TriggerDetail({ data }) {
-  return (
-    <section className="day-detail-section">
-      {data.event && <p><strong>אירוע:</strong> {data.event}</p>}
-      {Array.isArray(data.bodySensations) && data.bodySensations.length > 0 && (
-        <p><strong>גוף:</strong> {data.bodySensations.map(sensationLabel).join(', ')}</p>
-      )}
-      {Array.isArray(data.thoughts) && data.thoughts.length > 0 && (
-        <div>
-          <strong>קולות:</strong>
-          <ul className="detail-list">
-            {data.thoughts.map((t, i) => <li key={i}>{t}</li>)}
-          </ul>
-        </div>
-      )}
-      {Array.isArray(data.distortions) && data.distortions.length > 0 && (
-        <p><strong>עיוותי חשיבה:</strong> {data.distortions.map(distortionLabel).join(', ')}</p>
-      )}
-      {Array.isArray(data.schemasActivated) && data.schemasActivated.length > 0 && (
-        <p><strong>סכמות:</strong> {data.schemasActivated.map(schemaName).join(', ')}</p>
-      )}
-      {data.healthyResponse && <p><strong>תגובה בריאה:</strong> {data.healthyResponse}</p>}
-    </section>
-  );
-}
-
-function ModeCheckDetail({ data }) {
-  return (
-    <section className="day-detail-section">
-      {Array.isArray(data.modesActive) && data.modesActive.length > 0 && (
-        <p><strong>מודים:</strong> {data.modesActive.map(modeLabelOf).join(', ')}</p>
-      )}
-      {data.note && <p><strong>תיאור:</strong> {data.note}</p>}
-    </section>
-  );
-}
-
-function CatastropheDetail({ data }) {
-  return (
-    <section className="day-detail-section">
-      {data.thought && <p><strong>המחשבה:</strong> {data.thought}</p>}
-      {data.evidenceFor && <p><strong>בעד:</strong> {data.evidenceFor}</p>}
-      {data.evidenceAgainst && <p><strong>נגד:</strong> {data.evidenceAgainst}</p>}
-      {data.worstCasePlan && <p><strong>תוכנית למקרה הגרוע:</strong> {data.worstCasePlan}</p>}
-      {data.reframe && <p><strong>ניסוח מחדש:</strong> {data.reframe}</p>}
     </section>
   );
 }

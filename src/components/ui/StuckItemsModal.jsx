@@ -7,13 +7,11 @@ import {
 } from '../../utils/syncQueue.js';
 import { flushPendingSessions } from '../../utils/emergencyLog.js';
 import { flushPendingCheckins } from '../../utils/checkinStorage.js';
-import { flushPendingTools } from '../../utils/toolsStorage.js';
 import { flushPendingAnalyses } from '../../utils/analysisStorage.js';
 
 const FLUSH_BY_TYPE = {
   sessions: flushPendingSessions,
   checkins: flushPendingCheckins,
-  tools: flushPendingTools,
   analyses: flushPendingAnalyses,
 };
 

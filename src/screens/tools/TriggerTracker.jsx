@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CheckinHeader from '../checkin/components/CheckinHeader.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import { distortions, BODY_SENSATIONS } from '../../data/distortions.js';
 import { dominantSchemas } from '../../data/schemas.js';
 import { getModeById } from '../../data/modes.js';
@@ -90,20 +89,8 @@ export default function TriggerTracker() {
     setShowSuggestions(false);
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setSaving(true);
-    const schemasArr = Array.from(schemaSet);
-    const finalSchemas = schemasArr.includes(OTHER_SCHEMA)
-      ? [...schemasArr.filter((x) => x !== OTHER_SCHEMA), ...(otherSchemaText.trim() ? [`other:${otherSchemaText.trim()}`] : [])]
-      : schemasArr;
-    await saveToolSession('triggers', {
-      event: event.trim(),
-      bodySensations: Array.from(sensations),
-      thoughts: thoughts.map((t) => t.trim()).filter(Boolean),
-      distortions: Array.from(distortionSet),
-      schemasActivated: finalSchemas,
-      healthyResponse: healthyResponse.trim() || null,
-    });
     incrementCounts('body_sensations', Array.from(sensations));
     incrementCounts('distortions', Array.from(distortionSet));
     incrementCounts('schemas', Array.from(schemaSet).filter((id) => id !== OTHER_SCHEMA));

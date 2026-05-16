@@ -20,7 +20,6 @@ import ModeCheck from './screens/tools/ModeCheck.jsx';
 import CatastropheCheck from './screens/tools/CatastropheCheck.jsx';
 import SomaticHub from './screens/tools/SomaticHub.jsx';
 import SomaticExercise from './screens/tools/SomaticExercise.jsx';
-import ToolHistory from './screens/tools/ToolHistory.jsx';
 import RepositoryHub from './screens/repository/RepositoryHub.jsx';
 import ImportScreen from './screens/repository/ImportScreen.jsx';
 import AnalysisDetail from './screens/repository/AnalysisDetail.jsx';
@@ -30,12 +29,12 @@ import MindfulnessHub from './screens/mindfulness/MindfulnessHub.jsx';
 import TherapyFrameScreen from './screens/therapy/TherapyFrameScreen.jsx';
 import TherapyDaySettings from './screens/therapy/TherapyDaySettings.jsx';
 import SomethingWaitingScreen from './screens/something-waiting/SomethingWaitingScreen.jsx';
+import FactoryReset from './screens/admin/FactoryReset.jsx';
 import IconGallery from './screens/IconGallery.jsx';
 import NavRail from './components/ui/NavRail.jsx';
 import { NavProvider } from './utils/navContext.jsx';
 import { flushPendingSessions, flushPendingTriggerAnalyses } from './utils/emergencyLog.js';
 import { flushPendingCheckins } from './utils/checkinStorage.js';
-import { flushPendingTools } from './utils/toolsStorage.js';
 import { flushPendingAnalyses } from './utils/analysisStorage.js';
 import { flushPendingFrames } from './utils/therapyStorage.js';
 import { flushPendingWaitingItems } from './utils/somethingWaitingStorage.js';
@@ -76,7 +75,6 @@ export default function App() {
     const flushAll = () => {
       flushPendingSessions().catch(() => {});
       flushPendingCheckins().catch(() => {});
-      flushPendingTools().catch(() => {});
       flushPendingAnalyses().catch(() => {});
       flushPendingFrames().catch(() => {});
       flushPendingTriggerAnalyses().catch(() => {});
@@ -121,7 +119,6 @@ export default function App() {
         <Route path="/tools/catastrophe" element={<CatastropheCheck />} />
         <Route path="/tools/somatic" element={<SomaticHub />} />
         <Route path="/tools/somatic/:id" element={<SomaticExercise />} />
-        <Route path="/tools/history" element={<ToolHistory />} />
         <Route path="/repository" element={<RepositoryHub />} />
         <Route path="/repository/import" element={<ImportScreen />} />
         <Route path="/repository/trash" element={<RecycleBin />} />
@@ -131,6 +128,7 @@ export default function App() {
         <Route path="/therapy/frame" element={<TherapyFrameScreen />} />
         <Route path="/settings/therapy-day" element={<TherapyDaySettings />} />
         <Route path="/something-waiting" element={<SomethingWaitingScreen />} />
+        <Route path="/admin/reset" element={<FactoryReset />} />
         <Route path="/icons" element={<IconGallery />} />
         </Routes>
         </main>

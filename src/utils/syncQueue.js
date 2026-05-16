@@ -6,7 +6,6 @@
 const KEYS = {
   sessions: 'tavor_mind_pending_sessions',
   checkins: 'tavor_mind_pending_checkins',
-  tools: 'tavor_mind_pending_tools',
   analyses: 'tavor_mind_pending_analyses',
   trigger_analyses: 'tavor_mind_pending_trigger_analyses',
   frames: 'tavor_mind_pending_frames',
@@ -62,12 +61,6 @@ export function markFailureForType(type, predicate, err) {
 
 // ── Identity & description per type ─────────────────────────────────
 
-const TOOL_LABEL = {
-  triggers: 'מעקב טריגר',
-  mode_checks: 'בדיקת מודים',
-  catastrophe_checks: 'בדיקת קטסטרופה',
-};
-
 const SCOPE_LABEL = {
   morning: 'צ׳ק-אין בוקר',
   evening: 'צ׳ק-אין ערב',
@@ -99,13 +92,6 @@ function describe(type, item) {
       id: `checkins:${item.uid}:${item.date}:${item.timestamp}`,
       label: SCOPE_LABEL[scope] || 'צ׳ק-אין',
       detail: item.date,
-    };
-  }
-  if (type === 'tools') {
-    return {
-      id: `tools:${item.category}:${item.ts}`,
-      label: TOOL_LABEL[item.category] || item.category,
-      detail: formatTime(item.ts || item._firstQueuedAt),
     };
   }
   if (type === 'analyses') {
@@ -204,13 +190,6 @@ function matcherFor(id) {
       key: KEYS.checkins,
       predicate: (it) =>
         it.uid === uid && it.date === date && String(it.timestamp) === String(timestamp),
-    };
-  }
-  if (type === 'tools') {
-    const [category, ts] = parts.slice(1);
-    return {
-      key: KEYS.tools,
-      predicate: (it) => it.category === category && String(it.ts) === String(ts),
     };
   }
   if (type === 'analyses') {

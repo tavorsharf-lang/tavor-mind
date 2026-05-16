@@ -39,11 +39,6 @@ export default function ToolsHub() {
             </li>
           ))}
         </ul>
-        <div className="tools-history-link-wrap">
-          <button type="button" className="link-btn tools-history-link" onClick={() => navigate('/tools/history')}>
-            היסטוריה ←
-          </button>
-        </div>
       </main>
     </div>
   );

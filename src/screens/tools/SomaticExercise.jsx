@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import { getSomaticExercise } from '../../data/somatic.js';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import { SomaticAnimation } from './components/somatic/SomaticAnimations.jsx';
 import VagalHummingHologram from '../emergency/components/VagalHummingHologram.jsx';
 import ScoreSlider from '../../components/ui/ScoreSlider.jsx';
@@ -33,7 +32,6 @@ export default function SomaticExercise() {
   const [completedFully, setCompletedFully] = useState(false);
   const [silent, setSilent] = useState(false);
   const [vibrationFelt, setVibrationFelt] = useState(null); // null | true | false
-  const [savingState, setSavingState] = useState('idle'); // idle | saving | saved | offline
   const startedAtRef = useRef(null);
   const [, setTick] = useState(0);
 
@@ -72,30 +70,14 @@ export default function SomaticExercise() {
     setStage('rating');
   };
 
-  const handleSave = async (includeScore) => {
-    const durationSec = Math.max(1, Math.round((Date.now() - startedAtRef.current) / 1000));
-    setSavingState('saving');
-    const result = await saveToolSession('somatic_sessions', {
-      exerciseId: id,
-      exerciseTitle: exercise.title,
-      variant,
-      completedFully,
-      afterScore: includeScore ? afterScore : null,
-      durationSec,
-      silent: exercise.supportsSilent ? silent : undefined,
-      vibrationFelt: id === 'vagal_humming' ? vibrationFelt : undefined,
-    });
-    setSavingState(result.ok ? 'saved' : 'offline');
-    setTimeout(() => navigate('/tools/somatic'), result.ok ? 600 : 1400);
+  const handleSave = () => {
+    navigate('/tools/somatic');
   };
 
-  const inFlight = savingState === 'saving' || savingState === 'saved';
+  const inFlight = false;
 
   return (
     <div className="tool-page ds2-themed">
-      {savingState === 'offline' && (
-        <div className="offline-toast" role="status">נשמר מקומית, יסונכרן כשתחזור לרשת</div>
-      )}
       <ToolHeader
         title={exercise.title}
         subtitle={exercise.subtitle}

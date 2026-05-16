@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import CheckinHeader from '../checkin/components/CheckinHeader.jsx';
 import SoftButton from '../emergency/components/SoftButton.jsx';
 import SavedConfirm from '../../components/ui/SavedConfirm.jsx';
-import { saveToolSession } from '../../utils/toolsStorage.js';
 import { getModeById } from '../../data/modes.js';
 import { useBackHandler } from '../../utils/navContext.jsx';
 
@@ -33,15 +32,8 @@ export default function CatastropheCheck() {
 
   const showAgainstHint = step === 3 && evidenceAgainst.trim() === '';
 
-  const handleSave = async () => {
+  const handleSave = () => {
     setSaving(true);
-    await saveToolSession('catastrophe_checks', {
-      thought: thought.trim(),
-      evidenceFor: evidenceFor.trim(),
-      evidenceAgainst: evidenceAgainst.trim(),
-      worstCasePlan: worstCasePlan.trim(),
-      reframe: reframe.trim(),
-    });
     setSaving(false);
     setSaved(true);
   };
