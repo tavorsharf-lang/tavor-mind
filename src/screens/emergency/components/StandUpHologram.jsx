@@ -149,7 +149,7 @@ export default function StandUpHologram({ size = 200 }) {
         {animate && (
           <g clipPath="url(#holoClip)" className="holo-scan">
             <rect x="0" y="0" width="220" height="2.5" fill="#5AC8FA" fillOpacity="0.5" />
-            <rect x="0" y="0" width="220" height="1" fill="#FFFFFF" fillOpacity="0.35" y="3.5" />
+            <rect x="0" y="3.5" width="220" height="1" fill="#FFFFFF" fillOpacity="0.35" />
           </g>
         )}
       </svg>
