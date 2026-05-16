@@ -4,6 +4,7 @@ import ToolHeader from '../toolbox/components/ToolHeader.jsx';
 import { getSomaticExercise } from '../../data/somatic.js';
 import { saveToolSession } from '../../utils/toolsStorage.js';
 import { SomaticAnimation } from './components/somatic/SomaticAnimations.jsx';
+import VagalHummingHologram from '../emergency/components/VagalHummingHologram.jsx';
 import { colorForScore } from '../../utils/scoreColor.js';
 
 function moodForScore(s) {
@@ -103,6 +104,11 @@ export default function SomaticExercise() {
         {stage === 'select' && (
           <section className="somatic-select">
             <p className="somatic-why">{exercise.why}</p>
+            {id === 'vagal_humming' && (
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '4px 0 12px' }}>
+                <VagalHummingHologram size={240} />
+              </div>
+            )}
             <ol className="somatic-instructions">
               {exercise.instructions.map((line, i) => (
                 <li key={i}>{line}</li>

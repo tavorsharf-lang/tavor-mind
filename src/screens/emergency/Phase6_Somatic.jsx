@@ -4,6 +4,7 @@ import { saveToolSession } from '../../utils/toolsStorage.js';
 import { colorForScore } from '../../utils/scoreColor.js';
 import { PhaseSomatic as Phase6SomaticIcon } from '../../components/icons/system.jsx';
 import { usePointerSlider } from '../../utils/usePointerSlider.js';
+import VagalHummingHologram from './components/VagalHummingHologram.jsx';
 
 const BUTTERFLY_DURATION_SEC = 60;
 const VAGAL_DURATION_SEC = 90;
@@ -333,30 +334,9 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
           </p>
         </div>
 
-        {/* Concentric rings + hand glyphs */}
-        <div className="ds3-center" style={{ position: 'relative', minHeight: 260, margin: '8px 0 4px' }}>
-          <svg width="240" height="240" viewBox="0 0 240 240">
-            {[0, 1, 2, 3, 4].map((i) => (
-              <circle
-                key={i}
-                cx="120" cy="120" r={28 + i * 18}
-                fill="none"
-                stroke={ringTint}
-                strokeOpacity={0.42 - i * 0.07}
-                strokeWidth="1.2"
-              />
-            ))}
-            <circle cx="120" cy="120" r="18" fill={ringTint} opacity="0.92" />
-            <circle cx="120" cy="120" r="9" fill="#fff" opacity="0.55" />
-          </svg>
-          {/* Hand placement labels — chest + throat */}
-          <div style={{
-            position: 'absolute', bottom: 8, left: 0, right: 0,
-            display: 'flex', justifyContent: 'center', gap: 28,
-          }}>
-            <HandSpot label="גרון" tint={ringTint} />
-            <HandSpot label="חזה" tint={ringTint} />
-          </div>
+        {/* Breath hologram — figure inhales, then exhales humming "מממממ" */}
+        <div className="ds3-center" style={{ minHeight: 260, margin: '8px 0 4px' }}>
+          <VagalHummingHologram size={240} />
         </div>
 
         <div className="ds3-caption ds3-text-muted ds3-text-center" style={{ marginBottom: 16 }}>
@@ -446,20 +426,6 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
           התחל
         </button>
       </footer>
-    </div>
-  );
-}
-
-function HandSpot({ label, tint }) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-        <path
-          d="M7 14V7a1.4 1.4 0 012.8 0v5M9.8 12V5.5a1.4 1.4 0 012.8 0V12M12.6 12V7a1.4 1.4 0 012.8 0v6.5c0 3.5-2.5 5.5-5 5.5s-5-1.5-5-5v-3l-1.6 1c-.8.5-1.6-.6-1-1.4L6 8"
-          stroke={tint} strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round"
-        />
-      </svg>
-      <div style={{ fontSize: 11, color: 'var(--ink-muted)', letterSpacing: '0.02em' }}>{label}</div>
     </div>
   );
 }
