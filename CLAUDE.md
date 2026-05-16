@@ -127,10 +127,11 @@ src/
 │   ├── checkin/                   # Step 4: morning + evening + history
 │   │   ├── CheckinHub.jsx, MorningCheckin.jsx, EveningCheckin.jsx, CheckinHistory.jsx
 │   │   └── components/ (CheckinHeader, EnergySlider, EmotionPicker, DayCard)
-│   ├── tools/                     # Step 5: in-the-moment regulation tools
+│   ├── tools/                     # Step 5: in-the-moment regulation tools (no persistence)
 │   │   ├── ToolsHub.jsx, TriggerTracker.jsx (5 steps), ModeCheck.jsx
-│   │   ├── MessageHold.jsx (timer with localStorage persistence)
-│   │   ├── CatastropheCheck.jsx (5 steps), ToolHistory.jsx (filters + list)
+│   │   ├── CatastropheCheck.jsx (5 steps), SomaticHub.jsx, SomaticExercise.jsx
+│   ├── admin/
+│   │   └── FactoryReset.jsx        # /admin/reset — wipes user data, keeps analyses
 │   ├── repository/                # Step 6: analysis repository (JSON import)
 │   │   ├── RepositoryHub.jsx       # list + filters + import button
 │   │   ├── ImportScreen.jsx        # paste JSON, validate, save (debounced)
@@ -151,7 +152,6 @@ src/
 └── utils/
     ├── emergencyLog.js            # Firebase write w/ offline queue (emergency)
     ├── checkinStorage.js          # Firebase R/W w/ offline queue (checkin)
-    ├── toolsStorage.js            # Firebase R/W w/ offline queue (tools) + active hold
     ├── analysisValidation.js      # validateAnalysis + applyDateOverride
     ├── analysisStorage.js         # Firebase R/W w/ offline queue (analyses) + filters
     ├── reviewAggregator.js        # aggregateReview(scope) — reads all sources, returns one object
@@ -166,7 +166,7 @@ src/
 - **Step 2 (מסך עכשיו קשה לי): הושלם.** 6 שלבים: זיהוי הפעלה (Phase1) → נשימה (Phase2) → גראונדינג (Phase3, 5-4-3-2-1 או סריקת צבעים, נבחר אוטומטית לפי activation: hyper→colors, hypo/mid→senses; ניתן להחליף; לא נשמר בסשן) → אנקרים (Phase4) → מודים (Phase5) → סיום (Phase6). Phase 5 = multi-select של 5 מודים מ-`data/modes.js`/`MODES` (4 protectors + exile בתחתית). Phase 6 כולל בלוק הפניה אופציונלי לכלי מתאים (mapping ב-`data/emergencyToolMap.js` לפי בחירת activation בשלב 1), בלוק מדיטציה אופציונלי (mapping ב-`data/emergencyMeditationMap.js` לפי activation, MP3 מ-`public/audio/meditation-{hyper|hypo|mid}.mp3`), ובלוק מכתב אופציונלי (mapping ב-`data/emergencyLetterMap.js` — מציג רק ב-hypo/mid את `letterDefault` מ-`data/selfLetter.js` במודאל גלילה. סגירה חוזרת ל-Phase 6, לא מסיימת את הסשן) — שלושתם מוצגים מעל "סיימתי". המדיטציה נפתחת ב-Modal עם נגן HTML5 (Play/Pause + פס פרוגרס + זמן), `onEnded` קורא ל-handleFinish (שומר סשן + ניווט הביתה), סגירה ידנית מחזירה ל-Phase6. תרגיל הנשימה (BreathingExercise) מורחב: countdown של השלב הנוכחי בלב המעגל, זמן כולל שעבר מעל, אייקון כיוון (↑/■/↓) ליד label, תת-הוראה לכל שלב, חיזוק לכל מחזור, ושדה `breathingNote` אופציונלי במסך post-completion שנשמר ב-session payload. התבנית נבחרת אוטומטית לפי activation (hyper→`478`, hypo→`coherent`, mid→`box`) וניתנת לשינוי מתוך ה-pattern picker (3 אפשרויות: 4-7-8 / קופסה 4×4 / 5-5). cycles נקבע אוטומטית לפי התבנית (478→4, box/coherent→6) ומוצג בכפתור "עוד X נשימות".
 - **Step 3 (ארגז כלים): הושלם + עודכן מטא-ניתוח.** SchemaProfile מציג גם סכמה לבחינה (מחסור רגשי, השערה במסגרת מקווקוות). ModesMap בהיררכיה תלת-שכבתית: המבוגר הבריא (העֵד) למעלה, 4 מגנים באמצע, הילד שלא מספיק חשוב (הגרעין) למטה. SelfLetter פונה ישירות לילד הגלותי. `data/modes.js` מייצא `coreMode`, `protectorModes`, `healthyAdult` + flat `modes` ל-backwards compat עם ModeCheck.
 - **Step 4 (צ'ק-אין יומי): הושלם.**
-- **Step 5 (כלים פנימיים): הושלם.** ToolsHub עם 3 כלים: TriggerTracker (5 שלבים, schemas מ-data/schemas.js), ModeCheck (single-screen מ-data/modes.js, עם pre-select אופציונלי מ-location.state.selectedModes), CatastropheCheck (5 שלבים). היסטוריה משולבת עם פילטרים. כל הכתיבות עם Firebase + תור offline.
+- **Step 5 (כלים פנימיים): הושלם — ללא שמירה.** ToolsHub עם 3 כלים + תרגילי גוף: TriggerTracker (5 שלבים), ModeCheck (single-screen, עם pre-select אופציונלי מ-location.state.selectedModes), CatastropheCheck (5 שלבים), SomaticHub/SomaticExercise. **2026-05-16: שמירה והיסטוריה הוסרו לחלוטין** — הכלים פועלים כתהליך בזמן אמת בלבד, אין כתיבה ל-Firebase, אין מסך היסטוריה, אין כניסות ל-Review/Timeline. [src/utils/toolsStorage.js] נמחק. Timeline + reviewAggregator + timelineAggregator לא קוראים יותר מ-`triggers`/`mode_checks`/`catastrophe_checks`/`somatic_sessions`.
 - **Step 6 (מאגר ניתוחים): הושלם.** מערכת ייבוא JSON — לא קוראת ל-Claude API מתוך האפליקציה. 5 סוגי ניתוחים: emotion_recognition, gratitude, i_language, therapy_session (3 ענפים: IFS / schema-focused / chair-dialogue), meta_analysis. ImportScreen עם validation דבאונסד וtצוגה מקדימה, RepositoryHub עם פילטרים (סוג / סכמות / דפוסים / חיפוש), AnalysisDetail עם רכיב מותאם לכל סוג + fallback גנרי. כתיבות ל-Firebase תחת `tavormind/{uid}/analyses/{_id}`, queue offline ב-`localStorage['tavor_mind_pending_analyses']`. Override תאריך לניתוחים ישנים (משנה רק occurredAt, createdAt תמיד now).
 - **Step 7 (המראה — סקירת שבוע/חודש/90 יום): הושלם.** ReviewScreen עם 3 טאבים (שבוע=7 ימים, חודש=30, 90 יום) ו-8 סקציות בסדר: CheckinRhythm (ribbon של נקודות + sparkline אם ≥4 נקודות) → EmotionalLandscape (chips לפי תדירות + רשימת absent + thesis: "היעדר זה גם מידע") → TriggersList (top 5 + הדגשת חזרה) → PatternsPresence (4 דפוסים עם ratio + פירוש מותאם) → ModesActive (top 5 + פירוש למוד הדומיננטי) → SchemasActivated (כולל הערה מיוחדת ל-emotional_deprivation) → CoreChildSection (יורד אם אין נתונים — מציג "לא מספיק" appearances + needs_expressed) → OpenQuestion (קבוע פר scope+week דרך hash). reviewAggregator קורא 7 paths של Firebase במקביל, מסנן לפי טווח, וחושב את כל הסקציות בלקוח.
 - **Step 8: ממתין.**
@@ -180,7 +180,7 @@ src/
 
 **Iteration 3 (Toolbox + Tools + Checkin):** הושלם 2026-05-02. `.ds2-themed` הוסף לשורש של 13 מסכים נוספים:
 - Toolbox: ToolboxHub, SchemaProfile, AttachmentProfile, ModesMap, SelfLetter
-- Tools: ToolsHub, TriggerTracker, ModeCheck, CatastropheCheck, ToolHistory
+- Tools: ToolsHub, TriggerTracker, ModeCheck, CatastropheCheck
 - Checkin: CheckinHub, MorningCheckin, EveningCheckin, CheckinHistory
 
 **כעת כל המסכים באפליקציה ב-DS2** — אין יותר "iteration boundary jarring."
@@ -199,7 +199,7 @@ src/
 **Iteration 4 (פולישינג סופי): הושלם.** הוספות:
 - `<Modal />` ראשוני ב-[src/components/ui/Modal.jsx](src/components/ui/Modal.jsx) — Esc + click-backdrop לסגירה, body-scroll lock, backdrop blur, slide-up במובייל וcenter בטאבלט.
   - מוחל על EmergencyFlow Phase 6 ("אנשים שיענו לך"). AnalysisDetail delete confirm נשאר inline (החלטה מודעת — destructive confirmations שקטים נעימים יותר).
-- `<Loading />` ב-[src/components/ui/Loading.jsx](src/components/ui/Loading.jsx) עם נקודה דופקת ב-`--lichen` במקום `טוען…` שטוח. הוחלף ב-5 מקומות (RepositoryHub, AnalysisDetail, CheckinHistory, ToolHistory, ReviewScreen).
+- `<Loading />` ב-[src/components/ui/Loading.jsx](src/components/ui/Loading.jsx) עם נקודה דופקת ב-`--lichen` במקום `טוען…` שטוח. הוחלף ב-4 מקומות (RepositoryHub, AnalysisDetail, CheckinHistory, ReviewScreen).
 - אנימציות: page fade-in (0.6→1, 250ms), bar-fill ב-Review (600ms), sparkline draw (800ms forward), modal rise (24px → 0). הכל מכבדים `prefers-reduced-motion`.
 - A11y: `:focus-visible` rings ב-`--lichen` רק במקלדת, skip-nav link ראשון בתוך BrowserRouter (`#main-content`), דרישות ARIA הקיימות נבדקו.
 - ניקוי קוד מורשת (Option B): ה-:root הישן ב-styles.css עכשיו aliases ל-DS2 tokens (`--accent → --lichen`, `--bg → --canvas`, `--text → --ink`, וכו'). שמירה על תאימות לאחור עבור inline-style references ב-JSX (ב-MessageHold, BreathingExercise, CheckinRhythm sparkline). שום ערך פלטה ישן לא נשאר בעיצוב.
@@ -217,6 +217,10 @@ src/
 - ink-soft → canvas/surface: 2.4-2.5 (כשל מכוון — בשימוש רק לטקסט דקורטיבי לא-חיוני: app tag, watermark status, decorative dividers, footnotes)
 
 **App מצב סופי:** כל 19 המסלולים עטופים ב-DS2. JS 649KB, CSS 116KB. אין יותר iteration boundaries.
+
+## 8b. Factory Reset (/admin/reset)
+
+מסך לא-מקושר [src/screens/admin/FactoryReset.jsx](src/screens/admin/FactoryReset.jsx) שמתנקש את כל נתוני המשתמש חוץ מהניתוחים. שני שלבים: confirm → "כן, מחק הכל" → לוג בזמן אמת → "חזור לבית". **מוחק** מ-Firebase: `checkins`, `emergency_sessions`, `trigger_analyses`, `triggers`, `mode_checks`, `catastrophe_checks`, `somatic_sessions`, `therapy_frames`, `something_waiting`, וכל `tavormindLiveHr/{uid}`. **מוחק** מ-localStorage: כל ה-`tavor_mind_pending_*`, דגלי onboarding (62, containment, seen_home), `hr_setup_done`, `wearing_watch`, `option_frequencies`. **שומר**: `tavormind/{uid}/analyses`, `tavor_mind_auth_uid`, `tavor_mind_therapy_dow`, `tavor_mind_last_therapist_export`. הגישה רק על-ידי הקלדת ה-URL ידנית.
 
 ## 9. כללי עבודה כלליים
 
