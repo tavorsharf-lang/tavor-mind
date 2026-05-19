@@ -277,6 +277,19 @@ src/
 3. **התמדה ומיון** — אופציות משלך נשמרות ב-`tavormind/{uid}/custom_options/{type}/{questionId}/{optionId}` עם `{label, count, createdAt}`. ב-wizard, הן מתמזגות לרשימה ומיון משותף לפי `choice_frequency + custom_options.count`.
 4. **דילוג** — `WizardStep` מציג בתחתית קישור "דלג על שאלה זו" (חוץ מ-required). דילוג: `variables[questionId] = null` ומתקדם.
 
+#### יחסים עם Phase 8 (Emergency Flow) — לא לאחד
+
+יש שני מנגנוני תדירות נפרדים בכוונה:
+
+- **Phase 8 (`src/screens/emergency/Phase8_Trigger.jsx`)** — משתמש ב-`src/utils/optionFrequency.js` שמחזיק ספירות ב-`localStorage['tavor_mind_option_frequencies']`. per-device בלבד, בלי סנכרון, בלי custom additions.
+- **Conversation Sessions** — `src/services/choiceFrequencyService.js` + `customOptionsService.js`, שמורים ב-Firebase תחת `tavormind/{uid}/`. cross-device, עם custom additions.
+
+הם לא חולקים קוד ולא צריכים. ה-localStorage של Phase 8 ישן ויציב; ה-Firebase של conversation sessions תוכנן להיות הסטנדרט החדש לסשנים מובנים.
+
+הסליידר 0/1-10 משותף — `src/components/ui/ScoreSlider.jsx` הוא הקנוני. גם Phase 8, גם בדיקות הצ'ק-אין, גם type=scale ב-wizard משתמשים בו ישירות. אין צורך ב-wrapper נוסף.
+
+ה-chips של Phase 8 (`.emotion-chip` ב-grid) **אינם** משותפים עם `.cs-option` של ה-wizard (full-width בסטאק) — שני שימושים חזותיים שונים. אל תכפה קומפוננטה משותפת ביניהם.
+
 ### קבצים מרכזיים
 
 - `src/pages/ConversationSessions/` — `ConversationSessionsHome.jsx`, `SessionTypeEntry.jsx`, `SessionWizard.jsx`, `SessionResult.jsx`, `SessionHistory.jsx`, `UnifiedHistory.jsx`, `components/SessionListItem.jsx`

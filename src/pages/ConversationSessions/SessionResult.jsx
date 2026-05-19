@@ -37,7 +37,14 @@ export default function SessionResult() {
 
   const prompt = useMemo(() => {
     if (!session) return '';
-    return buildSessionPrompt({ type: session.type, variables: session.variables });
+    const createdAtIso = session.createdAt
+      ? new Date(session.createdAt).toISOString()
+      : null;
+    return buildSessionPrompt({
+      type: session.type,
+      variables: session.variables,
+      meta: { createdAt: createdAtIso, sessionId: session.sessionId },
+    });
   }, [session]);
 
   if (loading) {

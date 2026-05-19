@@ -149,6 +149,15 @@ function formatSelectWithCustomList(value, staticOpts) {
   return arr.map((id) => lookup(id, value.custom_labels)).join(', ');
 }
 
+function formatBulletList(value, staticOpts) {
+  if (value === null) return NULL_TOKEN;
+  if (!value || typeof value !== 'object') return NULL_TOKEN;
+  const ids = asArray(value.selected) || [];
+  if (ids.length === 0) return NULL_TOKEN;
+  const lookup = makeLabelLookup(staticOpts);
+  return ids.map((id) => `- ${lookup(id, value.custom_labels)}`).join('\n');
+}
+
 function formatSelectWithCustomSingle(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
   if (!value || typeof value !== 'object') return NULL_TOKEN;
@@ -164,19 +173,9 @@ function formatSingleSelect(value, staticOpts) {
   return opt ? opt.label : value;
 }
 
-function formatScale(value, cfg) {
+function formatScale(value) {
   if (value === null || typeof value !== 'number') return NULL_TOKEN;
-  const max = cfg?.max ?? 10;
-  return `${value}/${max}`;
-}
-
-function formatScenarioList(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const ids = Array.isArray(value.selected) ? value.selected : [];
-  if (ids.length === 0) return NULL_TOKEN;
-  const lookup = makeLabelLookup(staticOpts);
-  return ids.map((id, i) => `${i + 1}. ${lookup(id, value.custom_labels)}`).join('\n');
+  return `${value}/10`;
 }
 
 function getSubInput(value, subInputId) {
@@ -189,6 +188,21 @@ function isOptionSelected(value, optionId) {
   if (!value || typeof value !== 'object') return false;
   const arr = Array.isArray(value.selected) ? value.selected : (value.selected ? [value.selected] : []);
   return arr.includes(optionId);
+}
+
+// Return labels of user-added (custom_*) options that are currently selected.
+// Used to surface the "בקול שלי" line — text the user wrote in their own words.
+function getCustomLabels(value) {
+  if (!value || typeof value !== 'object') return [];
+  const selected = asArray(value.selected) || [];
+  const labels = value.custom_labels || {};
+  const out = [];
+  for (const id of selected) {
+    if (typeof id === 'string' && id.startsWith('custom_') && labels[id]) {
+      out.push(labels[id]);
+    }
+  }
+  return out;
 }
 
 // ── Session definition ─────────────────────────────────────────────
@@ -271,59 +285,61 @@ export const anticipatoryAnxiety = {
     },
   ],
 
-  buildPrompt: (v) => {
+  buildPrompt: (v, meta) => {
     const eventType    = formatSelectWithCustomSingle(v.event_type, EVENT_TYPE_OPTIONS);
     const timeDistance = formatSingleSelect(v.time_distance, TIME_DISTANCE_OPTIONS);
-    const preparedness = formatScale(v.preparedness, { max: 10 });
-    const scenarios    = formatScenarioList(v.catastrophic_scenario, CATASTROPHIC_OPTIONS);
-    const pastPattern  = formatSelectWithCustomList(v.past_pattern, PAST_PATTERN_OPTIONS);
-    const judges       = formatSelectWithCustomList(v.judges, JUDGES_OPTIONS);
+    const preparedness = formatScale(v.preparedness);
+    const scenariosBullets = formatBulletList(v.catastrophic_scenario, CATASTROPHIC_OPTIONS);
+    const scenariosCustom  = getCustomLabels(v.catastrophic_scenario);
+    const pastPattern  = formatBulletList(v.past_pattern, PAST_PATTERN_OPTIONS);
+    const judges       = formatBulletList(v.judges, JUDGES_OPTIONS);
     const specificPerson = isOptionSelected(v.judges, 'specific_person_present')
       ? getSubInput(v.judges, 'specific_person')
       : null;
     const bodyLocation = formatSelectWithCustomList(v.body_location, BODY_LOCATION_OPTIONS);
     const bodyQuality  = formatSelectWithCustomList(v.body_quality, BODY_QUALITY_OPTIONS);
     const threatType   = formatSelectWithCustomList(v.threat_type, THREAT_TYPE_OPTIONS);
+    const dateIso      = meta?.createdAt || new Date().toISOString();
 
     const lines = [
-      '[anticipatory_anxiety]',
+      'סשן: חרדה ציפייתית לפני אירוע',
+      `תאריך: ${dateIso}`,
       '',
-      'לפניי אירוע שמעיק עליי כבר עכשיו. אני רוצה להבין מה עולה ולהיכנס אליו פחות שבור.',
-      '',
-      '—— האירוע ——',
-      '',
+      '— מה האירוע —',
       `סוג: ${eventType}`,
       `מתי: ${timeDistance}`,
-      `תחושת מוכנות: ${preparedness}`,
       '',
-      '—— הסיוט ——',
+      '— מצב נוכחי —',
+      `רמת מוכנות סובייקטיבית: ${preparedness}`,
+      `תחושה גופנית — מיקום: ${bodyLocation}`,
+      `תחושה גופנית — איכות: ${bodyQuality}`,
       '',
-      'תרחישים שעולים בי:',
-      scenarios,
-      '',
-      `סוג האיום הבסיסי: ${threatType}`,
-      '',
-      '—— המראה אחורה ——',
-      '',
-      'מה קרה בעבר באירועים דומים:',
-      pastPattern,
-      '',
-      '—— מי שם ——',
-      '',
-      `שופטים פוטנציאליים: ${judges}`,
+      '— התוכן הקוגניטיבי —',
+      'התרחיש הקטסטרופי:',
+      scenariosBullets,
     ];
 
-    if (specificPerson) {
-      lines.push(`אדם ספציפי: ${specificPerson}`);
+    if (scenariosCustom.length > 0) {
+      lines.push('');
+      lines.push(`בקול שלי: ${scenariosCustom.join(', ')}`);
     }
 
-    lines.push(
-      '',
-      '—— הגוף ——',
-      '',
-      `איפה: ${bodyLocation}`,
-      `איכות: ${bodyQuality}`,
-    );
+    lines.push('');
+    lines.push(`סוג איום בסיסי: ${threatType}`);
+    lines.push('');
+    lines.push('— הקשר היסטורי ושיפוטי —');
+    lines.push('דפוס בעבר:');
+    lines.push(pastPattern);
+    lines.push('מי השופט:');
+    lines.push(judges);
+
+    if (specificPerson) {
+      lines.push(`אדם ספציפי שצוין: ${specificPerson}`);
+    }
+
+    lines.push('');
+    lines.push('— הוראה לקלוד —');
+    lines.push('זהו סשן חרדה ציפייתית. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט.');
 
     return lines.join('\n');
   },
