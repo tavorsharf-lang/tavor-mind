@@ -5,6 +5,23 @@ import Modal from '../ui/Modal.jsx';
 // the parsed payload. On failure stores rawText only with a parse error so
 // the user is never blocked.
 
+function messageForResult(result) {
+  if (!result) return 'שגיאה לא ידועה בשמירה';
+  switch (result.reason) {
+    case 'no-uid':
+      return 'אין משתמש מחובר — נסה לרענן את הדף';
+    case 'offline':
+      return 'אין חיבור — נסה שוב כשתחזור לרשת';
+    case 'error': {
+      const code = result.code ? ` [${result.code}]` : '';
+      const msg = result.message || 'שגיאה לא מוסברת';
+      return `שמירה ב-Firebase נכשלה${code}: ${msg}`;
+    }
+    default:
+      return `שגיאה: ${result.reason || 'unknown'}`;
+  }
+}
+
 function tryParse(rawText) {
   const trimmed = (rawText || '').trim();
   if (!trimmed) {
@@ -47,6 +64,11 @@ export default function ImportResponseModal({ open, onClose, onSave }) {
       return;
     }
     setBusy(true);
+
+    // Parse and save are two independent layers. A parse failure is NOT a
+    // save failure — we still persist rawText so the user never loses what
+    // they pasted. Parse outcome is folded into the saved record as
+    // payload/parseError; the save itself is what determines UI success.
     const { payload, parseError, warning } = tryParse(rawText);
     const importedResponse = {
       importedAt: Date.now(),
@@ -55,18 +77,26 @@ export default function ImportResponseModal({ open, onClose, onSave }) {
       parseError,
       warning: warning || undefined,
     };
+
     try {
       const result = await onSave(importedResponse);
-      if (result?.ok === false) {
-        setFeedback({ kind: 'error', text: 'השמירה נכשלה — נסה שוב' });
+      if (result?.ok) {
         setBusy(false);
+        reset();
+        onClose();
         return;
       }
+      // Save did not succeed — surface a reason-specific message.
+      console.error('[ImportResponseModal] save returned non-ok:', result);
+      const text = messageForResult(result);
+      setFeedback({ kind: 'error', text });
       setBusy(false);
-      reset();
-      onClose();
-    } catch {
-      setFeedback({ kind: 'error', text: 'שגיאה בשמירה' });
+    } catch (err) {
+      console.error('[ImportResponseModal] save threw:', err);
+      const text = err?.message
+        ? `שגיאה: ${err.message}`
+        : 'שגיאה לא צפויה בשמירה';
+      setFeedback({ kind: 'error', text });
       setBusy(false);
     }
   };

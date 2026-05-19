@@ -136,7 +136,12 @@ export async function saveImportedResponse(sessionId, importedResponse) {
     return { ok: true };
   } catch (err) {
     console.warn('saveImportedResponse failed:', err?.message || err);
-    return { ok: false, reason: 'error' };
+    return {
+      ok: false,
+      reason: 'error',
+      message: err?.message || String(err),
+      code: err?.code || null,
+    };
   }
 }
 
