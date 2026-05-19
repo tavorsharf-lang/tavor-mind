@@ -443,6 +443,33 @@
 }
 .morning-intent-card:active { transform: scale(0.99); }
 
+.morning-finish-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.morning-finish-or {
+  text-align: center;
+  font-size: 13px;
+  color: #8A8579;
+  padding: 6px 0 2px;
+  letter-spacing: 0.06em;
+  position: relative;
+}
+.morning-finish-or::before,
+.morning-finish-or::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background: rgba(44, 95, 111, 0.14);
+}
+.morning-finish-or::before { inset-inline-start: 0; }
+.morning-finish-or::after  { inset-inline-end: 0; }
+
 /* Hide nav rail + skip-link while in morning flow */
 body:has(.morning-page) .ds3-nav-rail,
 body:has(.morning-page) .ds3-skip-link { display: none !important; }
