@@ -4,7 +4,7 @@
 // click as the originator of both actions.
 
 export const CLAUDE_CONVERSATION_PROJECT_URL =
-  'https://claude.ai/project/019e0f55-801c-7678-a509-a30da71d5386';
+  'https://claude.ai/project/019e4074-ebe0-7103-a92e-71503e07ed24';
 
 export function copyAndOpen(text, url) {
   try {
