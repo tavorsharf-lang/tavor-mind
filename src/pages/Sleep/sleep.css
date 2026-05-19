@@ -144,6 +144,9 @@
   justify-content: center;
   gap: 22px;
   margin-top: 8px;
+  /* LTR so −15 sits on the left and +15 on the right, matching the
+     LTR-filled progress bar below it.                                */
+  direction: ltr;
 }
 
 .nidra-player-btn {
