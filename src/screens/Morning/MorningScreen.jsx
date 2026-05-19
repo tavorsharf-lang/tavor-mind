@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import BreathingExercise from '../emergency/components/BreathingExercise.jsx';
 import DurationGate from './components/DurationGate.jsx';
 import ModeSelector from './components/ModeSelector.jsx';
+import ModeReveal from './components/ModeReveal.jsx';
 import IntentionPicker from './components/IntentionPicker.jsx';
 import { HEALTHY_ADULT_MESSAGES, INTENTION_MESSAGES, pickOne, pickTwo } from './morningContent.js';
 import './styles.css';
@@ -14,6 +15,7 @@ export default function MorningScreen() {
   const [duration, setDuration] = useState(null);
   const [stage, setStage] = useState(0);
   const [selectedMode, setSelectedMode] = useState(null);
+  const [rePickCount, setRePickCount] = useState(0);
   const [selectedIntentions, setSelectedIntentions] = useState([]);
 
   const healthyAdultMessage = useMemo(() => pickOne(HEALTHY_ADULT_MESSAGES), []);
@@ -60,8 +62,8 @@ export default function MorningScreen() {
           <div className="morning-stage">
             <h1 className="morning-headline morning-headline-display">אני כאן. זה בוקר.</h1>
             <p className="morning-sub-quiet">הגוף עוד לא איתי, וזה בסדר.</p>
-            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
-              הלאה
+            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
+              המשך
             </button>
           </div>
         )}
@@ -70,7 +72,7 @@ export default function MorningScreen() {
 
         {stage === 3 && (
           <div className="morning-stage morning-breath">
-            <h2 className="morning-headline">נשימה איטית. בנשיפה — המהום שקט.</h2>
+            <h2 className="morning-headline">נשימה איטית. בנשיפה - המהום שקט.</h2>
             <p className="morning-sub-quiet">המהום מפעיל את העצב הוואגלי. עוזר להתעורר בעדינות.</p>
             <div className="morning-breath-wrap">
               <BreathingExercise
@@ -81,8 +83,8 @@ export default function MorningScreen() {
                 onComplete={goNext}
               />
             </div>
-            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
-              הלאה
+            <button type="button" className="morning-btn morning-btn-ghost" onClick={goNext}>
+              סיימתי
             </button>
           </div>
         )}
@@ -90,19 +92,25 @@ export default function MorningScreen() {
         {stage === 4 && (
           <div className="morning-stage morning-voice">
             <p className="morning-voice-line">{healthyAdultMessage}</p>
-            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
-              הלאה
+            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
+              המשך
             </button>
           </div>
         )}
 
-        {stage === 5 && duration === 'long' && (
-          <ModeSelector
-            onContinue={(modeId) => {
-              setSelectedMode(modeId);
-              setStage(6);
+        {stage === 5 && duration === 'long' && !selectedMode && (
+          <ModeSelector onSelect={(modeId) => setSelectedMode(modeId)} />
+        )}
+
+        {stage === 5 && duration === 'long' && selectedMode && (
+          <ModeReveal
+            modeId={selectedMode}
+            canRePick={rePickCount === 0}
+            onRePick={() => {
+              setSelectedMode(null);
+              setRePickCount((n) => n + 1);
             }}
-            onSkip={() => setStage(6)}
+            onContinue={() => setStage(6)}
           />
         )}
 
@@ -110,12 +118,12 @@ export default function MorningScreen() {
           <div className="morning-stage">
             <h2 className="morning-headline">עכשיו, צא מהאזור הזה.</h2>
             <p className="morning-body-line">לך לצחצח שיניים.</p>
-            <p className="morning-body-line">שטוף פנים במים פושרים — לא קרים.</p>
+            <p className="morning-body-line">שטוף פנים במים פושרים - לא קרים.</p>
             <p className="morning-note">
               מים קרים מתאימים למצב הפוך מהבוקר שלך. פושרים יעירו את הגוף בלי לחץ.
             </p>
-            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
-              הלאה
+            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
+              הולך
             </button>
           </div>
         )}
@@ -157,8 +165,13 @@ function HeartHandStage({ onReady }) {
       <h2 className="morning-headline">הנח יד על הלב.</h2>
       <p className="morning-sub-quiet">שים לב לחום. לא צריך להרגיש משהו מיוחד.</p>
 
-      <div className="morning-heart-dial" aria-hidden="true">
-        <svg viewBox="0 0 120 120" width="160" height="160">
+      <button
+        type="button"
+        className="morning-heart-dial"
+        onClick={onReady}
+        aria-label={finished ? 'מוכן' : 'דלג על הטיימר'}
+      >
+        <svg viewBox="0 0 120 120" width="160" height="160" aria-hidden="true">
           <circle
             cx="60" cy="60" r="54"
             fill="none"
@@ -177,14 +190,16 @@ function HeartHandStage({ onReady }) {
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
         </svg>
-        <span className="morning-heart-num">
+        <span className="morning-heart-num" aria-hidden="true">
           {finished ? '✓' : remaining}
         </span>
-      </div>
-
-      <button type="button" className="morning-btn morning-btn-next" onClick={onReady}>
-        הלאה
       </button>
+
+      {finished && (
+        <button type="button" className="morning-btn morning-btn-primary" onClick={onReady}>
+          מוכן
+        </button>
+      )}
     </div>
   );
 }

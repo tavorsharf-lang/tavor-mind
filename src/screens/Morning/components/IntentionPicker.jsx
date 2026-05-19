@@ -30,7 +30,7 @@ export default function IntentionPicker({ intentions, selected, onToggle }) {
         })}
       </div>
 
-      <button type="button" className="morning-btn morning-btn-next" onClick={openJournal}>
+      <button type="button" className="morning-btn morning-btn-primary" onClick={openJournal}>
         פתח יומן ובנה את היום
       </button>
     </div>
