@@ -89,12 +89,25 @@ function VariableValue({ question, value }) {
       return <p className="cs-full-text">{label}</p>;
     }
     case 'multi_select': {
-      if (!Array.isArray(value) || value.length === 0) {
+      const usesSubs = (question.options || []).some((o) => o?.sub_input);
+      const arr = usesSubs
+        ? (value && typeof value === 'object' && Array.isArray(value.selected) ? value.selected : [])
+        : (Array.isArray(value) ? value : []);
+      if (arr.length === 0) {
         return <span className="cs-full-skipped">{SKIPPED_LABEL}</span>;
       }
+      const subInputsBag = usesSubs ? (value?.sub_inputs || {}) : null;
       return (
         <ul className="cs-full-bullets">
-          {value.map((id) => <li key={id}>{optionLabel(question, id)}</li>)}
+          {arr.map((id) => {
+            const sub = subInputsBag ? subInputFor(question, id, subInputsBag) : null;
+            return (
+              <li key={id}>
+                {optionLabel(question, id)}
+                {sub && <span className="cs-full-subinput"> ({sub.label}: {sub.value})</span>}
+              </li>
+            );
+          })}
         </ul>
       );
     }

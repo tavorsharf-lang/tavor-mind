@@ -31,23 +31,43 @@ export function formatSingleSelect(value, staticOpts) {
   return opt ? opt.label : id;
 }
 
-// multi_select: value is string[] (or null when skipped). Renders comma-
-// separated in INSERTION order — relies on the wizard preserving the order
-// of user selections (which it does, via Set insertion order).
-export function formatMultiSelect(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!Array.isArray(value) || value.length === 0) return NULL_TOKEN;
-  const lookup = makeLabelLookup(staticOpts);
-  return value.map((id) => lookup(id)).join(', ');
+// Returns the option ids from either the legacy array shape or the
+// structured `{ selected, sub_inputs }` shape used when a multi_select has
+// sub_inputs declared on options.
+function multiIdsFrom(value) {
+  if (Array.isArray(value)) return value;
+  if (value && typeof value === 'object' && Array.isArray(value.selected)) return value.selected;
+  return null;
 }
 
-// multi_select: same as above but rendered as a 1./2./3. numbered list — used
-// when ordering is clinically meaningful (e.g. response sequence).
+// multi_select: comma-separated, INSERTION order (Set insertion in wizard).
+// Accepts legacy array or structured shape.
+export function formatMultiSelect(value, staticOpts) {
+  if (value === null) return NULL_TOKEN;
+  const ids = multiIdsFrom(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
+  const lookup = makeLabelLookup(staticOpts);
+  return ids.map((id) => lookup(id)).join(', ');
+}
+
+// multi_select: 1./2./3. numbered list — used when ordering is clinically
+// meaningful (e.g. response sequence).
 export function formatMultiSelectNumbered(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
-  if (!Array.isArray(value) || value.length === 0) return NULL_TOKEN;
+  const ids = multiIdsFrom(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
   const lookup = makeLabelLookup(staticOpts);
-  return value.map((id, i) => `${i + 1}. ${lookup(id)}`).join('\n');
+  return ids.map((id, i) => `${i + 1}. ${lookup(id)}`).join('\n');
+}
+
+// multi_select rendered as bullets ("- item"). For clinical readability when
+// the list is short but each entry is heavy.
+export function formatMultiSelectBullets(value, staticOpts) {
+  if (value === null) return NULL_TOKEN;
+  const ids = multiIdsFrom(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
+  const lookup = makeLabelLookup(staticOpts);
+  return ids.map((id) => `- ${lookup(id)}`).join('\n');
 }
 
 // select_with_custom (single): value is { selected: 'id', sub_inputs, custom_labels } | null

@@ -151,6 +151,9 @@ function renderInput({ question, options, value, onChange, draftCustom, setDraft
       );
 
     case 'multi_select': {
+      if (questionUsesSubInputs(question)) {
+        return renderMultiSelectStructured({ question, options, value, onChange });
+      }
       const selectedSet = new Set(Array.isArray(value) ? value : []);
       const toggle = (id) => {
         const next = new Set(selectedSet);
@@ -216,6 +219,78 @@ function normalizeSingleStructured(value) {
     selected: typeof value.selected === 'string' ? value.selected : null,
     sub_inputs: value.sub_inputs && typeof value.sub_inputs === 'object' ? value.sub_inputs : {},
   };
+}
+
+function normalizeMultiStructured(value) {
+  if (Array.isArray(value)) return { selected: value, sub_inputs: {} };
+  if (!value || typeof value !== 'object') return { selected: [], sub_inputs: {} };
+  return {
+    selected: Array.isArray(value.selected) ? value.selected : [],
+    sub_inputs: value.sub_inputs && typeof value.sub_inputs === 'object' ? value.sub_inputs : {},
+  };
+}
+
+function renderMultiSelectStructured({ question, options, value, onChange }) {
+  const v = normalizeMultiStructured(value);
+  const selectedSet = new Set(v.selected);
+
+  const toggle = (id) => {
+    const next = new Set(selectedSet);
+    if (next.has(id)) {
+      next.delete(id);
+      // Deselecting an option clears its sub_input so stale text doesn't leak.
+      const opt = options.find((o) => o.id === id);
+      if (opt?.sub_input) {
+        const remaining = { ...v.sub_inputs };
+        delete remaining[opt.sub_input.id];
+        onChange({ selected: Array.from(next), sub_inputs: remaining });
+        return;
+      }
+    } else {
+      next.add(id);
+    }
+    onChange({ ...v, selected: Array.from(next) });
+  };
+
+  const setSubInput = (subId, text) => {
+    onChange({ ...v, sub_inputs: { ...v.sub_inputs, [subId]: text } });
+  };
+
+  return (
+    <div className="cs-options" role="group" aria-label={question.label}>
+      {options.map((opt) => {
+        const selected = selectedSet.has(opt.id);
+        const subInput = opt.sub_input || null;
+        return (
+          <div key={opt.id} className="cs-option-row">
+            <button
+              type="button"
+              className={`cs-option${selected ? ' is-selected' : ''}`}
+              aria-pressed={selected}
+              onClick={() => toggle(opt.id)}
+            >
+              {opt.label}
+            </button>
+            {selected && subInput && (
+              <div className="cs-sub-input">
+                <label className="cs-sub-input-label" htmlFor={`sub-${opt.id}-${subInput.id}`}>
+                  {subInput.label}
+                </label>
+                <input
+                  id={`sub-${opt.id}-${subInput.id}`}
+                  type="text"
+                  className="cs-text-input cs-sub-input-field"
+                  value={v.sub_inputs[subInput.id] || ''}
+                  onChange={(e) => setSubInput(subInput.id, e.target.value)}
+                  placeholder={subInput.placeholder || ''}
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function renderSingleSelectStructured({ question, options, value, onChange }) {
@@ -432,6 +507,10 @@ export function isAnswered(question, value) {
       }
       return typeof value === 'string' && value !== '';
     case 'multi_select':
+      if (questionUsesSubInputs(question)) {
+        return !!value && typeof value === 'object'
+          && Array.isArray(value.selected) && value.selected.length > 0;
+      }
       return Array.isArray(value) && value.length > 0;
     case 'select_with_custom': {
       if (!value || typeof value !== 'object') return false;
@@ -460,7 +539,13 @@ export function selectedOptionIds(question, value) {
     }
     return typeof value === 'string' && value ? [value] : [];
   }
-  if (question.type === 'multi_select') return Array.isArray(value) ? value.slice() : [];
+  if (question.type === 'multi_select') {
+    if (questionUsesSubInputs(question)) {
+      if (!value || typeof value !== 'object') return [];
+      return Array.isArray(value.selected) ? value.selected.slice() : [];
+    }
+    return Array.isArray(value) ? value.slice() : [];
+  }
   if (question.type === 'select_with_custom') {
     if (!value || typeof value !== 'object') return [];
     if (question.multi) return Array.isArray(value.selected) ? value.selected.slice() : [];

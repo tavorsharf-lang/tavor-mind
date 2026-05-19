@@ -5,7 +5,7 @@
 import {
   formatSingleSelect,
   formatMultiSelect,
-  formatSelectWithCustomList,
+  formatMultiSelectBullets,
   formatBulletList,
   formatScale,
   getSubInput,
@@ -268,11 +268,3 @@ export const relationshipConflict = {
   },
 };
 
-// Local: render a plain multi_select as a bullet list. Lives here (not in
-// _promptHelpers) since it's a one-off display choice for what_hit.
-function formatMultiSelectBullets(value, staticOpts) {
-  if (value === null) return '[לא צוין]';
-  if (!Array.isArray(value) || value.length === 0) return '[לא צוין]';
-  const map = new Map((staticOpts || []).map((o) => [o.id, o.label]));
-  return value.map((id) => `- ${map.get(id) || id}`).join('\n');
-}
