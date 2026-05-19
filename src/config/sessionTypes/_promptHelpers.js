@@ -20,12 +20,15 @@ export function makeLabelLookup(staticOpts) {
   };
 }
 
-// single_select: value is string id (or null when skipped)
+// single_select: value is string id, OR (when the question has sub_inputs)
+// { selected, sub_inputs }. Returns the option label, NULL_TOKEN when skipped.
 export function formatSingleSelect(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
   if (!value) return NULL_TOKEN;
-  const opt = (staticOpts || []).find((o) => o.id === value);
-  return opt ? opt.label : value;
+  const id = typeof value === 'object' ? value.selected : value;
+  if (!id || typeof id !== 'string') return NULL_TOKEN;
+  const opt = (staticOpts || []).find((o) => o.id === id);
+  return opt ? opt.label : id;
 }
 
 // multi_select: value is string[] (or null when skipped). Renders comma-

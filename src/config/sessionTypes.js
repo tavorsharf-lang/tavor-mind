@@ -26,10 +26,12 @@
 
 import { anticipatoryAnxiety } from './sessionTypes/anticipatoryAnxiety.js';
 import { parentalAnger } from './sessionTypes/parentalAnger.js';
+import { relationshipConflict } from './sessionTypes/relationshipConflict.js';
 
 export const SESSION_TYPES = {
   [anticipatoryAnxiety.id]: anticipatoryAnxiety,
   [parentalAnger.id]: parentalAnger,
+  [relationshipConflict.id]: relationshipConflict,
 
   _placeholder: {
     id: '_placeholder',

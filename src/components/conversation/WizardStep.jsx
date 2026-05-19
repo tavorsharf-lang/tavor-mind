@@ -127,6 +127,9 @@ export default function WizardStep({
 function renderInput({ question, options, value, onChange, draftCustom, setDraftCustom }) {
   switch (question.type) {
     case 'single_select':
+      if (questionUsesSubInputs(question)) {
+        return renderSingleSelectStructured({ question, options, value, onChange });
+      }
       return (
         <div className="cs-options" role="radiogroup" aria-label={question.label}>
           {options.map((opt) => {
@@ -196,6 +199,71 @@ function renderInput({ question, options, value, onChange, draftCustom, setDraft
     default:
       return null;
   }
+}
+
+// A single_select option may declare sub_input — when so, its value shape
+// upgrades from `'id'` to `{ selected: 'id', sub_inputs: {...} }`. Detection
+// is config-driven (any option carries sub_input → structured).
+function questionUsesSubInputs(question) {
+  return Array.isArray(question?.options) && question.options.some((o) => o?.sub_input);
+}
+
+function normalizeSingleStructured(value) {
+  if (!value || typeof value !== 'object') {
+    return { selected: typeof value === 'string' ? value : null, sub_inputs: {} };
+  }
+  return {
+    selected: typeof value.selected === 'string' ? value.selected : null,
+    sub_inputs: value.sub_inputs && typeof value.sub_inputs === 'object' ? value.sub_inputs : {},
+  };
+}
+
+function renderSingleSelectStructured({ question, options, value, onChange }) {
+  const v = normalizeSingleStructured(value);
+  const pick = (id) => {
+    // Picking a new option clears stale sub_inputs from the previously-picked
+    // option so they don't leak into the value payload.
+    onChange({ selected: id, sub_inputs: {} });
+  };
+  const setSubInput = (subId, text) => {
+    onChange({ ...v, sub_inputs: { ...v.sub_inputs, [subId]: text } });
+  };
+  return (
+    <div className="cs-options" role="radiogroup" aria-label={question.label}>
+      {options.map((opt) => {
+        const selected = v.selected === opt.id;
+        const subInput = opt.sub_input || null;
+        return (
+          <div key={opt.id} className="cs-option-row">
+            <button
+              type="button"
+              className={`cs-option${selected ? ' is-selected' : ''}`}
+              role="radio"
+              aria-checked={selected}
+              onClick={() => pick(opt.id)}
+            >
+              {opt.label}
+            </button>
+            {selected && subInput && (
+              <div className="cs-sub-input">
+                <label className="cs-sub-input-label" htmlFor={`sub-${opt.id}-${subInput.id}`}>
+                  {subInput.label}
+                </label>
+                <input
+                  id={`sub-${opt.id}-${subInput.id}`}
+                  type="text"
+                  className="cs-text-input cs-sub-input-field"
+                  value={v.sub_inputs[subInput.id] || ''}
+                  onChange={(e) => setSubInput(subInput.id, e.target.value)}
+                  placeholder={subInput.placeholder || ''}
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function defaultSelectWithCustomValue(multi) {
@@ -359,6 +427,9 @@ export function isAnswered(question, value) {
   if (value === null) return false; // skipped — handled separately by wizard
   switch (question.type) {
     case 'single_select':
+      if (questionUsesSubInputs(question)) {
+        return !!value && typeof value === 'object' && typeof value.selected === 'string' && value.selected !== '';
+      }
       return typeof value === 'string' && value !== '';
     case 'multi_select':
       return Array.isArray(value) && value.length > 0;
@@ -381,7 +452,14 @@ export function isAnswered(question, value) {
 // empty.
 export function selectedOptionIds(question, value) {
   if (!question || value == null) return [];
-  if (question.type === 'single_select') return typeof value === 'string' && value ? [value] : [];
+  if (question.type === 'single_select') {
+    if (questionUsesSubInputs(question)) {
+      return value && typeof value === 'object' && typeof value.selected === 'string' && value.selected
+        ? [value.selected]
+        : [];
+    }
+    return typeof value === 'string' && value ? [value] : [];
+  }
   if (question.type === 'multi_select') return Array.isArray(value) ? value.slice() : [];
   if (question.type === 'select_with_custom') {
     if (!value || typeof value !== 'object') return [];
@@ -409,4 +487,4 @@ export function freshCustomSelections(question, value) {
   return out;
 }
 
-export { isCustomOptionId };
+export { isCustomOptionId, questionUsesSubInputs };

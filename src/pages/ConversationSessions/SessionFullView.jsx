@@ -72,6 +72,19 @@ function VariableValue({ question, value }) {
   }
   switch (question.type) {
     case 'single_select': {
+      const usesSubs = (question.options || []).some((o) => o?.sub_input);
+      if (usesSubs) {
+        const obj = value && typeof value === 'object' ? value : { selected: null, sub_inputs: {} };
+        if (!obj.selected) return <span className="cs-full-skipped">{SKIPPED_LABEL}</span>;
+        const label = optionLabel(question, obj.selected);
+        const sub = subInputFor(question, obj.selected, obj.sub_inputs);
+        return (
+          <div>
+            <p className="cs-full-text">{label}</p>
+            {sub && <p className="cs-full-subinput">({sub.label}: {sub.value})</p>}
+          </div>
+        );
+      }
       const label = optionLabel(question, value);
       return <p className="cs-full-text">{label}</p>;
     }
