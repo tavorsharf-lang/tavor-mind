@@ -92,8 +92,7 @@ export default function YogaNidra({ onEnded, onSkip, onStop }) {
     if (!bar) return 0;
     const rect = bar.getBoundingClientRect();
     if (rect.width <= 0) return 0;
-    // RTL: rightmost edge = start
-    return 1 - (clientX - rect.left) / rect.width;
+    return (clientX - rect.left) / rect.width;
   };
 
   const handlePointerDown = (e) => {
@@ -219,7 +218,7 @@ export default function YogaNidra({ onEnded, onSkip, onStop }) {
         >
           <div className="nidra-progress-track">
             <div className="nidra-progress-bar" style={{ width: `${pct}%` }} />
-            <div className="nidra-progress-thumb" style={{ insetInlineStart: `${pct}%` }} aria-hidden="true" />
+            <div className="nidra-progress-thumb" style={{ left: `${pct}%` }} aria-hidden="true" />
           </div>
         </div>
 
