@@ -70,12 +70,14 @@ export default function ImportResponseModal({ open, onClose, onSave }) {
     // they pasted. Parse outcome is folded into the saved record as
     // payload/parseError; the save itself is what determines UI success.
     const { payload, parseError, warning } = tryParse(rawText);
+    // Firebase RTDB rejects `undefined` anywhere in an update payload, so
+    // every optional field is coerced to `null` explicitly.
     const importedResponse = {
       importedAt: Date.now(),
-      rawText,
-      payload,
-      parseError,
-      warning: warning || undefined,
+      rawText: rawText ?? '',
+      payload: payload ?? null,
+      parseError: parseError ?? null,
+      warning: warning ?? null,
     };
 
     try {

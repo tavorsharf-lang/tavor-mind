@@ -28,6 +28,18 @@ function pathFor(uid, sessionId) {
   return `${ROOM}/${uid}/conversation_sessions/${sessionId}`;
 }
 
+// Firebase RTDB rejects `undefined` anywhere in an update payload. Shallow
+// coerce undefined → null on a record before writing. Future callers can't
+// reintroduce the bug by forgetting a default.
+function sanitizeForRtdb(obj) {
+  if (!obj || typeof obj !== 'object') return obj;
+  const out = {};
+  for (const [k, v] of Object.entries(obj)) {
+    out[k] = v === undefined ? null : v;
+  }
+  return out;
+}
+
 export function generateSessionId() {
   const salt = Math.random().toString(36).slice(2, 8);
   return `${Date.now()}-${salt}`;
@@ -130,7 +142,7 @@ export async function saveImportedResponse(sessionId, importedResponse) {
   if (!navigator.onLine) return { ok: false, reason: 'offline' };
   try {
     await update(ref(db, pathFor(uid, sessionId)), {
-      importedResponse,
+      importedResponse: sanitizeForRtdb(importedResponse),
       updatedAt: ts,
     });
     return { ok: true };
