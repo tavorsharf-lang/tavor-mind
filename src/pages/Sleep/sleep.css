@@ -29,7 +29,7 @@
 .sleep-skip {
   position: fixed;
   top: 18px;
-  inset-inline-end: 18px;
+  inset-inline-start: 18px;
   background: transparent;
   border: 1px solid #1F1F1F;
   color: #555;

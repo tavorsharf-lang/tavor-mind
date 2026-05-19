@@ -8428,7 +8428,7 @@ button:focus-visible {
   position: fixed;
   top: var(--space-3);
   inset-inline-end: var(--space-3);
-  z-index: 90;
+  z-index: 200;
   display: inline-flex;
   align-items: center;
   gap: 2px;
@@ -8440,6 +8440,17 @@ button:focus-visible {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
+
+/* Dark variant — sleep flow has #0A0A0A background. Quieter chrome
+   so the rail reads as available without breaking the low-stim mood. */
+body.sleep-mode .ds2-navrail {
+  background: rgba(20, 20, 20, 0.78);
+  border-color: #1F1F1F;
+  box-shadow: none;
+}
+body.sleep-mode .ds2-navrail-btn { color: #555; }
+body.sleep-mode .ds2-navrail-btn:hover { background: #1A1A1A; color: #999; }
+body.sleep-mode .ds2-navrail-divider { background: #1F1F1F; }
 
 .ds2-navrail-btn {
   width: 36px;

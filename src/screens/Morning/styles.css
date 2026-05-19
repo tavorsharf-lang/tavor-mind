@@ -40,29 +40,6 @@
   align-items: stretch;
 }
 
-.morning-exit {
-  position: fixed;
-  top: 18px;
-  inset-inline-end: 18px;
-  background: transparent;
-  border: none;
-  color: #8A8579;
-  font-size: 22px;
-  line-height: 1;
-  padding: 10px 14px;
-  cursor: pointer;
-  font-family: inherit;
-  border-radius: 999px;
-  z-index: 110;
-  min-width: 44px;
-  min-height: 44px;
-}
-.morning-exit:hover, .morning-exit:focus-visible {
-  color: #2C5F6F;
-  background: rgba(44, 95, 111, 0.06);
-  outline: none;
-}
-
 /* ── Stage wrappers ─────────────────────────────────────────────────────── */
 .morning-stage {
   display: flex;

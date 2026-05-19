@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import BreathingExercise from '../emergency/components/BreathingExercise.jsx';
 import DurationGate from './components/DurationGate.jsx';
 import ModeSelector from './components/ModeSelector.jsx';
@@ -11,7 +10,6 @@ import './styles.css';
 const HEART_HAND_SECONDS = 20;
 
 export default function MorningScreen() {
-  const navigate = useNavigate();
   const [duration, setDuration] = useState(null);
   const [stage, setStage] = useState(0);
   const [selectedMode, setSelectedMode] = useState(null);
@@ -25,8 +23,6 @@ export default function MorningScreen() {
     document.body.classList.add('morning-mode');
     return () => document.body.classList.remove('morning-mode');
   }, []);
-
-  const exitHome = () => navigate('/', { replace: true });
 
   const chooseDuration = (d) => {
     setDuration(d);
@@ -51,10 +47,6 @@ export default function MorningScreen() {
 
   return (
     <div className="morning-page" role="presentation">
-      <button type="button" className="morning-exit" onClick={exitHome} aria-label="סיום">
-        ✕
-      </button>
-
       <div className="morning-canvas">
         {stage === 0 && <DurationGate onChoose={chooseDuration} />}
 
