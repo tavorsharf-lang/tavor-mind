@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import { MODES } from '../morningContent.js';
 
-export default function ModeSelector({ onContinue }) {
+export default function ModeSelector({ onContinue, onSkip }) {
   const [selectedId, setSelectedId] = useState(null);
   const selected = selectedId ? MODES.find((m) => m.id === selectedId) : null;
+
+  const handleNext = () => {
+    if (selected) onContinue(selected.id);
+    else onSkip?.();
+  };
 
   return (
     <div className="morning-stage morning-modes">
@@ -33,11 +38,9 @@ export default function ModeSelector({ onContinue }) {
         </div>
       )}
 
-      {selected && (
-        <button type="button" className="morning-btn morning-btn-primary" onClick={() => onContinue(selected.id)}>
-          המשך
-        </button>
-      )}
+      <button type="button" className="morning-btn morning-btn-next" onClick={handleNext}>
+        הלאה
+      </button>
     </div>
   );
 }

@@ -60,8 +60,8 @@ export default function MorningScreen() {
           <div className="morning-stage">
             <h1 className="morning-headline morning-headline-display">אני כאן. זה בוקר.</h1>
             <p className="morning-sub-quiet">הגוף עוד לא איתי, וזה בסדר.</p>
-            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
-              המשך
+            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
+              הלאה
             </button>
           </div>
         )}
@@ -81,8 +81,8 @@ export default function MorningScreen() {
                 onComplete={goNext}
               />
             </div>
-            <button type="button" className="morning-btn morning-btn-ghost" onClick={goNext}>
-              סיימתי
+            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
+              הלאה
             </button>
           </div>
         )}
@@ -90,8 +90,8 @@ export default function MorningScreen() {
         {stage === 4 && (
           <div className="morning-stage morning-voice">
             <p className="morning-voice-line">{healthyAdultMessage}</p>
-            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
-              המשך
+            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
+              הלאה
             </button>
           </div>
         )}
@@ -102,6 +102,7 @@ export default function MorningScreen() {
               setSelectedMode(modeId);
               setStage(6);
             }}
+            onSkip={() => setStage(6)}
           />
         )}
 
@@ -113,8 +114,8 @@ export default function MorningScreen() {
             <p className="morning-note">
               מים קרים מתאימים למצב הפוך מהבוקר שלך. פושרים יעירו את הגוף בלי לחץ.
             </p>
-            <button type="button" className="morning-btn morning-btn-primary" onClick={goNext}>
-              הולך
+            <button type="button" className="morning-btn morning-btn-next" onClick={goNext}>
+              הלאה
             </button>
           </div>
         )}
@@ -156,13 +157,8 @@ function HeartHandStage({ onReady }) {
       <h2 className="morning-headline">הנח יד על הלב.</h2>
       <p className="morning-sub-quiet">שים לב לחום. לא צריך להרגיש משהו מיוחד.</p>
 
-      <button
-        type="button"
-        className="morning-heart-dial"
-        onClick={onReady}
-        aria-label={finished ? 'מוכן' : 'דלג על הטיימר'}
-      >
-        <svg viewBox="0 0 120 120" width="160" height="160" aria-hidden="true">
+      <div className="morning-heart-dial" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="160" height="160">
           <circle
             cx="60" cy="60" r="54"
             fill="none"
@@ -181,16 +177,14 @@ function HeartHandStage({ onReady }) {
             style={{ transition: 'stroke-dashoffset 1s linear' }}
           />
         </svg>
-        <span className="morning-heart-num" aria-hidden="true">
+        <span className="morning-heart-num">
           {finished ? '✓' : remaining}
         </span>
-      </button>
+      </div>
 
-      {finished && (
-        <button type="button" className="morning-btn morning-btn-primary" onClick={onReady}>
-          מוכן
-        </button>
-      )}
+      <button type="button" className="morning-btn morning-btn-next" onClick={onReady}>
+        הלאה
+      </button>
     </div>
   );
 }

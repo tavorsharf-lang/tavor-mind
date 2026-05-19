@@ -164,6 +164,19 @@
   outline: none;
 }
 
+/* "הלאה" — orange forward button. Matches ds3-btn-primary (terra/coral)
+   so the morning flow advances feel identical to every other session.    */
+.morning-btn-next {
+  background: #FF6A4F;
+  color: #fff;
+  box-shadow: 0 8px 22px rgba(255, 106, 79, 0.40);
+}
+.morning-btn-next:hover, .morning-btn-next:focus-visible {
+  background: #FF5538;
+  box-shadow: 0 10px 26px rgba(255, 106, 79, 0.50);
+  outline: none;
+}
+
 .morning-btn-soft {
   background: rgba(44, 95, 111, 0.08);
   color: #2C5F6F;
@@ -206,18 +219,10 @@
   position: relative;
   width: 160px;
   height: 160px;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
   display: grid;
   place-items: center;
   margin: 8px auto;
   border-radius: 50%;
-}
-.morning-heart-dial:focus-visible {
-  outline: 2px solid rgba(44, 95, 111, 0.40);
-  outline-offset: 6px;
 }
 
 .morning-heart-num {
