@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ButterflyAnim, VagalAnim } from '../tools/components/somatic/SomaticAnimations.jsx';
 import { PhaseSomatic as Phase6SomaticIcon, ChevronStart } from '../../components/icons/system.jsx';
 import VagalHummingHologram from './components/VagalHummingHologram.jsx';
@@ -119,11 +119,30 @@ export default function Phase6Somatic({ activation, onNext, onSkip, onExit }) {
   );
 }
 
+function formatRemaining(ms) {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${m}:${String(s).padStart(2, '0')}`;
+}
+
 function ButterflyExercise({ onDone, onBack, onExit }) {
   const [done, setDone] = useState(false);
+  const startedAtRef = useRef(Date.now());
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    if (done) return;
+    const id = setInterval(() => setTick((n) => n + 1), 250);
+    return () => clearInterval(id);
+  }, [done]);
+
   const handleComplete = () => {
     setDone(true);
   };
+
+  const remainingMs = BUTTERFLY_DURATION_SEC * 1000 - (Date.now() - startedAtRef.current);
+
   return (
     <div className="ds3-screen">
       <Topbar onExit={onExit} label="חיבוק פרפר" />
@@ -136,6 +155,20 @@ function ButterflyExercise({ onDone, onBack, onExit }) {
           {!done && <ButterflyAnim durationSec={BUTTERFLY_DURATION_SEC} onComplete={handleComplete} />}
           {done && <p className="ds3-body" style={{ fontWeight: 600 }}>סיימת.</p>}
         </div>
+        {!done && (
+          <div
+            aria-live="polite"
+            style={{
+              fontSize: 36,
+              fontWeight: 500,
+              color: 'var(--lichen)',
+              fontVariantNumeric: 'tabular-nums',
+              letterSpacing: '0.02em',
+            }}
+          >
+            {formatRemaining(remainingMs)}
+          </div>
+        )}
       </main>
       <footer className="ds3-screen-footer ds3-stack-3">
         {done ? (
