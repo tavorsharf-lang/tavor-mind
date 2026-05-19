@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BreathingChooser from './BreathingChooser.jsx';
 import Sigh from './Sigh.jsx';
+import Breathing478 from './Breathing478.jsx';
 import YogaNidra from './YogaNidra.jsx';
 import SleepBodyScan from './SleepBodyScan.jsx';
 import SleepGoodnight from './SleepGoodnight.jsx';
 import './sleep.css';
 
 const STAGES = {
+  CHOOSER: 'chooser',
   SIGH: 'sigh',
+  BREATH_478: 'breath_478',
   NIDRA: 'nidra',
   CHOICE: 'choice',
   BODYSCAN: 'bodyscan',
@@ -16,7 +20,7 @@ const STAGES = {
 
 export default function SleepFlow() {
   const navigate = useNavigate();
-  const [stage, setStage] = useState(STAGES.SIGH);
+  const [stage, setStage] = useState(STAGES.CHOOSER);
 
   useEffect(() => {
     document.body.classList.add('sleep-mode');
@@ -25,9 +29,28 @@ export default function SleepFlow() {
 
   const exitHome = () => navigate('/', { replace: true });
 
+  if (stage === STAGES.CHOOSER) {
+    return (
+      <BreathingChooser
+        onPickSigh={() => setStage(STAGES.SIGH)}
+        onPick478={() => setStage(STAGES.BREATH_478)}
+        onSkip={() => setStage(STAGES.NIDRA)}
+      />
+    );
+  }
+
   if (stage === STAGES.SIGH) {
     return (
       <Sigh
+        onComplete={() => setStage(STAGES.NIDRA)}
+        onSkip={() => setStage(STAGES.NIDRA)}
+      />
+    );
+  }
+
+  if (stage === STAGES.BREATH_478) {
+    return (
+      <Breathing478
         onComplete={() => setStage(STAGES.NIDRA)}
         onSkip={() => setStage(STAGES.NIDRA)}
       />
