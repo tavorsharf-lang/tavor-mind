@@ -208,6 +208,39 @@
 }
 .nidra-upload:hover, .nidra-upload:focus-visible { color: #666; outline: none; }
 
+.nidra-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #1F1F1F;
+  border-radius: 999px;
+}
+
+.nidra-speed-btn {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 32px;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.nidra-speed-btn:hover, .nidra-speed-btn:focus-visible {
+  color: #888;
+  outline: none;
+}
+
+.nidra-speed-btn.is-active {
+  background: rgba(44, 95, 111, 0.20);
+  color: #C8C8C8;
+}
+
 .nidra-error {
   color: #6B4040;
   font-size: 16px;

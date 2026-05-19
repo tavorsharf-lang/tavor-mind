@@ -9148,6 +9148,46 @@ button:focus-visible {
   margin-bottom: var(--space-3);
 }
 
+/* ── Playback speed picker (light/DS3 meditation player) ───────── */
+.playback-speed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--canvas);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-3);
+  align-self: center;
+}
+
+.playback-speed-btn {
+  border: none;
+  background: transparent;
+  color: var(--ink-muted);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  min-height: 32px;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.playback-speed-btn:hover { color: var(--ink); }
+
+.playback-speed-btn.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-soft);
+}
+
+.playback-speed-btn:focus-visible {
+  outline: 2px solid var(--lichen);
+  outline-offset: 2px;
+}
+
 /* ── Phase 6 — letter card + modal ───────────────────────────── */
 .ds2-themed .phase-letter {
   display: flex;

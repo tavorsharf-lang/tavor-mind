@@ -18,6 +18,7 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
   const [duration, setDuration] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
 
   // Reset + stop when closed/unmounted, so audio doesn't bleed into Home.
   useEffect(() => {
@@ -28,8 +29,14 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
       setCurrentTime(0);
       setIsDragging(false);
       setHasError(false);
+      setPlaybackRate(1);
     }
   }, [open]);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (a) a.playbackRate = playbackRate;
+  }, [playbackRate, src]);
 
   // Reset error flag when src swaps (user picked a different track).
   useEffect(() => {
@@ -184,6 +191,20 @@ export default function MeditationPlayer({ open, src, title, subtitle, onClose, 
         <div className="meditation-time" aria-hidden="true">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
+        </div>
+
+        <div className="playback-speed" role="group" aria-label="מהירות נגינה">
+          {[1, 1.5, 2].map((rate) => (
+            <button
+              key={rate}
+              type="button"
+              className={`playback-speed-btn${playbackRate === rate ? ' is-active' : ''}`}
+              onClick={() => setPlaybackRate(rate)}
+              aria-pressed={playbackRate === rate}
+            >
+              ×{rate}
+            </button>
+          ))}
         </div>
 
         <div className="modal-actions">

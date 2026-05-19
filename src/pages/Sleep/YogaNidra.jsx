@@ -18,6 +18,12 @@ export default function YogaNidra({ onEnded, onStop }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [playbackRate, setPlaybackRate] = useState(1);
+
+  useEffect(() => {
+    const a = audioRef.current;
+    if (a) a.playbackRate = playbackRate;
+  }, [playbackRate, src]);
 
   useEffect(() => {
     let cancelled = false;
@@ -109,6 +115,20 @@ export default function YogaNidra({ onEnded, onStop }) {
         >
           <span aria-hidden="true">{isPlaying ? '❙❙' : '▶'}</span>
         </button>
+
+        <div className="nidra-speed" role="group" aria-label="מהירות נגינה">
+          {[1, 1.5, 2].map((rate) => (
+            <button
+              key={rate}
+              type="button"
+              className={`nidra-speed-btn${playbackRate === rate ? ' is-active' : ''}`}
+              onClick={() => setPlaybackRate(rate)}
+              aria-pressed={playbackRate === rate}
+            >
+              ×{rate}
+            </button>
+          ))}
+        </div>
 
         {hasError && (
           <p className="nidra-error" role="status">
