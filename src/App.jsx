@@ -39,6 +39,7 @@ import SessionWizard from './pages/ConversationSessions/SessionWizard.jsx';
 import SessionResult from './pages/ConversationSessions/SessionResult.jsx';
 import SessionHistory from './pages/ConversationSessions/SessionHistory.jsx';
 import UnifiedHistory from './pages/ConversationSessions/UnifiedHistory.jsx';
+import SessionFullView from './pages/ConversationSessions/SessionFullView.jsx';
 import NavRail from './components/ui/NavRail.jsx';
 import { NavProvider } from './utils/navContext.jsx';
 import { flushPendingSessions, flushPendingTriggerAnalyses } from './utils/emergencyLog.js';
@@ -144,6 +145,7 @@ export default function App() {
         <Route path="/icons" element={<IconGallery />} />
         <Route path="/sessions" element={<ConversationSessionsHome />} />
         <Route path="/sessions/history" element={<UnifiedHistory />} />
+        <Route path="/sessions/full/:sessionId" element={<SessionFullView />} />
         <Route path="/sessions/:type" element={<SessionTypeEntry />} />
         <Route path="/sessions/:type/new" element={<SessionWizard />} />
         <Route path="/sessions/:type/history" element={<SessionHistory />} />

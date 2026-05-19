@@ -58,7 +58,11 @@ export default function UnifiedHistory() {
                 key={s.sessionId}
                 session={s}
                 showType={true}
-                onClick={() => navigate(`/sessions/${s.type}/result/${s.sessionId}`)}
+                onClick={() => navigate(
+                  s.importedResponse
+                    ? `/sessions/full/${s.sessionId}`
+                    : `/sessions/${s.type}/result/${s.sessionId}`
+                )}
               />
             ))}
           </ul>

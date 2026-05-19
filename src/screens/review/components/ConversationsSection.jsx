@@ -18,11 +18,14 @@ function formatDate(ms) {
   }
 }
 
-function summarizeImported(importedResponse) {
+// Pick the most meaningful insight string from the imported payload. The
+// Claude project system for anticipatory_anxiety returns `core_insight`;
+// others may use one of the conventional headline keys. Full text — no
+// truncation — fits the "shut and chew on it" intent of the mirror card.
+function bestInsight(importedResponse) {
   if (!importedResponse) return null;
   const p = importedResponse.payload;
   if (p && typeof p === 'object') {
-    // Prefer a few common headline-style keys; never assume a deep schema.
     const candidates = [
       p.title,
       p.headline,
@@ -31,11 +34,28 @@ function summarizeImported(importedResponse) {
       p.core_insight,
       p.insight,
     ].filter((v) => typeof v === 'string' && v.trim());
-    if (candidates.length) return candidates[0].trim().slice(0, 140);
+    if (candidates.length) return { kind: 'insight', text: candidates[0].trim() };
   }
   const raw = (importedResponse.rawText || '').trim();
-  if (raw) return raw.slice(0, 140) + (raw.length > 140 ? '…' : '');
+  if (raw) {
+    return { kind: 'raw', text: raw.slice(0, 140) + (raw.length > 140 ? '…' : '') };
+  }
   return null;
+}
+
+function extractTags(importedResponse) {
+  const p = importedResponse?.payload;
+  if (!p || typeof p !== 'object') return [];
+  const tags = [];
+  const primary = p.modes_active?.primary;
+  if (typeof primary === 'string' && primary.trim()) {
+    tags.push({ label: 'מוד', value: primary.trim() });
+  }
+  if (Array.isArray(p.schemas_identified) && p.schemas_identified.length > 0) {
+    const first = p.schemas_identified.find((s) => typeof s === 'string' && s.trim());
+    if (first) tags.push({ label: 'סכמה', value: first.trim() });
+  }
+  return tags;
 }
 
 export default function ConversationsSection({ scope = 'week' }) {
@@ -66,19 +86,33 @@ export default function ConversationsSection({ scope = 'week' }) {
       </header>
       <ul className="cs-review-list">
         {items.map((s) => {
-          const summary = summarizeImported(s.importedResponse);
+          const insight = bestInsight(s.importedResponse);
+          const tags = extractTags(s.importedResponse);
           return (
             <li key={s.sessionId} className="cs-review-item">
               <button
                 type="button"
-                className="cs-review-item-btn"
-                onClick={() => navigate(`/sessions/${s.type}/result/${s.sessionId}`)}
+                className="cs-review-item-btn cs-review-card"
+                onClick={() => navigate(`/sessions/full/${s.sessionId}`)}
               >
                 <div className="cs-review-item-head">
                   <span className="cs-history-type-tag">{getSessionTypeLabel(s.type)}</span>
                   <span className="cs-history-date">{formatDate(s.createdAt)}</span>
                 </div>
-                {summary && <p className="cs-review-item-summary">{summary}</p>}
+                {insight && (
+                  <p className={`cs-review-insight${insight.kind === 'raw' ? ' is-raw' : ''}`}>
+                    {insight.text}
+                  </p>
+                )}
+                {tags.length > 0 && (
+                  <div className="cs-review-tags">
+                    {tags.map((t, i) => (
+                      <span key={i} className="cs-neutral-chip">
+                        <span className="cs-neutral-chip-label">{t.label}:</span> {t.value}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </button>
             </li>
           );
