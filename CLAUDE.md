@@ -297,7 +297,7 @@ src/
 - `src/components/conversation/` — `WizardStep.jsx`, `ProgressDots.jsx`, `ImportResponseModal.jsx`
 - `src/services/` — `conversationSessionsService.js` (CRUD + מונה תדירות סוגים), `choiceFrequencyService.js` (תדירות אופציות), `promptBuilder.js` (dispatcher גנרי)
 - `src/config/sessionTypes.js` — registry
-- `src/config/sessionTypes/` — קונפיגים פר-סשן (`anticipatoryAnxiety.js`, `parentalAnger.js`, `relationshipConflict.js`, `rumination.js`, `rejection.js`). כל סשן עומד בפני עצמו. helpers משותפים ב-`_promptHelpers.js`.
+- `src/config/sessionTypes/` — קונפיגים פר-סשן (`anticipatoryAnxiety.js`, `parentalAnger.js`, `relationshipConflict.js`, `rumination.js`, `rejection.js`, `boundaryFailure.js`). כל סשן עומד בפני עצמו. helpers משותפים ב-`_promptHelpers.js`.
 - `src/services/customOptionsService.js` — `addOrBumpCustomOption`, `listCustomOptions`, `customOptionIdFromLabel`
 - `src/utils/handoffToClaude.js` — `copyAndOpen(text, url)` + `CLAUDE_CONVERSATION_PROJECT_URL`
 - `src/screens/review/components/ConversationsSection.jsx` — סקציה במראה ("שיחות שניהלת"): מציגה רק רשומות עם `importedResponse` בטווח ה-scope. רנדור null כשאין נתונים.

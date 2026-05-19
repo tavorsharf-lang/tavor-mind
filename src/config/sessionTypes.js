@@ -29,6 +29,7 @@ import { parentalAnger } from './sessionTypes/parentalAnger.js';
 import { relationshipConflict } from './sessionTypes/relationshipConflict.js';
 import { rumination } from './sessionTypes/rumination.js';
 import { rejection } from './sessionTypes/rejection.js';
+import { boundaryFailure } from './sessionTypes/boundaryFailure.js';
 
 export const SESSION_TYPES = {
   [anticipatoryAnxiety.id]: anticipatoryAnxiety,
@@ -36,6 +37,7 @@ export const SESSION_TYPES = {
   [relationshipConflict.id]: relationshipConflict,
   [rumination.id]: rumination,
   [rejection.id]: rejection,
+  [boundaryFailure.id]: boundaryFailure,
 
   _placeholder: {
     id: '_placeholder',
