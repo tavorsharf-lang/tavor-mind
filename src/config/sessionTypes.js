@@ -1,19 +1,19 @@
 // Registry of structured conversation session types. Each entry is a self-
 // contained config: identity (id/label/description), the wizard questions,
-// and a buildPrompt(variables) function. The wizard shell, history, importer,
-// and result screen are all generic — they read from here.
+// and a buildPrompt(variables, meta) function. The wizard shell, history,
+// importer, and result screen are all generic — they read from here.
 //
 // Supported question shapes (rendered by WizardStep):
-//   single_select        : { id, type, label, options: [{id,label}], required? }
-//   multi_select         : { id, type, label, options: [{id,label}], required? }
+//   single_select        : { id, type, label, options: [{id,label,sub_input?}], required? }
+//   multi_select         : { id, type, label, options: [{id,label,sub_input?}], hint?, required? }
 //   text                 : { id, type, label, placeholder?, maxLength?, required? }
 //   scale                : { id, type, label, config: { min, max, step?, leftLabel, midLabel?, rightLabel } }
 //   select_with_custom   : { id, type, label, multi: bool, options, hint?, required? }
 //                          options may carry sub_input: { id, label, placeholder }
 //
 // Value shape stored in `variables`:
-//   single_select        : string | null
-//   multi_select         : string[] | null
+//   single_select        : string | { selected, sub_inputs } | null   (object when an option has sub_input)
+//   multi_select         : string[] | { selected, sub_inputs } | null (object when an option has sub_input)
 //   text                 : string | null
 //   scale                : number | null
 //   select_with_custom   : { selected, sub_inputs, custom_labels } | null
@@ -30,6 +30,7 @@ import { relationshipConflict } from './sessionTypes/relationshipConflict.js';
 import { rumination } from './sessionTypes/rumination.js';
 import { rejection } from './sessionTypes/rejection.js';
 import { boundaryFailure } from './sessionTypes/boundaryFailure.js';
+import { loneliness } from './sessionTypes/loneliness.js';
 
 export const SESSION_TYPES = {
   [anticipatoryAnxiety.id]: anticipatoryAnxiety,
@@ -38,33 +39,7 @@ export const SESSION_TYPES = {
   [rumination.id]: rumination,
   [rejection.id]: rejection,
   [boundaryFailure.id]: boundaryFailure,
-
-  _placeholder: {
-    id: '_placeholder',
-    label: 'סשן לדוגמה',
-    icon: '○',
-    description: 'סשן בדיקה לתשתית',
-    questions: [
-      {
-        id: 'sample_q1',
-        type: 'single_select',
-        label: 'שאלה לדוגמה',
-        options: [
-          { id: 'opt_a', label: 'אופציה א' },
-          { id: 'opt_b', label: 'אופציה ב' },
-        ],
-      },
-      {
-        id: 'sample_q2',
-        type: 'text',
-        label: 'תיאור חופשי',
-        placeholder: 'כתוב כאן...',
-      },
-    ],
-    buildPrompt: (variables) => {
-      return `סשן לדוגמה\n\nמשתנים:\n${JSON.stringify(variables, null, 2)}`;
-    },
-  },
+  [loneliness.id]: loneliness,
 };
 
 export function listSessionTypes() {
