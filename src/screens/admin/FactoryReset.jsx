@@ -13,6 +13,9 @@ const FIREBASE_NODES_TO_WIPE = [
   'somatic_sessions',
   'therapy_frames',
   'something_waiting',
+  'conversation_sessions',
+  'choice_frequency',
+  'custom_options',
 ];
 
 const LOCAL_STORAGE_KEYS_TO_WIPE = [
@@ -23,6 +26,8 @@ const LOCAL_STORAGE_KEYS_TO_WIPE = [
   'tavor_mind_pending_analyses',
   'tavor_mind_pending_frames',
   'tavor_mind_pending_waiting_items_v1',
+  'tavor_mind_pending_conversation_sessions',
+  'tavor_mind_conversation_choice_frequency',
   'tavor_mind_hr_setup_done',
   'tavor_mind_wearing_watch',
   'tavor_mind_62_onboarded_v1',
@@ -108,6 +113,8 @@ export default function FactoryReset() {
           <li>כל הכלים הפנימיים (טריגרים / מודים / קטסטרופה / סומאטי)</li>
           <li>כל מסגרות הטיפול (הכנה / דיברוף)</li>
           <li>כל הפריטים בקונטיינר</li>
+          <li>כל השיחות המובנות (סשנים + תגובות מיובאות)</li>
+          <li>תדירות בחירות + אופציות מותאמות אישית (סדר ותכנים ב-wizard)</li>
           <li>כל דגימות הדופק</li>
           <li>כל תורי ה-offline + דגלי onboarding</li>
         </ul>

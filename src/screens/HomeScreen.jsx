@@ -193,6 +193,13 @@ export default function HomeScreen({ authError }) {
           title="המראה"
           onClick={() => goTo('/review')}
         />
+        <HomeTile
+          tone="brand"
+          icon={<ChatIcon />}
+          title="שיחות מובנות"
+          subtitle="סשנים מודרכים"
+          onClick={() => goTo('/sessions')}
+        />
       </div>
 
       <footer className="ds3-home-footer">
@@ -211,6 +218,16 @@ function MoonIcon() {
   return (
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
+    </svg>
+  );
+}
+
+function ChatIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12Z" />
+      <path d="M8.5 11.5h7" />
+      <path d="M8.5 14.5h4.5" />
     </svg>
   );
 }

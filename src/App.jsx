@@ -33,6 +33,12 @@ import FactoryReset from './screens/admin/FactoryReset.jsx';
 import SleepFlow from './pages/Sleep/SleepFlow.jsx';
 import MorningScreen from './screens/Morning/MorningScreen.jsx';
 import IconGallery from './screens/IconGallery.jsx';
+import ConversationSessionsHome from './pages/ConversationSessions/ConversationSessionsHome.jsx';
+import SessionTypeEntry from './pages/ConversationSessions/SessionTypeEntry.jsx';
+import SessionWizard from './pages/ConversationSessions/SessionWizard.jsx';
+import SessionResult from './pages/ConversationSessions/SessionResult.jsx';
+import SessionHistory from './pages/ConversationSessions/SessionHistory.jsx';
+import UnifiedHistory from './pages/ConversationSessions/UnifiedHistory.jsx';
 import NavRail from './components/ui/NavRail.jsx';
 import { NavProvider } from './utils/navContext.jsx';
 import { flushPendingSessions, flushPendingTriggerAnalyses } from './utils/emergencyLog.js';
@@ -40,6 +46,7 @@ import { flushPendingCheckins } from './utils/checkinStorage.js';
 import { flushPendingAnalyses } from './utils/analysisStorage.js';
 import { flushPendingFrames } from './utils/therapyStorage.js';
 import { flushPendingWaitingItems } from './utils/somethingWaitingStorage.js';
+import { flushPendingConversationSessions } from './services/conversationSessionsService.js';
 
 function computeTimeOfDay() {
   const h = new Date().getHours();
@@ -81,6 +88,7 @@ export default function App() {
       flushPendingFrames().catch(() => {});
       flushPendingTriggerAnalyses().catch(() => {});
       flushPendingWaitingItems().catch(() => {});
+      flushPendingConversationSessions().catch(() => {});
     };
     flushAll();
     window.addEventListener('online', flushAll);
@@ -134,6 +142,12 @@ export default function App() {
         <Route path="/sleep" element={<SleepFlow />} />
         <Route path="/morning" element={<MorningScreen />} />
         <Route path="/icons" element={<IconGallery />} />
+        <Route path="/sessions" element={<ConversationSessionsHome />} />
+        <Route path="/sessions/history" element={<UnifiedHistory />} />
+        <Route path="/sessions/:type" element={<SessionTypeEntry />} />
+        <Route path="/sessions/:type/new" element={<SessionWizard />} />
+        <Route path="/sessions/:type/history" element={<SessionHistory />} />
+        <Route path="/sessions/:type/result/:sessionId" element={<SessionResult />} />
         </Routes>
         </main>
       </NavProvider>

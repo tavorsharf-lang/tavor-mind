@@ -14,6 +14,7 @@ import ModesActive from './components/ModesActive.jsx';
 import SchemasActivated from './components/SchemasActivated.jsx';
 import CoreChildSection from './components/CoreChildSection.jsx';
 import OpenQuestion from './components/OpenQuestion.jsx';
+import ConversationsSection from './components/ConversationsSection.jsx';
 import Timeline from './components/Timeline.jsx';
 import { aggregateReview } from '../../utils/reviewAggregator.js';
 
@@ -74,11 +75,15 @@ export default function ReviewScreen() {
             <SchemasActivated data={data.schemas} />
             <CoreChildSection data={data.coreChild} />
             <OpenQuestion aggregate={data} />
+            <ConversationsSection scope={scope} />
             <Timeline scope={scope} />
           </>
         )}
         {!loading && data && !data.hasEnoughData && (
-          <Timeline scope={scope} />
+          <>
+            <ConversationsSection scope={scope} />
+            <Timeline scope={scope} />
+          </>
         )}
       </main>
       <ExportPrompterModal open={exportOpen} onClose={() => setExportOpen(false)} />

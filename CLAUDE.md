@@ -218,9 +218,96 @@ src/
 
 **App מצב סופי:** כל 19 המסלולים עטופים ב-DS2. JS 649KB, CSS 116KB. אין יותר iteration boundaries.
 
+## 8c. Conversation Sessions (תשתית — `/sessions`)
+
+תת-מערכת חדשה (תשתית בלבד נכון לעכשיו) ל-"שיחות מובנות": wizard מודרך שאוסף משתנים, מייצר פרומפט, מעביר ל-claude.ai עם הקלקה אחת (clipboard + window.open באותה user gesture), ומייבא את התגובה JSON חזרה. הסשן הזה הוסיף שלד גנרי — אין עדיין סוגי סשנים אמיתיים, רק `_placeholder` לבדיקה.
+
+### Data model
+
+נתיב Firebase חדש: `tavormind/{uid}/conversation_sessions/{sessionId}`
+
+מבנה רשומה:
+```js
+{
+  sessionId: string,        // `${Date.now()}-${4-8charSalt}`
+  type: string,             // מפתח מ-SESSION_TYPES (config/sessionTypes.js)
+  createdAt: number,        // Date.now()
+  updatedAt: number,
+  variables: { [questionId]: any },
+  exportedAt: number | null,
+  importedResponse: {
+    importedAt: number,
+    rawText: string,
+    payload: object | null,         // JSON.parse הצליח
+    parseError: string | null,
+    warning?: string                // "missing:session_type,generated_at" וכו'
+  } | null
+}
+```
+
+נתיב מונה תדירות בחירות פנימיות: `tavormind/{uid}/choice_frequency/{type}/{questionId}/{optionId} = count` (מעודכן עם `increment(1)` של Firebase). משמש בלקוח לסדר options ב-wizard לפי תדירות אישית. סדר סוגי הסשנים בכרטיסיות ה-home מחושב מתוך `conversation_sessions` (חלון 30 יום) — אין מונה נפרד.
+
+מחיקות: מכבדות את `softDelete` הגלובלי (`deletedAt`). כתיבות אופליין: queue ב-`localStorage['tavor_mind_pending_conversation_sessions']`, flush ב-`App.jsx` בכל `online` event.
+
+### Registry contract
+
+`src/config/sessionTypes.js` מחזיק את ה-`SESSION_TYPES` map. כל ערך חייב לממש:
+- `id`, `label`, `icon`, `description`
+- `questions: Array<Question>` — wizard מציג שאלה אחת לכל מסך
+- `buildPrompt(variables): string` — מקבל את ה-variables ומחזיר את הטקסט שיועתק לקלוד
+
+טיפוסי שאלות נתמכים ב-wizard: `single_select`, `multi_select`, `text`, `scale`, `select_with_custom`. הוספת סוג סשן אמיתי = רק עוד מפתח ב-SESSION_TYPES; לא לגעת ב-wizard, ב-result, ב-history או ב-importer.
+
+#### Question shapes & value shapes
+
+| type | question fields | value in `variables` |
+|------|-----------------|----------------------|
+| single_select | `options:[{id,label}]` | `string \| null` |
+| multi_select | `options:[{id,label}]` | `string[] \| null` |
+| text | `placeholder?`, `maxLength?` | `string \| null` |
+| scale | `config:{min,max,step?,leftLabel,midLabel?,rightLabel}` (משתמש ב-`ScoreSlider` הקיים, polarity=static) | `number \| null` |
+| select_with_custom | `multi:bool`, `options:[{id,label,sub_input?}]`, `hint?` | `{selected, sub_inputs, custom_labels} \| null` |
+
+`null` בכל מקום = המשתמש דילג מפורשות על השאלה. כל buildPrompt חייב להבחין בין `null` למערך/מחרוזת ריקים — להציג `[לא צוין]` עבור `null`. שאלות עם `required: true` לא יציגו את קישור הדילוג.
+
+#### select_with_custom — מנגנונים
+
+1. **אופציה משלך** — שדה טקסט קבוע מתחת לאופציות + כפתור "הוסף". המשתמש יכול להוסיף אופציה משלו; ה-id נוצר deterministically מ-label (`custom_<slug>_<shortHash>`), כך שהוספה כפולה של אותו טקסט מדויק = bump לאותה רשומה.
+2. **sub_input** — אופציה יכולה להכריז על `sub_input:{id,label,placeholder}`. כשהיא נבחרת, מופיע inline שדה טקסט; הערך נשמר ב-`variables[questionId].sub_inputs[sub_input.id]`. נתמך כרגע רק על `select_with_custom`.
+3. **התמדה ומיון** — אופציות משלך נשמרות ב-`tavormind/{uid}/custom_options/{type}/{questionId}/{optionId}` עם `{label, count, createdAt}`. ב-wizard, הן מתמזגות לרשימה ומיון משותף לפי `choice_frequency + custom_options.count`.
+4. **דילוג** — `WizardStep` מציג בתחתית קישור "דלג על שאלה זו" (חוץ מ-required). דילוג: `variables[questionId] = null` ומתקדם.
+
+### קבצים מרכזיים
+
+- `src/pages/ConversationSessions/` — `ConversationSessionsHome.jsx`, `SessionTypeEntry.jsx`, `SessionWizard.jsx`, `SessionResult.jsx`, `SessionHistory.jsx`, `UnifiedHistory.jsx`, `components/SessionListItem.jsx`
+- `src/components/conversation/` — `WizardStep.jsx`, `ProgressDots.jsx`, `ImportResponseModal.jsx`
+- `src/services/` — `conversationSessionsService.js` (CRUD + מונה תדירות סוגים), `choiceFrequencyService.js` (תדירות אופציות), `promptBuilder.js` (dispatcher גנרי)
+- `src/config/sessionTypes.js` — registry
+- `src/config/sessionTypes/` — קונפיגים פר-סשן (`anticipatoryAnxiety.js` וכו'). כל סשן עומד בפני עצמו.
+- `src/services/customOptionsService.js` — `addOrBumpCustomOption`, `listCustomOptions`, `customOptionIdFromLabel`
+- `src/utils/handoffToClaude.js` — `copyAndOpen(text, url)` + `CLAUDE_CONVERSATION_PROJECT_URL`
+- `src/screens/review/components/ConversationsSection.jsx` — סקציה במראה ("שיחות שניהלת"): מציגה רק רשומות עם `importedResponse` בטווח ה-scope. רנדור null כשאין נתונים.
+
+### Routes
+
+```
+/sessions                              → ConversationSessionsHome
+/sessions/history                      → UnifiedHistory (פילטר לפי type)
+/sessions/:type                        → SessionTypeEntry (התחל חדש / היסטוריה)
+/sessions/:type/new                    → SessionWizard
+/sessions/:type/history                → SessionHistory (פר-type)
+/sessions/:type/result/:sessionId      → SessionResult (פרומפט + ייצוא + ייבוא)
+```
+
+### עקרונות
+
+- בלי terra ב-cs-* — הפלטה הפעילה היא lichen / canvas / ink / clay.
+- בלי תוכן של סשנים ספציפיים בתשתית הזו. הוספה תיעשה בקבצי registry בלבד.
+- אין סכמת JSON תגובה קשיחה — דרישה רכה ל-`session_type` ו-`generated_at` (סימון warning אם חסר, לא חוסם).
+
 ## 8b. Factory Reset (/admin/reset)
 
-מסך לא-מקושר [src/screens/admin/FactoryReset.jsx](src/screens/admin/FactoryReset.jsx) שמתנקש את כל נתוני המשתמש חוץ מהניתוחים. שני שלבים: confirm → "כן, מחק הכל" → לוג בזמן אמת → "חזור לבית". **מוחק** מ-Firebase: `checkins`, `emergency_sessions`, `trigger_analyses`, `triggers`, `mode_checks`, `catastrophe_checks`, `somatic_sessions`, `therapy_frames`, `something_waiting`, וכל `tavormindLiveHr/{uid}`. **מוחק** מ-localStorage: כל ה-`tavor_mind_pending_*`, דגלי onboarding (62, containment, seen_home), `hr_setup_done`, `wearing_watch`, `option_frequencies`. **שומר**: `tavormind/{uid}/analyses`, `tavor_mind_auth_uid`, `tavor_mind_therapy_dow`, `tavor_mind_last_therapist_export`. הגישה רק על-ידי הקלדת ה-URL ידנית.
+מסך לא-מקושר [src/screens/admin/FactoryReset.jsx](src/screens/admin/FactoryReset.jsx) שמתנקש את כל נתוני המשתמש חוץ מהניתוחים. שני שלבים: confirm → "כן, מחק הכל" → לוג בזמן אמת → "חזור לבית". **מוחק** מ-Firebase: `checkins`, `emergency_sessions`, `trigger_analyses`, `triggers`, `mode_checks`, `catastrophe_checks`, `somatic_sessions`, `therapy_frames`, `something_waiting`, `conversation_sessions`, `choice_frequency`, `custom_options`, וכל `tavormindLiveHr/{uid}`. **מוחק** מ-localStorage: כל ה-`tavor_mind_pending_*` (כולל `pending_conversation_sessions`), `tavor_mind_conversation_choice_frequency`, דגלי onboarding (62, containment, seen_home), `hr_setup_done`, `wearing_watch`, `option_frequencies`. **שומר**: `tavormind/{uid}/analyses`, `tavor_mind_auth_uid`, `tavor_mind_therapy_dow`, `tavor_mind_last_therapist_export`. הגישה רק על-ידי הקלדת ה-URL ידנית.
 
 ## 9. כללי עבודה כלליים
 
