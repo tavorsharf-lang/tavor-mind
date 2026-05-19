@@ -182,6 +182,13 @@ export default function HomeScreen({ authError }) {
         />
         <HomeTile
           tone="calm"
+          icon={<SunriseIcon />}
+          title="בוקר טוב"
+          subtitle="להתעורר לאט"
+          onClick={() => goTo('/morning')}
+        />
+        <HomeTile
+          tone="calm"
           icon={<MoonIcon />}
           title="לפני שינה"
           onClick={() => goTo('/sleep')}
@@ -208,7 +215,19 @@ function MoonIcon() {
   );
 }
 
-function HomeTile({ tone = 'calm', icon, title, badge, onClick }) {
+function SunriseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 18h18" />
+      <path d="M5 14a7 7 0 0 1 14 0" />
+      <path d="M12 4v3" />
+      <path d="M5.6 7.6l1.4 1.4" />
+      <path d="M18.4 7.6l-1.4 1.4" />
+    </svg>
+  );
+}
+
+function HomeTile({ tone = 'calm', icon, title, subtitle, badge, onClick }) {
   return (
     <button type="button" className="ds3-home-tile" onClick={onClick}>
       <span className={`ds3-icon-tile icon-tone-${tone}`} aria-hidden="true">
@@ -219,6 +238,7 @@ function HomeTile({ tone = 'calm', icon, title, badge, onClick }) {
           <span>{title}</span>
           {badge && <span className="ds3-home-tile-badge">{badge}</span>}
         </div>
+        {subtitle && <div className="ds3-home-tile-sub">{subtitle}</div>}
       </div>
     </button>
   );

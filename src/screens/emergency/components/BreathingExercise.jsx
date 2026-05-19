@@ -101,6 +101,15 @@ const PATTERNS = {
       ],
     },
   },
+  morning_hum: {
+    paces: {
+      normal: [
+        { label: 'תכניס', from: 0.55, to: 1.55, sec: 4 },
+        { label: 'תחזיק', from: 1.55, to: 1.55, sec: 2 },
+        { label: 'תוציא', from: 1.55, to: 0.55, sec: 6 },
+      ],
+    },
+  },
 };
 
 function prefersReducedMotion() {

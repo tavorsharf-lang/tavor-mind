@@ -31,6 +31,7 @@ import TherapyDaySettings from './screens/therapy/TherapyDaySettings.jsx';
 import SomethingWaitingScreen from './screens/something-waiting/SomethingWaitingScreen.jsx';
 import FactoryReset from './screens/admin/FactoryReset.jsx';
 import SleepFlow from './pages/Sleep/SleepFlow.jsx';
+import MorningScreen from './screens/Morning/MorningScreen.jsx';
 import IconGallery from './screens/IconGallery.jsx';
 import NavRail from './components/ui/NavRail.jsx';
 import { NavProvider } from './utils/navContext.jsx';
@@ -131,6 +132,7 @@ export default function App() {
         <Route path="/something-waiting" element={<SomethingWaitingScreen />} />
         <Route path="/admin/reset" element={<FactoryReset />} />
         <Route path="/sleep" element={<SleepFlow />} />
+        <Route path="/morning" element={<MorningScreen />} />
         <Route path="/icons" element={<IconGallery />} />
         </Routes>
         </main>

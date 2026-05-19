@@ -1,0 +1,363 @@
+/* ── Morning flow — calm, warm, single-thought-per-screen ──────────────────
+   Lives outside the standard DS3 theming so the page reads as its own quiet
+   moment. Calm-sea-blue is the only accent. No terra.                       */
+
+.morning-page {
+  position: fixed;
+  inset: 0;
+  background: #FDF9F0;
+  color: #1C1B19;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 32px 24px;
+  z-index: 100;
+  overflow-y: auto;
+  font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  animation: morning-fade-in 280ms ease-out both;
+}
+
+@keyframes morning-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morning-page { animation: none; }
+}
+
+.morning-canvas {
+  width: 100%;
+  max-width: 460px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.morning-exit {
+  position: fixed;
+  top: 18px;
+  inset-inline-end: 18px;
+  background: transparent;
+  border: none;
+  color: #8A8579;
+  font-size: 22px;
+  line-height: 1;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 999px;
+  z-index: 110;
+  min-width: 44px;
+  min-height: 44px;
+}
+.morning-exit:hover, .morning-exit:focus-visible {
+  color: #2C5F6F;
+  background: rgba(44, 95, 111, 0.06);
+  outline: none;
+}
+
+/* ── Stage wrappers ─────────────────────────────────────────────────────── */
+.morning-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 22px;
+  text-align: center;
+  animation: morning-stage-in 320ms ease-out both;
+}
+
+@keyframes morning-stage-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morning-stage { animation: none; }
+}
+
+/* ── Typography ─────────────────────────────────────────────────────────── */
+.morning-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #2C5F6F;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.morning-headline {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2C5F6F;
+  margin: 0;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+
+.morning-headline-display {
+  font-size: 32px;
+  line-height: 1.3;
+}
+
+.morning-sub {
+  font-size: 18px;
+  color: #5C5852;
+  margin: 0;
+  font-weight: 400;
+}
+
+.morning-sub-quiet {
+  font-size: 16px;
+  color: #8A8579;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.morning-body-line {
+  font-size: 19px;
+  color: #1C1B19;
+  margin: 0;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.morning-note {
+  font-size: 14px;
+  color: #8A8579;
+  font-style: italic;
+  margin: 8px 0 0;
+  line-height: 1.6;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.morning-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  font-family: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 18px 32px;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 56px;
+  width: 100%;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease, transform 120ms ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.morning-btn:active { transform: scale(0.98); }
+
+.morning-btn-primary {
+  background: #2C5F6F;
+  color: #FDF9F0;
+}
+.morning-btn-primary:hover, .morning-btn-primary:focus-visible {
+  background: #244C5A;
+  outline: none;
+}
+
+.morning-btn-soft {
+  background: rgba(44, 95, 111, 0.08);
+  color: #2C5F6F;
+  border: 1px solid rgba(44, 95, 111, 0.18);
+}
+.morning-btn-soft:hover, .morning-btn-soft:focus-visible {
+  background: rgba(44, 95, 111, 0.14);
+  border-color: rgba(44, 95, 111, 0.30);
+  outline: none;
+}
+
+.morning-btn-ghost {
+  background: transparent;
+  color: #8A8579;
+  border: 1px solid rgba(60, 60, 67, 0.16);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 14px 24px;
+  min-height: 48px;
+}
+.morning-btn-ghost:hover, .morning-btn-ghost:focus-visible {
+  color: #2C5F6F;
+  border-color: rgba(44, 95, 111, 0.28);
+  outline: none;
+}
+
+/* ── Stage 0: Duration gate ─────────────────────────────────────────────── */
+.morning-gate { gap: 28px; padding-top: 24px; }
+.morning-gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+/* ── Stage 2: Heart hand ────────────────────────────────────────────────── */
+.morning-heart { gap: 26px; align-items: center; }
+
+.morning-heart-dial {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  margin: 8px auto;
+  border-radius: 50%;
+}
+.morning-heart-dial:focus-visible {
+  outline: 2px solid rgba(44, 95, 111, 0.40);
+  outline-offset: 6px;
+}
+
+.morning-heart-num {
+  position: absolute;
+  font-size: 36px;
+  font-weight: 600;
+  color: #2C5F6F;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Stage 3: Breathing ─────────────────────────────────────────────────── */
+.morning-breath { gap: 18px; }
+.morning-breath-wrap {
+  width: 100%;
+  --accent: #2C5F6F;
+  --accent-soft: rgba(44, 95, 111, 0.30);
+}
+.morning-breath-wrap .breathing { color: #1C1B19; }
+
+/* ── Stage 4: Healthy adult voice ───────────────────────────────────────── */
+.morning-voice {
+  gap: 36px;
+  padding: 48px 16px 24px;
+  align-items: center;
+}
+.morning-voice-line {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2C5F6F;
+  line-height: 1.9;
+  margin: 0;
+  max-width: 380px;
+}
+
+/* ── Stage 5: Mode selector ─────────────────────────────────────────────── */
+.morning-modes { gap: 18px; }
+
+.morning-modes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.morning-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  text-align: start;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(44, 95, 111, 0.14);
+  border-radius: 16px;
+  padding: 16px 18px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, opacity 220ms ease;
+  min-height: 56px;
+}
+.morning-mode-card:hover, .morning-mode-card:focus-visible {
+  background: rgba(44, 95, 111, 0.06);
+  border-color: rgba(44, 95, 111, 0.26);
+  outline: none;
+}
+.morning-mode-card.is-selected {
+  background: rgba(44, 95, 111, 0.10);
+  border-color: rgba(44, 95, 111, 0.45);
+}
+.morning-mode-card.is-faded {
+  opacity: 0.4;
+}
+
+.morning-mode-label {
+  font-size: 17px;
+  font-weight: 600;
+  color: #2C5F6F;
+}
+
+.morning-mode-desc {
+  font-size: 14px;
+  color: #5C5852;
+  line-height: 1.5;
+}
+
+.morning-mode-reaction {
+  background: rgba(44, 95, 111, 0.07);
+  border: 1px solid rgba(44, 95, 111, 0.20);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1C1B19;
+  text-align: start;
+  animation: morning-fade-in 280ms ease-out both;
+}
+
+/* ── Stage 7: Intention picker ──────────────────────────────────────────── */
+.morning-intentions { gap: 20px; }
+
+.morning-intent-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+@media (max-width: 520px) {
+  .morning-intent-grid { grid-template-columns: 1fr; }
+}
+
+.morning-intent-card {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(44, 95, 111, 0.14);
+  border-radius: 18px;
+  padding: 22px 18px;
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #1C1B19;
+  cursor: pointer;
+  text-align: start;
+  min-height: 96px;
+  transition: background 180ms ease, border-color 180ms ease, opacity 220ms ease, transform 120ms ease;
+}
+.morning-intent-card:hover, .morning-intent-card:focus-visible {
+  background: rgba(44, 95, 111, 0.05);
+  border-color: rgba(44, 95, 111, 0.26);
+  outline: none;
+}
+.morning-intent-card.is-selected {
+  background: rgba(44, 95, 111, 0.10);
+  border-color: rgba(44, 95, 111, 0.50);
+  color: #2C5F6F;
+  font-weight: 500;
+}
+.morning-intent-card.is-faded {
+  opacity: 0.4;
+}
+.morning-intent-card:active { transform: scale(0.99); }
+
+/* Hide nav rail + skip-link while in morning flow */
+body:has(.morning-page) .ds3-nav-rail,
+body:has(.morning-page) .ds3-skip-link { display: none !important; }
