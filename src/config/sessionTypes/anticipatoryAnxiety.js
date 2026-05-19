@@ -2,7 +2,16 @@
 // Pure configuration. The wizard shell renders the questions and the result
 // screen runs buildPrompt(variables) below.
 
-const NULL_TOKEN = '[לא צוין]';
+import {
+  formatSingleSelect,
+  formatSelectWithCustomSingle,
+  formatSelectWithCustomList,
+  formatBulletList,
+  formatScale,
+  getSubInput,
+  isOptionSelected,
+  getCustomLabels,
+} from './_promptHelpers.js';
 
 // ── Question option dictionaries ───────────────────────────────────
 // Each option has a stable English-mnemonic id so the value lives unchanged
@@ -121,89 +130,6 @@ const THREAT_TYPE_OPTIONS = [
   { id: 'exposure',  label: 'חשיפה — יראו אותי כפי שאני באמת' },
   { id: 'perform',   label: 'ביצוע — צריך להוציא תוצר ספציפי תחת לחץ' },
 ];
-
-// ── Lookup helpers for buildPrompt ─────────────────────────────────
-
-function makeLabelLookup(staticOpts) {
-  const map = new Map(staticOpts.map((o) => [o.id, o.label]));
-  return (id, customLabels) => {
-    if (!id) return id;
-    if (map.has(id)) return map.get(id);
-    if (customLabels && customLabels[id]) return customLabels[id];
-    return id;
-  };
-}
-
-function asArray(value) {
-  if (value == null) return null;
-  if (Array.isArray(value)) return value;
-  return [value];
-}
-
-function formatSelectWithCustomList(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const lookup = makeLabelLookup(staticOpts);
-  const arr = asArray(value.selected) || [];
-  if (arr.length === 0) return NULL_TOKEN;
-  return arr.map((id) => lookup(id, value.custom_labels)).join(', ');
-}
-
-function formatBulletList(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const ids = asArray(value.selected) || [];
-  if (ids.length === 0) return NULL_TOKEN;
-  const lookup = makeLabelLookup(staticOpts);
-  return ids.map((id) => `- ${lookup(id, value.custom_labels)}`).join('\n');
-}
-
-function formatSelectWithCustomSingle(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const id = Array.isArray(value.selected) ? value.selected[0] : value.selected;
-  if (!id) return NULL_TOKEN;
-  return makeLabelLookup(staticOpts)(id, value.custom_labels);
-}
-
-function formatSingleSelect(value, staticOpts) {
-  if (value === null) return NULL_TOKEN;
-  if (!value) return NULL_TOKEN;
-  const opt = staticOpts.find((o) => o.id === value);
-  return opt ? opt.label : value;
-}
-
-function formatScale(value) {
-  if (value === null || typeof value !== 'number') return NULL_TOKEN;
-  return `${value}/10`;
-}
-
-function getSubInput(value, subInputId) {
-  if (!value || typeof value !== 'object') return null;
-  const text = value.sub_inputs?.[subInputId];
-  return typeof text === 'string' && text.trim() ? text.trim() : null;
-}
-
-function isOptionSelected(value, optionId) {
-  if (!value || typeof value !== 'object') return false;
-  const arr = Array.isArray(value.selected) ? value.selected : (value.selected ? [value.selected] : []);
-  return arr.includes(optionId);
-}
-
-// Return labels of user-added (custom_*) options that are currently selected.
-// Used to surface the "בקול שלי" line — text the user wrote in their own words.
-function getCustomLabels(value) {
-  if (!value || typeof value !== 'object') return [];
-  const selected = asArray(value.selected) || [];
-  const labels = value.custom_labels || {};
-  const out = [];
-  for (const id of selected) {
-    if (typeof id === 'string' && id.startsWith('custom_') && labels[id]) {
-      out.push(labels[id]);
-    }
-  }
-  return out;
-}
 
 // ── Session definition ─────────────────────────────────────────────
 

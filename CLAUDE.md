@@ -276,6 +276,7 @@ src/
 2. **sub_input** — אופציה יכולה להכריז על `sub_input:{id,label,placeholder}`. כשהיא נבחרת, מופיע inline שדה טקסט; הערך נשמר ב-`variables[questionId].sub_inputs[sub_input.id]`. נתמך כרגע רק על `select_with_custom`.
 3. **התמדה ומיון** — אופציות משלך נשמרות ב-`tavormind/{uid}/custom_options/{type}/{questionId}/{optionId}` עם `{label, count, createdAt}`. ב-wizard, הן מתמזגות לרשימה ומיון משותף לפי `choice_frequency + custom_options.count`.
 4. **דילוג** — `WizardStep` מציג בתחתית קישור "דלג על שאלה זו" (חוץ מ-required). דילוג: `variables[questionId] = null` ומתקדם.
+5. **שמירת סדר ב-multi_select** — ה-value ב-multi_select ו-select_with_custom multi נשמר ב-**insertion order** (סדר הבחירה של המשתמש), לא בסדר ה-options. המנגנון: `new Set(...)` + `.add(id)` + `Array.from()`. `formatMultiSelectNumbered` ב-`_promptHelpers.js` מנצל את זה כדי לרנדר רשימה ממוספרת 1./2./3. כשהסדר משמעותי קלינית (למשל רצף תגובה ב-parental_anger).
 
 #### יחסים עם Phase 8 (Emergency Flow) — לא לאחד
 
@@ -296,7 +297,7 @@ src/
 - `src/components/conversation/` — `WizardStep.jsx`, `ProgressDots.jsx`, `ImportResponseModal.jsx`
 - `src/services/` — `conversationSessionsService.js` (CRUD + מונה תדירות סוגים), `choiceFrequencyService.js` (תדירות אופציות), `promptBuilder.js` (dispatcher גנרי)
 - `src/config/sessionTypes.js` — registry
-- `src/config/sessionTypes/` — קונפיגים פר-סשן (`anticipatoryAnxiety.js` וכו'). כל סשן עומד בפני עצמו.
+- `src/config/sessionTypes/` — קונפיגים פר-סשן (`anticipatoryAnxiety.js`, `parentalAnger.js` וכו'). כל סשן עומד בפני עצמו. helpers משותפים ב-`_promptHelpers.js`.
 - `src/services/customOptionsService.js` — `addOrBumpCustomOption`, `listCustomOptions`, `customOptionIdFromLabel`
 - `src/utils/handoffToClaude.js` — `copyAndOpen(text, url)` + `CLAUDE_CONVERSATION_PROJECT_URL`
 - `src/screens/review/components/ConversationsSection.jsx` — סקציה במראה ("שיחות שניהלת"): מציגה רק רשומות עם `importedResponse` בטווח ה-scope. רנדור null כשאין נתונים.

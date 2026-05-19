@@ -25,9 +25,11 @@
 // need to change.
 
 import { anticipatoryAnxiety } from './sessionTypes/anticipatoryAnxiety.js';
+import { parentalAnger } from './sessionTypes/parentalAnger.js';
 
 export const SESSION_TYPES = {
   [anticipatoryAnxiety.id]: anticipatoryAnxiety,
+  [parentalAnger.id]: parentalAnger,
 
   _placeholder: {
     id: '_placeholder',
