@@ -169,6 +169,19 @@ export default function HomeScreen({ authError }) {
           onClick={() => goTo('/tools')}
         />
         <HomeTile
+          tone="sun"
+          icon={<SunIcon />}
+          title="בוקר טוב"
+          subtitle="להתעורר לאט"
+          onClick={() => goTo('/morning')}
+        />
+        <HomeTile
+          tone="calm"
+          icon={<MoonIcon />}
+          title="לפני שינה"
+          onClick={() => goTo('/sleep')}
+        />
+        <HomeTile
           tone="reflect"
           icon={<Search />}
           title="ניתוח מקרה"
@@ -179,19 +192,6 @@ export default function HomeScreen({ authError }) {
           icon={<HomeMirror />}
           title="המראה"
           onClick={() => goTo('/review')}
-        />
-        <HomeTile
-          tone="calm"
-          icon={<SunriseIcon />}
-          title="בוקר טוב"
-          subtitle="להתעורר לאט"
-          onClick={() => goTo('/morning')}
-        />
-        <HomeTile
-          tone="calm"
-          icon={<MoonIcon />}
-          title="לפני שינה"
-          onClick={() => goTo('/sleep')}
         />
       </div>
 
@@ -215,14 +215,18 @@ function MoonIcon() {
   );
 }
 
-function SunriseIcon() {
+function SunIcon() {
   return (
     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 18h18" />
-      <path d="M5 14a7 7 0 0 1 14 0" />
-      <path d="M12 4v3" />
-      <path d="M5.6 7.6l1.4 1.4" />
-      <path d="M18.4 7.6l-1.4 1.4" />
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 3v2" />
+      <path d="M12 19v2" />
+      <path d="M3 12h2" />
+      <path d="M19 12h2" />
+      <path d="M5.6 5.6l1.4 1.4" />
+      <path d="M17 17l1.4 1.4" />
+      <path d="M5.6 18.4l1.4-1.4" />
+      <path d="M17 7l1.4-1.4" />
     </svg>
   );
 }

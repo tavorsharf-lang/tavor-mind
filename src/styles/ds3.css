@@ -1186,9 +1186,7 @@
 .icon-tone-warmth,  .ds3-icon-tile-orange { background: rgba(255, 138, 42, 0.15) !important; color: var(--orange) !important; }
 .icon-tone-reflect, .ds3-icon-tile-indigo { background: rgba(94, 92, 230, 0.15)  !important; color: var(--indigo) !important; }
 .icon-tone-mind,    .ds3-icon-tile-teal   { background: rgba(31, 182, 166, 0.15) !important; color: var(--teal)   !important; }
-
-/* Yellow has no semantic tone yet — palette-only until claimed. */
-.ds3-icon-tile-yellow { background: rgba(255, 185, 56, 0.18); color: #B8924E; }
+.icon-tone-sun,     .ds3-icon-tile-yellow { background: rgba(255, 185, 56, 0.20) !important; color: #B8801F      !important; }
 
 /* Color-only variants — no background, just the family hue. Use inline (e.g.,
  * topbar labels) where a tile would feel too heavy. */
