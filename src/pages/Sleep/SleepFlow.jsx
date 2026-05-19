@@ -6,18 +6,6 @@ import SleepBodyScan from './SleepBodyScan.jsx';
 import SleepGoodnight from './SleepGoodnight.jsx';
 import './sleep.css';
 
-/*  Sleep session orchestrator.
-
-    Stages:
-      sigh      — physiological sigh × 5
-      nidra     — yoga nidra recording (auto-plays)
-      choice    — at end of nidra: "לילה טוב" or "עוד ער — סריקת גוף"
-      bodyscan  — optional body scan
-      goodnight — final dark screen, auto-dismiss to /
-
-    No persistence. No Firebase. Stop button at any point exits straight home.
-*/
-
 const STAGES = {
   SIGH: 'sigh',
   NIDRA: 'nidra',
@@ -30,7 +18,6 @@ export default function SleepFlow() {
   const navigate = useNavigate();
   const [stage, setStage] = useState(STAGES.SIGH);
 
-  // Always restore body scroll lock + class on unmount, just in case.
   useEffect(() => {
     document.body.classList.add('sleep-mode');
     return () => document.body.classList.remove('sleep-mode');
@@ -51,6 +38,7 @@ export default function SleepFlow() {
     return (
       <YogaNidra
         onEnded={() => setStage(STAGES.CHOICE)}
+        onSkip={() => setStage(STAGES.CHOICE)}
         onStop={exitHome}
       />
     );
@@ -59,6 +47,7 @@ export default function SleepFlow() {
   if (stage === STAGES.CHOICE) {
     return (
       <div className="sleep-page">
+        <button type="button" className="sleep-skip" onClick={exitHome}>דלג</button>
         <div className="nidra-stage">
           <h2 className="nidra-title">הסשן הסתיים</h2>
           <div className="nidra-actions">
@@ -86,6 +75,7 @@ export default function SleepFlow() {
     return (
       <SleepBodyScan
         onComplete={() => setStage(STAGES.GOODNIGHT)}
+        onSkip={() => setStage(STAGES.GOODNIGHT)}
         onStop={exitHome}
       />
     );

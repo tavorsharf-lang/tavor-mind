@@ -2,9 +2,10 @@ import { BodyScanAnim } from '../../screens/tools/components/somatic/SomaticAnim
 
 const DURATION_SEC = 140;
 
-export default function SleepBodyScan({ onComplete, onStop }) {
+export default function SleepBodyScan({ onComplete, onSkip, onStop }) {
   return (
     <div className="sleep-page">
+      <button type="button" className="sleep-skip" onClick={onSkip}>דלג</button>
       <button type="button" className="sleep-stop" onClick={onStop}>עצור</button>
 
       <div className="sleep-bodyscan-stage">
