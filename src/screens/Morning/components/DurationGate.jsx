@@ -20,6 +20,14 @@ export default function DurationGate({ onChoose }) {
           יש לי כמה דקות
         </button>
       </div>
+
+      <button
+        type="button"
+        className="morning-skip-link"
+        onClick={() => onChoose('short')}
+      >
+        דלג
+      </button>
     </div>
   );
 }

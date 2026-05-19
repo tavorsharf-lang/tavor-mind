@@ -91,7 +91,10 @@ export default function MorningScreen() {
         )}
 
         {stage === 5 && duration === 'long' && !selectedMode && (
-          <ModeSelector onSelect={(modeId) => setSelectedMode(modeId)} />
+          <ModeSelector
+            onSelect={(modeId) => setSelectedMode(modeId)}
+            onSkip={() => setStage(6)}
+          />
         )}
 
         {stage === 5 && duration === 'long' && selectedMode && (

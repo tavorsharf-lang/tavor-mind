@@ -1,6 +1,6 @@
 import { MODES } from '../morningContent.js';
 
-export default function ModeSelector({ onSelect }) {
+export default function ModeSelector({ onSelect, onSkip }) {
   return (
     <div className="morning-stage morning-modes">
       <h2 className="morning-headline">איזה חלק התעורר ראשון איתי הבוקר?</h2>
@@ -18,6 +18,16 @@ export default function ModeSelector({ onSelect }) {
           </button>
         ))}
       </div>
+
+      {onSkip && (
+        <button
+          type="button"
+          className="morning-skip-link"
+          onClick={onSkip}
+        >
+          דלג
+        </button>
+      )}
     </div>
   );
 }

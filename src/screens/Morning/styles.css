@@ -168,6 +168,31 @@
   outline: none;
 }
 
+/* Quiet inline skip link — sits below the primary actions on gated stages */
+.morning-skip-link {
+  align-self: center;
+  margin-top: 18px;
+  background: transparent;
+  border: none;
+  color: #8A8579;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  min-height: 44px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(138, 133, 121, 0.45);
+}
+.morning-skip-link:hover, .morning-skip-link:focus-visible {
+  color: #2C5F6F;
+  text-decoration-color: rgba(44, 95, 111, 0.50);
+  outline: none;
+}
+
 /* ── Stage 0: Duration gate ─────────────────────────────────────────────── */
 .morning-gate { gap: 28px; padding-top: 24px; }
 .morning-gate-actions {

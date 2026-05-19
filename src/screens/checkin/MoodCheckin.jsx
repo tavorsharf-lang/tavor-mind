@@ -48,7 +48,10 @@ export default function MoodCheckin() {
     setSaved(true);
   };
 
-  const canAdvance = phase === 1 ? !!scope : true;
+  const advance = () => {
+    if (phase === 1 && !scope) setScope('moment');
+    setPhase(phase + 1);
+  };
 
   return (
     <div className="phase ck-step mood-checkin ds2-themed">
@@ -72,9 +75,7 @@ export default function MoodCheckin() {
       </main>
       <footer className="phase-footer">
         {phase < MAX_PHASE && (
-          <SoftButton onClick={() => setPhase(phase + 1)} disabled={!canAdvance}>
-            הבא
-          </SoftButton>
+          <SoftButton onClick={advance}>הבא</SoftButton>
         )}
         {phase === MAX_PHASE && (
           <SoftButton onClick={handleSave} disabled={saving || saved}>
