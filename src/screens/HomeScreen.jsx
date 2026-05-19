@@ -180,6 +180,12 @@ export default function HomeScreen({ authError }) {
           title="המראה"
           onClick={() => goTo('/review')}
         />
+        <HomeTile
+          tone="calm"
+          icon={<MoonIcon />}
+          title="לפני שינה"
+          onClick={() => goTo('/sleep')}
+        />
       </div>
 
       <footer className="ds3-home-footer">
@@ -191,6 +197,14 @@ export default function HomeScreen({ authError }) {
         <SyncStatusBadge />
       </footer>
     </div>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
+    </svg>
   );
 }
 

@@ -1,0 +1,283 @@
+/* ── Sleep flow — dark, quiet, no-stimulation theme ────────────────────────
+   Lives outside DS2/DS3. Everything inside .sleep-page hard-overrides ambient
+   theme colors so it stays dark regardless of system preference.            */
+
+.sleep-page {
+  position: fixed;
+  inset: 0;
+  background: #0A0A0A;
+  color: #C8C8C8;
+  font-size: 22px;
+  line-height: 1.8;
+  font-weight: 400;
+  direction: rtl;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  padding: 32px 28px;
+  z-index: 100;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sleep-page * { box-shadow: none !important; text-shadow: none !important; }
+
+.sleep-secondary { color: #666; font-size: 18px; }
+.sleep-faint    { color: #444; font-size: 16px; }
+
+.sleep-skip {
+  position: absolute;
+  top: 18px;
+  inset-inline-start: 18px;
+  background: transparent;
+  border: none;
+  color: #444;
+  font-size: 15px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  line-height: 1;
+  border-radius: 8px;
+}
+.sleep-skip:hover, .sleep-skip:focus-visible { color: #888; outline: none; }
+
+.sleep-stop {
+  position: absolute;
+  bottom: 22px;
+  inset-inline-start: 22px;
+  background: transparent;
+  border: 1px solid #2A2A2A;
+  color: #555;
+  font-size: 14px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.sleep-stop:hover, .sleep-stop:focus-visible { color: #888; border-color: #3A3A3A; outline: none; }
+
+/* ── Phase 1: Physiological Sigh ──────────────────────────────────────── */
+.sigh-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 48px;
+  width: 100%;
+}
+
+.sigh-circle-wrap {
+  width: 260px;
+  height: 260px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.sigh-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(44, 95, 111, 0.18);
+  border: 1px solid rgba(44, 95, 111, 0.30);
+  transform: scale(0.45);
+  transition: transform var(--sigh-dur, 1.5s) ease-in-out;
+  will-change: transform;
+}
+
+.sigh-label {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #888;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+
+.sigh-counter {
+  color: #555;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+}
+
+.sigh-instruction {
+  color: #888;
+  font-size: 18px;
+  line-height: 1.7;
+  text-align: center;
+  max-width: 320px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sigh-circle { transition: none; }
+}
+
+/* ── Phase 2: Yoga Nidra player ───────────────────────────────────────── */
+.nidra-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+  width: 100%;
+}
+
+.nidra-title {
+  color: #888;
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.nidra-time {
+  color: #333;
+  font-size: 56px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.nidra-play {
+  background: transparent;
+  border: 1px solid #2A2A2A;
+  color: #666;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+  font-family: inherit;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 1;
+}
+.nidra-play:hover, .nidra-play:focus-visible {
+  color: #888;
+  border-color: #3A3A3A;
+  outline: none;
+}
+
+.nidra-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+.nidra-end-btn {
+  background: transparent;
+  border: 1px solid #2A2A2A;
+  color: #888;
+  padding: 18px 28px;
+  border-radius: 14px;
+  font-size: 19px;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%;
+  line-height: 1.4;
+}
+.nidra-end-btn:hover, .nidra-end-btn:focus-visible {
+  color: #C8C8C8;
+  border-color: #3A3A3A;
+  outline: none;
+}
+
+.nidra-end-btn-primary {
+  border-color: rgba(44, 95, 111, 0.40);
+  color: rgba(200, 200, 200, 0.85);
+}
+
+.nidra-upload {
+  margin-top: 8px;
+  background: transparent;
+  border: none;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 6px 10px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.nidra-upload:hover, .nidra-upload:focus-visible { color: #666; outline: none; }
+
+.nidra-error {
+  color: #6B4040;
+  font-size: 16px;
+  text-align: center;
+  max-width: 320px;
+}
+
+/* ── Body Scan in sleep mode ───────────────────────────────────────────── */
+.sleep-bodyscan-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  width: 100%;
+  color: #666;
+}
+
+.sleep-bodyscan-stage .somatic-body-svg {
+  width: 140px;
+  height: auto;
+  color: #555;
+}
+
+.sleep-bodyscan-stage .somatic-phase-label {
+  color: #888;
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+
+.sleep-bodyscan-stage .somatic-body-progress {
+  color: #444;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.sleep-bodyscan-stage .somatic-body-pulse {
+  animation: sleep-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes sleep-pulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sleep-bodyscan-stage .somatic-body-pulse { animation: none; }
+}
+
+/* ── Goodnight ─────────────────────────────────────────────────────────── */
+.sleep-goodnight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: #555;
+  text-align: center;
+}
+
+.sleep-goodnight-text {
+  font-size: 28px;
+  font-weight: 300;
+  color: #888;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.sleep-goodnight-sub { color: #444; font-size: 17px; margin: 0; }
+
+/* Hide nav rail and skip-link while in sleep flow */
+body:has(.sleep-page) .ds3-nav-rail,
+body:has(.sleep-page) .ds3-skip-link { display: none !important; }
