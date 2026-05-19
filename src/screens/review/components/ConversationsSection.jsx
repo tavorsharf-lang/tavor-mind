@@ -28,6 +28,7 @@ function summarizeImported(importedResponse) {
       p.headline,
       p.summary,
       p.central_sentence,
+      p.core_insight,
       p.insight,
     ].filter((v) => typeof v === 'string' && v.trim());
     if (candidates.length) return candidates[0].trim().slice(0, 140);
