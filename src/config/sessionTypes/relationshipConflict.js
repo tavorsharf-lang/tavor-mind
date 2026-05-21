@@ -176,6 +176,7 @@ export const relationshipConflict = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'רגוע יחסית',
         midLabel: 'מורגש מאוד אבל מתפקד',
         rightLabel: 'מציף, קשה לחשוב',

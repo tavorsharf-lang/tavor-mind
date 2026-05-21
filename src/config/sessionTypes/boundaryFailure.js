@@ -176,6 +176,7 @@ export const boundaryFailure = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'מציק ברקע',
         midLabel: 'חוזר ועולה, משפיע על המצב רוח',
         rightLabel: 'מציף, קשה לחשוב על משהו אחר',

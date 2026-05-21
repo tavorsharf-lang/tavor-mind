@@ -161,6 +161,7 @@ export const anticipatoryAnxiety = {
         min: 0,
         max: 10,
         step: 1,
+        polarity: 'high-good',
         leftLabel: 'לא מוכן בכלל',
         midLabel: 'מוכן חלקית',
         rightLabel: 'מוכן לגמרי',

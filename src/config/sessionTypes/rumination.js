@@ -167,6 +167,7 @@ export const rumination = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'ברקע, מצליח לעשות דברים',
         midLabel: 'חוזר בכל פעם שאני לא עסוק',
         rightLabel: 'כל הראש בזה, לא מצליח להתרכז',

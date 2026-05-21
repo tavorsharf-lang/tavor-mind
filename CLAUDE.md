@@ -265,7 +265,7 @@ src/
 | single_select | `options:[{id,label}]` | `string \| null` |
 | multi_select | `options:[{id,label}]` | `string[] \| null` |
 | text | `placeholder?`, `maxLength?` | `string \| null` |
-| scale | `config:{min,max,step?,leftLabel,midLabel?,rightLabel}` (משתמש ב-`ScoreSlider` הקיים, polarity=static) | `number \| null` |
+| scale | `config:{min,max,step?,leftLabel,midLabel?,rightLabel,polarity?}` (משתמש ב-`ScoreSlider` הקיים; `polarity` ברירת מחדל `'high-bad'` → גרדיאנט צבעים לפי הערך; הלייבלים מוצגים ויזואלית leftLabel משמאל / rightLabel מימין, תואם את ה-handle min=שמאל/max=ימין) | `number \| null` |
 | select_with_custom | `multi:bool`, `options:[{id,label,sub_input?}]`, `hint?` | `{selected, sub_inputs, custom_labels} \| null` |
 
 `null` בכל מקום = המשתמש דילג מפורשות על השאלה. כל buildPrompt חייב להבחין בין `null` למערך/מחרוזת ריקים — להציג `[לא צוין]` עבור `null`. שאלות עם `required: true` לא יציגו את קישור הדילוג.

@@ -163,6 +163,7 @@ export const parentalAnger = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'כמעט שכחתי',
         midLabel: 'מורגש ומתפקד',
         rightLabel: 'צף ושולט עליי',

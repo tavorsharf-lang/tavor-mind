@@ -163,6 +163,7 @@ export const loneliness = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'מורגשת ברקע, מתפקד',
         midLabel: 'נוכחת ומכבידה אבל סובל',
         rightLabel: 'מציפה, חייב לעשות משהו',

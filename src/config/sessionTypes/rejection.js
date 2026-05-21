@@ -193,6 +193,7 @@ export const rejection = {
         min: 1,
         max: 10,
         step: 1,
+        polarity: 'high-bad',
         leftLabel: 'מורגש, מתפקד',
         midLabel: 'נוכח מאוד, חוזר ועולה',
         rightLabel: 'מציף, קשה לעשות משהו',

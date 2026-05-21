@@ -480,8 +480,15 @@ function renderScale({ question, value, onChange }) {
   const left = cfg.leftLabel ?? question.minLabel ?? String(min);
   const mid = cfg.midLabel ?? question.midLabel ?? null;
   const right = cfg.rightLabel ?? question.maxLabel ?? String(max);
+  // Apple-gradient coloring like every other slider in the app. Distress scales
+  // are high-bad (10 = worst = red); a config can override to 'high-good'.
+  const polarity = cfg.polarity ?? question.polarity ?? 'high-bad';
   const current = typeof value === 'number' ? value : Math.round((min + max) / 2);
-  const labels = mid ? [left, mid, right] : [left, right];
+  // Config lists labels left→right, but the labels row is an RTL flex (first
+  // child lands on the physical right). Reverse so leftLabel sits on the physical
+  // left and rightLabel on the right — matching the handle, which is always
+  // min=left / max=right (usePointerSlider).
+  const labels = mid ? [right, mid, left] : [right, left];
   return (
     <div className="cs-scale-wrap">
       <ScoreSlider
@@ -489,7 +496,7 @@ function renderScale({ question, value, onChange }) {
         onChange={(n) => onChange(Number(n))}
         min={min}
         max={max}
-        polarity="static"
+        polarity={polarity}
         labels={labels}
         ariaLabel={question.label}
       />
