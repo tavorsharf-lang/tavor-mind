@@ -104,7 +104,7 @@ export default function SessionWizard() {
 
   return (
     <div className="tool-page conversation-sessions-page ds2-themed">
-      <ToolHeader title={def.label} subtitle="" backTo={`/sessions/${type}`} />
+      <ToolHeader title={def.label} subtitle="" backTo={`/sessions/${type}`} onBack={handleBack} />
       <div className="cs-wizard-progress-bar">
         <ProgressDots total={total} current={step} />
       </div>
