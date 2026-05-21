@@ -42,12 +42,12 @@ export default function SchemasActivated({ data }) {
           </ul>
           {dominantRatio > 0.5 && (
             <p className="schema-dominant-line">
-              {dominant.label} הייתה הסכמה הדומיננטית. שווה לתת לה קשב — לא להילחם בה, רק להכיר.
+              {dominant.label} הייתה הסכמה הדומיננטית. שווה לתת לה קשב - לא להילחם בה, רק להכיר.
             </p>
           )}
           {hasDeprivation && (
             <p className="schema-hypothesis-line">
-              מחסור רגשי — השערה פעילה — הופיעה בתקופה זו. סימן לבדיקה ולא למסקנה.
+              מחסור רגשי - השערה פעילה - הופיעה בתקופה זו. סימן לבדיקה ולא למסקנה.
             </p>
           )}
         </>

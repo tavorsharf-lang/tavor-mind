@@ -32,7 +32,7 @@ function toMs(v) {
 }
 
 function fmtDateTime(ms) {
-  if (!ms) return '—';
+  if (!ms) return '-';
   const d = new Date(ms);
   const fmt = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Jerusalem',
@@ -45,7 +45,7 @@ function fmtDateTime(ms) {
 }
 
 function fmtDate(ms) {
-  if (!ms) return '—';
+  if (!ms) return '-';
   const d = new Date(ms);
   const fmt = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Jerusalem',
@@ -90,7 +90,7 @@ function formatCheckins(checkinsRaw, sinceMs) {
       const valenceLabel = VALENCE_LABELS[normValence] || `${normValence}`;
       const emotions = Array.isArray(v.emotions) ? v.emotions.map(emotionLabelById).join(', ') : '';
       const scopeLabel = v.scope === 'morning' ? 'בוקר' : v.scope === 'evening' ? 'ערב' : '';
-      const parts = [`${fmtDateTime(ts)}${scopeLabel ? ' · ' + scopeLabel : ''} — ${valenceLabel}`];
+      const parts = [`${fmtDateTime(ts)}${scopeLabel ? ' · ' + scopeLabel : ''} - ${valenceLabel}`];
       if (emotions) parts.push(`רגשות: ${emotions}`);
       lines.push(parts.join(' · '));
       count += 1;
@@ -114,7 +114,7 @@ function formatTriggers(triggersRaw, sinceMs) {
       ? t.emotionsRaw.map(emotionLabelById).join(', ')
       : '';
     const reframe = clean(t.reframe);
-    const lineParts = [`${fmtDateTime(ts)} — TriggerTracker`, `אירוע: "${truncate(event, 160)}"`];
+    const lineParts = [`${fmtDateTime(ts)} - TriggerTracker`, `אירוע: "${truncate(event, 160)}"`];
     if (schemas) lineParts.push(`סכמות: ${schemas}`);
     if (emotions) lineParts.push(`רגשות: ${emotions}`);
     if (reframe) lineParts.push(`reframe: "${truncate(reframe, 160)}"`);
@@ -134,7 +134,7 @@ function formatModeChecks(modesRaw, sinceMs) {
     const ids = Array.isArray(m.modesActive) ? m.modesActive : [];
     const labels = ids.map((id) => getModeById(id)?.label || MODE_LABELS[id] || id).join(', ');
     const note = clean(m.note);
-    const parts = [`${fmtDateTime(ts)} — ModeCheck`, `מודים פעילים: ${labels || '—'}`];
+    const parts = [`${fmtDateTime(ts)} - ModeCheck`, `מודים פעילים: ${labels || '-'}`];
     if (note) parts.push(`הערה: "${truncate(note, 160)}"`);
     lines.push(parts.join(' · '));
     count += 1;
@@ -151,7 +151,7 @@ function formatCatastrophe(catRaw, sinceMs) {
     if (!ts || ts <= sinceMs) continue;
     const fear = clean(c.feared || c.worstCase);
     const realistic = clean(c.realistic);
-    const parts = [`${fmtDateTime(ts)} — CatastropheCheck`];
+    const parts = [`${fmtDateTime(ts)} - CatastropheCheck`];
     if (fear) parts.push(`תרחיש קטסטרופלי: "${truncate(fear, 160)}"`);
     if (realistic) parts.push(`מציאותי: "${truncate(realistic, 160)}"`);
     lines.push(parts.join(' · '));
@@ -167,13 +167,13 @@ function formatEmergency(emergRaw, sinceMs) {
   for (const e of valuesOf(emergRaw)) {
     const ts = toMs(e.clientTs) || toMs(e.startedAtClient);
     if (!ts || ts <= sinceMs) continue;
-    const activation = e.activation || '—';
+    const activation = e.activation || '-';
     const modes = Array.isArray(e.modesIdentified)
       ? e.modesIdentified.map((id) => getModeById(id)?.label || id).join(', ')
       : '';
     const grounding = e.groundingChoice || '';
     const breathingNote = clean(e.breathingNote);
-    const parts = [`${fmtDateTime(ts)} — רגע משבר`, `activation: ${activation}`];
+    const parts = [`${fmtDateTime(ts)} - רגע משבר`, `activation: ${activation}`];
     if (grounding) parts.push(`גראונדינג: ${grounding}`);
     if (modes) parts.push(`מודים שזוהו: ${modes}`);
     if (breathingNote) parts.push(`הערת נשימה: "${truncate(breathingNote, 160)}"`);
@@ -194,7 +194,7 @@ function formatAnalyses(analysesRaw, sinceMs) {
     const meta = ANALYSIS_TYPES[a.type];
     const typeLabel = meta?.label || a.type;
     const occurredDate = a.occurredAt ? fmtDate(toMs(a.occurredAt)) : null;
-    const title = clean(a.title) || '—';
+    const title = clean(a.title) || '-';
     const summary = truncate(a.summary, 220);
     const tags = Array.isArray(a.tags) ? a.tags.join(', ') : '';
     const schemas = Array.isArray(a.schemas_activated)
@@ -207,7 +207,7 @@ function formatAnalyses(analysesRaw, sinceMs) {
       .filter(([k, v]) => v === true && k !== 'dominant_mode')
       .map(([k]) => k);
 
-    const lineParts = [`[נכנס: ${fmtDateTime(ts)}${occurredDate ? `, התרחש: ${occurredDate}` : ''}] ${typeLabel} — "${title}"`];
+    const lineParts = [`[נכנס: ${fmtDateTime(ts)}${occurredDate ? `, התרחש: ${occurredDate}` : ''}] ${typeLabel} - "${title}"`];
     if (summary) lineParts.push(`תקציר: ${summary}`);
     if (tags) lineParts.push(`תגיות: ${tags}`);
     if (schemas) lineParts.push(`סכמות: ${schemas}`);

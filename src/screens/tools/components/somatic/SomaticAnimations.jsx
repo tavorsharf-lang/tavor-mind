@@ -109,7 +109,7 @@ export function ButterflyAnim({ durationSec, onComplete }) {
 // ─── Vagal Humming ───────────────────────────────────────────────────────────
 const VAGAL_STEPS = [
   { id: 'in',  label: 'שאיפה',          from: 0.9, to: 1.4, sec: 1.5, ripple: false },
-  { id: 'hum', label: 'מממ — נשיפה',    from: 1.4, to: 0.9, sec: 4.0, ripple: true },
+  { id: 'hum', label: 'מממ - נשיפה',    from: 1.4, to: 0.9, sec: 4.0, ripple: true },
 ];
 
 export function VagalAnim({ durationSec, onComplete }) {

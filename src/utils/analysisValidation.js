@@ -84,19 +84,19 @@ export function validateAnalysis(input) {
 
   // tags
   if (!Array.isArray(json.tags)) {
-    errors.push('tags לא תקין — חייב להיות מערך מחרוזות');
+    errors.push('tags לא תקין - חייב להיות מערך מחרוזות');
   } else {
     if (json.tags.length < 1 || json.tags.length > 15) {
-      errors.push('tags לא תקין — נדרש בין 1 ל-15 פריטים');
+      errors.push('tags לא תקין - נדרש בין 1 ל-15 פריטים');
     }
     if (!json.tags.every((t) => typeof t === 'string')) {
-      errors.push('tags לא תקין — כל פריט חייב להיות מחרוזת');
+      errors.push('tags לא תקין - כל פריט חייב להיות מחרוזת');
     }
   }
 
   // patterns
   if (!json.patterns || typeof json.patterns !== 'object' || Array.isArray(json.patterns)) {
-    errors.push('patterns לא תקין — חייב להיות אובייקט');
+    errors.push('patterns לא תקין - חייב להיות אובייקט');
   } else {
     for (const key of PATTERN_IDS) {
       if (!(key in json.patterns)) {
@@ -124,7 +124,7 @@ export function validateAnalysis(input) {
 
   // schemas_activated
   if (!Array.isArray(json.schemas_activated)) {
-    errors.push('schemas_activated לא תקין — חייב להיות מערך');
+    errors.push('schemas_activated לא תקין - חייב להיות מערך');
   } else {
     for (const s of json.schemas_activated) {
       if (typeof s !== 'string' || !SCHEMA_LABELS[s]) {
@@ -135,10 +135,10 @@ export function validateAnalysis(input) {
 
   // dates
   if (json.createdAt && Number.isNaN(new Date(json.createdAt).getTime())) {
-    errors.push('createdAt — תאריך לא תקין');
+    errors.push('createdAt - תאריך לא תקין');
   }
   if (json.occurredAt && Number.isNaN(new Date(json.occurredAt).getTime())) {
-    errors.push('occurredAt — תאריך לא תקין');
+    errors.push('occurredAt - תאריך לא תקין');
   }
 
   // therapy_session — exactly one *_specific non-null
@@ -148,7 +148,7 @@ export function validateAnalysis(input) {
       return v !== null && v !== undefined;
     });
     if (nonNull.length !== 1) {
-      errors.push('דיאלוג תרפיה — מותר רק שדה specific אחד פעיל');
+      errors.push('דיאלוג תרפיה - מותר רק שדה specific אחד פעיל');
     }
   }
 

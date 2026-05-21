@@ -135,7 +135,7 @@ export default function TherapyFrameScreen() {
             rows={6}
             value={prepDraft}
             onChange={(e) => setPrepDraft(e.target.value)}
-            placeholder={isPastSession ? 'הוספה אופציונלית — כבר עברת את הפגישה' : 'נושאים, תחושות, רגעים מהשבוע, שאלות למטפלת…'}
+            placeholder={isPastSession ? 'הוספה אופציונלית - כבר עברת את הפגישה' : 'נושאים, תחושות, רגעים מהשבוע, שאלות למטפלת…'}
             spellCheck={false}
           />
         </section>
@@ -166,7 +166,7 @@ export default function TherapyFrameScreen() {
             ייצא דוח גולמי לקלוד AI ←
           </button>
           <p className="override-note" style={{ marginTop: 6 }}>
-            יוצר פרומפט עם כל מה שתיעדת מאז הייצוא הקודם — להעביר לקלוד AI שיעזור לסדר ולתעדף.
+            יוצר פרומפט עם כל מה שתיעדת מאז הייצוא הקודם - להעביר לקלוד AI שיעזור לסדר ולתעדף.
           </p>
         </section>
 

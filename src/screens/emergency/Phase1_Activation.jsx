@@ -13,7 +13,7 @@ const OPTIONS = [
   },
   {
     id: 'mid',
-    label: 'עוד טריגר אחד — ואני מופעל',
+    label: 'עוד טריגר אחד - ואני מופעל',
     subtitle: 'מוצף אבל מתפקד, על הסף',
     tone: 'orange',
     glyph: 'edge',

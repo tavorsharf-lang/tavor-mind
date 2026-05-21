@@ -85,7 +85,7 @@ export default function EmotionalLandscape({ data }) {
             ))}
           </div>
           <p className="absent-thesis">
-            היעדר זה גם מידע. רגש שלא הופיע — לא בהכרח לא היה. אולי לא ניתן לו מקום.
+            היעדר זה גם מידע. רגש שלא הופיע - לא בהכרח לא היה. אולי לא ניתן לו מקום.
           </p>
         </>
       )}

@@ -17,7 +17,7 @@ export const ANALYSIS_TYPES = {
     icon: '○',
     color: 'var(--orange)',
     tone: 'warmth',
-    description: 'תרגול תודה — גרסה 2.0 עם פרוטוקולים',
+    description: 'תרגול תודה - גרסה 2.0 עם פרוטוקולים',
   },
   i_language: {
     id: 'i_language',

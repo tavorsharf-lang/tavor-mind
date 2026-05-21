@@ -15,12 +15,12 @@ import {
 // ── Question option dictionaries ───────────────────────────────────
 
 const LONELINESS_TYPE_OPTIONS = [
-  { id: 'internal_block', label: 'חסם פנימי — יש אנשים סביבי אבל אני לא פונה' },
-  { id: 'truly_alone',    label: 'אני לבד — אין אף אחד נגיש עכשיו' },
-  { id: 'different',      label: 'אני שונה — יש אנשים אבל אני לא שייך' },
+  { id: 'internal_block', label: 'חסם פנימי - יש אנשים סביבי אבל אני לא פונה' },
+  { id: 'truly_alone',    label: 'אני לבד - אין אף אחד נגיש עכשיו' },
+  { id: 'different',      label: 'אני שונה - יש אנשים אבל אני לא שייך' },
   {
     id: 'unseen',
-    label: 'אני לא נראה — אנשים בקרבתי אבל לא רואים אותי באמת',
+    label: 'אני לא נראה - אנשים בקרבתי אבל לא רואים אותי באמת',
     sub_input: {
       id: 'unseen_specifics',
       label: 'מה ספציפית לא נראה?',
@@ -32,11 +32,11 @@ const LONELINESS_TYPE_OPTIONS = [
 ];
 
 const DURATION_OPTIONS = [
-  { id: 'acute_today',    label: 'אקוטית — רק הערב / היום הזה' },
+  { id: 'acute_today',    label: 'אקוטית - רק הערב / היום הזה' },
   { id: 'nights_only',    label: 'חוזרת בלילות אבל לא בימים' },
   { id: 'one_two_weeks',  label: 'מלווה אותי כבר שבוע-שבועיים' },
   { id: 'months_bg',      label: 'רקע קבוע כבר חודשים' },
-  { id: 'always_like_this', label: 'היה תמיד ככה — לא זוכר תקופה אחרת' },
+  { id: 'always_like_this', label: 'היה תמיד ככה - לא זוכר תקופה אחרת' },
 ];
 
 const TRIGGER_CONTEXT_OPTIONS = [
@@ -56,11 +56,11 @@ const BODY_SENSATION_OPTIONS = [
   { id: 'heaviness',               label: 'כובד בחזה או בבטן' },
   { id: 'throat_pinch',            label: 'צביטה בגרון' },
   { id: 'sigh_no_release',         label: 'חוסר אוויר / אנחה שלא משחררת' },
-  { id: 'restless_limbs',          label: 'אי-שקט בידיים / ברגליים — צריך לקום' },
+  { id: 'restless_limbs',          label: 'אי-שקט בידיים / ברגליים - צריך לקום' },
   { id: 'urge_to_cry_stuck',       label: 'רצון לבכות שלא יוצא' },
   { id: 'cold_tremor',             label: 'קור / רעד' },
   { id: 'full_head_empty_body',    label: 'ראש "מלא" אבל גוף ריק' },
-  { id: 'disconnected_numb',       label: 'אין תחושה — מנותק' },
+  { id: 'disconnected_numb',       label: 'אין תחושה - מנותק' },
   { id: 'fog_cant_stay_present',   label: 'ערפול / קושי להישאר נוכח' },
 ];
 
@@ -71,7 +71,7 @@ const URGE_OPTIONS = [
   { id: 'sleep_escape',         label: 'להירדם / לברוח לשינה' },
   { id: 'content_fill',         label: 'לראות תוכן / סרט / משהו שאמלא את הריקנות' },
   { id: 'call_partner_wrong_time', label: 'להתקשר לבת זוג / קרוב גם אם זה לא הזמן' },
-  { id: 'no_urge_just_sit',     label: 'אין דחף ברור — רק עצב שאני יושב עם' },
+  { id: 'no_urge_just_sit',     label: 'אין דחף ברור - רק עצב שאני יושב עם' },
   { id: 'unsure_urge',          label: 'אני לא בטוח' },
 ];
 
@@ -83,7 +83,7 @@ const INNER_STORY_OPTIONS = [
   { id: 'if_they_knew_real_me',   label: '"אם הם היו יודעים מי אני באמת, לא היו רוצים"' },
   { id: 'reached_didnt_get',      label: '"פניתי כבר ולא קיבלתי, אז לא עוד"' },
   { id: 'always_like_this_wont_change', label: '"זה תמיד ככה, זה לא ישתנה"' },
-  { id: 'my_fault_no_bonds_built', label: '"אני בעצמי אשם — לא בניתי קשרים נכונים"' },
+  { id: 'my_fault_no_bonds_built', label: '"אני בעצמי אשם - לא בניתי קשרים נכונים"' },
   { id: 'unsure_story_yet',       label: 'לא בטוח עדיין' },
 ];
 
@@ -92,7 +92,7 @@ const AGE_OPTIONS = [
   { id: 'twenties',            label: 'מרגיש כמו עשרים-ומשהו (שנים אחרונות)' },
   { id: 'adolescence',         label: 'מרגיש כמו גיל ההתבגרות' },
   { id: 'elementary',          label: 'מרגיש כמו ילדות (בית ספר יסודי)' },
-  { id: 'preverbal',           label: 'מרגיש מאוד צעיר — קדם-מילולי כמעט' },
+  { id: 'preverbal',           label: 'מרגיש מאוד צעיר - קדם-מילולי כמעט' },
   { id: 'cant_identify_age',   label: 'לא מצליח לזהות גיל' },
   {
     id: 'shifting',
@@ -112,7 +112,7 @@ const REACH_OUT_OPTIONS = [
   { id: 'someone_comes_wrong',      label: 'עולה מישהו ואני יודע שהוא האדם הלא-נכון' },
   { id: 'no_one_comes_up',          label: 'אין אף אחד שעולה לי לראש' },
   { id: 'people_come_none_fit_moment', label: 'עולים אנשים אבל אף אחד לא מתאים לרגע הזה ספציפית' },
-  { id: 'dont_want_to_reach',       label: 'אני לא רוצה לפנות לאף אחד עכשיו — רק לשבת עם זה' },
+  { id: 'dont_want_to_reach',       label: 'אני לא רוצה לפנות לאף אחד עכשיו - רק לשבת עם זה' },
 ];
 
 // ── Session definition ─────────────────────────────────────────────
@@ -133,7 +133,7 @@ export const loneliness = {
     {
       id: 'duration',
       type: 'single_select',
-      label: 'משך — אקוטית או כרונית?',
+      label: 'משך - אקוטית או כרונית?',
       options: DURATION_OPTIONS,
     },
     {
@@ -215,13 +215,13 @@ export const loneliness = {
       'סשן: בדידות',
       `תאריך: ${dateIso}`,
       '',
-      '— סוג הבדידות —',
+      '- סוג הבדידות -',
       `הסוג כרגע: ${lonelinessType}`,
     ];
     if (unseenSpecifics) {
       lines.push(`מה ספציפית לא נראה: ${unseenSpecifics}`);
     }
-    lines.push(`משך — אקוטית או כרונית: ${duration}`);
+    lines.push(`משך - אקוטית או כרונית: ${duration}`);
     lines.push('מה מקדים את העלייה:');
     lines.push(triggers);
     if (triggersCustom.length > 0) {
@@ -229,12 +229,12 @@ export const loneliness = {
       lines.push(`בקול שלי: ${triggersCustom.join(', ')}`);
     }
     lines.push('');
-    lines.push('— איך זה מורגש —');
+    lines.push('- איך זה מורגש -');
     lines.push(`תחושה גופנית: ${body}`);
     lines.push(`הדחף הכי חזק עכשיו: ${urge}`);
     lines.push(`עוצמה: ${intensity}`);
     lines.push('');
-    lines.push('— מתחת לבדידות —');
+    lines.push('- מתחת לבדידות -');
     lines.push('הסיפור הפנימי על למה אני בודד:');
     lines.push(innerStory);
     if (innerStoryCustom.length > 0) {
@@ -249,14 +249,14 @@ export const loneliness = {
     lines.push('');
     lines.push(`מה קורה כשאני חושב לפנות למישהו: ${reachOut}`);
     lines.push('');
-    lines.push('— הוראה לקלוד —');
+    lines.push('- הוראה לקלוד -');
     lines.push('זהו סשן בדידות. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט.');
     lines.push('שים לב לארבע נקודות מבניות:');
-    lines.push('1) "סוג הבדידות" הוא משתנה מארגן — חסם פנימי / אני לבד / אני שונה / אני לא נראה הם ארבע סכמות שונות שדורשות עבודה שונה. אל תתייחס לבדידות כאל ישות אחת. במיוחד אל תציע "לפנות למישהו" אם הסוג הוא "אני לא נראה" — זה רק מחזק את ה-Emotional Deprivation.');
-    lines.push('2) הדחפים שעולים (אפליקציות, אדם לא נכון, אוכל, גלישה) הם Detached Self-Soother — חלק שמנסה לעזור בדרך היחידה שהוא מכיר. שמע אותו בלי לבייש, גם בלי לתת לו להוביל את הסשן לפעולה.');
+    lines.push('1) "סוג הבדידות" הוא משתנה מארגן - חסם פנימי / אני לבד / אני שונה / אני לא נראה הם ארבע סכמות שונות שדורשות עבודה שונה. אל תתייחס לבדידות כאל ישות אחת. במיוחד אל תציע "לפנות למישהו" אם הסוג הוא "אני לא נראה" - זה רק מחזק את ה-Emotional Deprivation.');
+    lines.push('2) הדחפים שעולים (אפליקציות, אדם לא נכון, אוכל, גלישה) הם Detached Self-Soother - חלק שמנסה לעזור בדרך היחידה שהוא מכיר. שמע אותו בלי לבייש, גם בלי לתת לו להוביל את הסשן לפעולה.');
     lines.push('3) "בן כמה הבדידות מרגישה" הוא הציר העמוק. גיל צעיר = הבדידות הנוכחית נושאת בדידות ילדית ספציפית, ושם העבודה. גיל הנוכחי = יותר מצבי. אל תדלג על השדה הזה.');
-    lines.push('4) הסיפור "זה תמיד יהיה ככה" יעלה כמעט בוודאות — זו קטסטרופיזציה של Abandonment, לא נבואה. אל תתווכח איתה ראש בראש; שמע מה היא מנסה למסור על מה שהיה ולא היה.');
-    lines.push('בדידות לילית שלא נחה לא תיפתר ב"לך לישון" או "תרשום למי לפנות מחר". המטרה כאן היא להישאר *עם* — לא לפתור.');
+    lines.push('4) הסיפור "זה תמיד יהיה ככה" יעלה כמעט בוודאות - זו קטסטרופיזציה של Abandonment, לא נבואה. אל תתווכח איתה ראש בראש; שמע מה היא מנסה למסור על מה שהיה ולא היה.');
+    lines.push('בדידות לילית שלא נחה לא תיפתר ב"לך לישון" או "תרשום למי לפנות מחר". המטרה כאן היא להישאר *עם* - לא לפתור.');
 
     return lines.join('\n');
   },

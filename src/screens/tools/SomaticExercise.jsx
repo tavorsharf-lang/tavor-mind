@@ -194,7 +194,7 @@ export default function SomaticExercise() {
                 </div>
                 {vibrationFelt === false && (
                   <p className="vibration-feedback-tip">
-                    נסה שוב — צליל יותר נמוך, נשיפה יותר ארוכה. הוויברציה מורגשת בעיקר באזור הצוואר והעצם החזה.
+                    נסה שוב - צליל יותר נמוך, נשיפה יותר ארוכה. הוויברציה מורגשת בעיקר באזור הצוואר והעצם החזה.
                   </p>
                 )}
               </div>

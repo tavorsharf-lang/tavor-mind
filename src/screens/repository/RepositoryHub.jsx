@@ -142,7 +142,7 @@ export default function RepositoryHub() {
 
   const subtitle =
     !ready ? 'טוען…' :
-    totalCount === 0 ? 'אין רישומים — לחץ "ייבא" כדי להתחיל' :
+    totalCount === 0 ? 'אין רישומים - לחץ "ייבא" כדי להתחיל' :
     `${totalCount} רישומים${isFiltered ? ` · מציג ${filteredCount}` : ''}`;
 
   return (

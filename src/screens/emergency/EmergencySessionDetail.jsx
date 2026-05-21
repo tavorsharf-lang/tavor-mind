@@ -24,7 +24,7 @@ function formatHebrewDateTime(value) {
 }
 
 function formatDuration(seconds) {
-  if (!seconds || seconds < 0) return '—';
+  if (!seconds || seconds < 0) return '-';
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   if (mins === 0) return `${secs} שניות`;
@@ -89,7 +89,7 @@ export default function EmergencySessionDetail() {
             <div className="emergency-detail-fields">
               <Field
                 label="רמת הפעלה"
-                value={ACTIVATION_LABELS[session.activation] || session.activation || '—'}
+                value={ACTIVATION_LABELS[session.activation] || session.activation || '-'}
               />
               <Field label="משך" value={formatDuration(session.durationSeconds)} />
               {modesText(session.modesIdentified) && (
@@ -100,7 +100,7 @@ export default function EmergencySessionDetail() {
               )}
               <Field
                 label="ציון סגירה"
-                value={session.closingScore == null ? '—' : `${session.closingScore}/10`}
+                value={session.closingScore == null ? '-' : `${session.closingScore}/10`}
               />
               {session.note && (
                 <Field label="הערה אישית" value={session.note} />

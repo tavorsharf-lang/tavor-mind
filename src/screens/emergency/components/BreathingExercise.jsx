@@ -309,7 +309,7 @@ export default function BreathingExercise({ defaultPattern = '478', defaultPace 
               </button>
             ))}
           </div>
-          <p className="pace-hint">אם הקצב או התבנית לא נוחים — שנה כל רגע</p>
+          <p className="pace-hint">אם הקצב או התבנית לא נוחים - שנה כל רגע</p>
         </>
       )}
 

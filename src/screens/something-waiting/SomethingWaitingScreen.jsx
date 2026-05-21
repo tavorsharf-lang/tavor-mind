@@ -57,7 +57,7 @@ export default function SomethingWaitingScreen() {
       <main className="tool-content">
         {items === null && <Loading />}
         {items?.length === 0 && (
-          <p className="ck-empty">אין כרגע דברים שממתינים. כל מה שתשים בקונטיינר — יופיע פה.</p>
+          <p className="ck-empty">אין כרגע דברים שממתינים. כל מה שתשים בקונטיינר - יופיע פה.</p>
         )}
         {items?.length > 0 && (
           <ul className="waiting-list">
@@ -67,7 +67,7 @@ export default function SomethingWaitingScreen() {
                 <li key={item._id} className={`waiting-item waiting-item-${status}`}>
                   <p className="waiting-item-sentence">"{item.sentence}"</p>
                   <div className="waiting-item-meta">
-                    <span>{STRUCTURE_LABELS[item.structure] || item.customStructure || '—'}</span>
+                    <span>{STRUCTURE_LABELS[item.structure] || item.customStructure || '-'}</span>
                     <span>·</span>
                     <span>{formatHebrewDate(getIsraelDateString(new Date(item.createdAt)))}</span>
                     {STATUS_LABELS[status] && (
@@ -78,7 +78,7 @@ export default function SomethingWaitingScreen() {
                     )}
                   </div>
                   {status === 'long_waited' && (
-                    <p className="waiting-item-prompt">האם זה עדיין רלוונטי? אפשר לבדוק עם עצמך — לפתוח, להסיר, או להשאיר עוד זמן.</p>
+                    <p className="waiting-item-prompt">האם זה עדיין רלוונטי? אפשר לבדוק עם עצמך - לפתוח, להסיר, או להשאיר עוד זמן.</p>
                   )}
                   <div className="waiting-item-actions">
                     <button

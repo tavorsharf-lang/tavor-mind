@@ -88,7 +88,7 @@ function IfsBranch({ data }) {
         <h3 className="form-section-label">Self Energy</h3>
         <div className="score-bar">
           <div className="score-bar-row">
-            <span className="score-bar-label">{Number.isFinite(energy) ? `${energy} / 10` : '—'}</span>
+            <span className="score-bar-label">{Number.isFinite(energy) ? `${energy} / 10` : '-'}</span>
           </div>
           <div className="score-bar-track">
             <div className="score-bar-fill" style={{ width: `${pct}%` }} />
@@ -109,7 +109,7 @@ function IfsBranch({ data }) {
                 {part.what_carries && <p><strong>מה הוא נושא:</strong> {part.what_carries}</p>}
                 {part.what_needs && <p><strong>מה הוא צריך:</strong> {part.what_needs}</p>}
                 <p className="part-self-status">
-                  {part.self_present ? 'Self היה נוכח ✓' : 'Self לא היה נוכח —'}
+                  {part.self_present ? 'Self היה נוכח ✓' : 'Self לא היה נוכח -'}
                 </p>
               </li>
             ))}

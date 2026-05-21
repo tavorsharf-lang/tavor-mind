@@ -9,9 +9,9 @@ function messageForResult(result) {
   if (!result) return 'שגיאה לא ידועה בשמירה';
   switch (result.reason) {
     case 'no-uid':
-      return 'אין משתמש מחובר — נסה לרענן את הדף';
+      return 'אין משתמש מחובר - נסה לרענן את הדף';
     case 'offline':
-      return 'אין חיבור — נסה שוב כשתחזור לרשת';
+      return 'אין חיבור - נסה שוב כשתחזור לרשת';
     case 'error': {
       const code = result.code ? ` [${result.code}]` : '';
       const msg = result.message || 'שגיאה לא מוסברת';

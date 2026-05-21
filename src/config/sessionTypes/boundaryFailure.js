@@ -55,8 +55,8 @@ const REVERSIBILITY_OPTIONS = [
   { id: 'yes_no_cost',         label: 'כן בלי "מחיר" משמעותי' },
   { id: 'yes_creates_tension', label: 'כן אבל יהיה לא נעים / יצור מתח' },
   { id: 'yes_fear_harm_bond',  label: 'כן אבל אני חושש שזה יפגע בקשר' },
-  { id: 'partial_only',        label: 'אפשר חלקית — אפשר לצמצם אבל לא לבטל' },
-  { id: 'no_done_already',     label: 'כבר אי אפשר — קרה / הסכמתי בכתב / נעשה' },
+  { id: 'partial_only',        label: 'אפשר חלקית - אפשר לצמצם אבל לא לבטל' },
+  { id: 'no_done_already',     label: 'כבר אי אפשר - קרה / הסכמתי בכתב / נעשה' },
   { id: 'unsure_reversible',   label: 'לא בטוח' },
 ];
 
@@ -66,20 +66,20 @@ const BODY_AT_YES_OPTIONS = [
   { id: 'watched_myself',         label: 'הסתכלתי על עצמי אומר כן מבחוץ (דיסוציאציה)' },
   { id: 'auto_fawn',              label: 'חיוך / נימוס אוטומטי השתלט (fawn)' },
   { id: 'fear_pushed_compliance', label: 'פחד גופני שדחף אותי לציית מהר' },
-  { id: 'flat_agreement',         label: 'לא הרגשתי כלום בגוף — הסכמתי שטוח' },
+  { id: 'flat_agreement',         label: 'לא הרגשתי כלום בגוף - הסכמתי שטוח' },
   { id: 'dont_remember',          label: 'אני לא זוכר את הרגע עצמו' },
 ];
 
 const FEELING_NOW_OPTIONS = [
-  { id: 'regret',                  label: 'חרטה — איך הסכמתי' },
+  { id: 'regret',                  label: 'חרטה - איך הסכמתי' },
   { id: 'anger_at_self',           label: 'כעס על עצמי' },
   { id: 'resentment',              label: 'רסנטמנט / כעס על האדם השני' },
   { id: 'anxiety_ahead',           label: 'חרדה לקראת הקיום של ההתחייבות' },
-  { id: 'trapped',                 label: '"לכוד" — אין מוצא' },
+  { id: 'trapped',                 label: '"לכוד" - אין מוצא' },
   { id: 'shame_humiliation',       label: 'בושה / השפלה' },
   { id: 'general_self_betrayal',   label: 'תחושת ויתור עצמי כללית' },
   { id: 'emptiness_fatigue',       label: 'ריקנות / עייפות' },
-  { id: 'disconnected_not_yet',    label: 'מנותק — אני לא מרגיש את זה לגמרי עדיין' },
+  { id: 'disconnected_not_yet',    label: 'מנותק - אני לא מרגיש את זה לגמרי עדיין' },
   { id: 'unsure_feeling',          label: 'אני לא בטוח' },
 ];
 
@@ -99,7 +99,7 @@ const FEARED_CONSEQUENCE_OPTIONS = [
   { id: 'will_see_me_selfish',      label: 'שיחשבו שאני אנוכי / רע' },
   { id: 'will_see_me_weak',         label: 'שיחשבו שאני לא מועיל / חלש / לא שווה' },
   { id: 'conflict_overwhelm',       label: 'שיהיה קונפליקט שאני לא אסתדר איתו' },
-  { id: 'public_image_no_guy',      label: 'שאני אהיה "ההוא שאמר לא" — הסתכלות חיצונית' },
+  { id: 'public_image_no_guy',      label: 'שאני אהיה "ההוא שאמר לא" - הסתכלות חיצונית' },
   { id: 'will_really_hurt_them',    label: 'שאני אפגע בהם באמת' },
   { id: 'concrete_bad_outcome',     label: 'שמשהו רע ממשי יקרה (פיטורים, פירוד, הוצאה מקבוצה)' },
   { id: 'will_feel_guilty_later',   label: 'שאני ארגיש אשמה / חרטה אחר כך על שאמרתי לא' },
@@ -110,7 +110,7 @@ const PATTERN_OPTIONS = [
   { id: 'yes_this_person',     label: 'כן, מול האדם הספציפי הזה זה חוזר' },
   { id: 'yes_this_type',       label: 'כן, מול סוג של אנשים (אני מזהה את הסוג)' },
   { id: 'yes_cant_characterize', label: 'כן, אבל אני לא מצליח לאפיין את הסוג' },
-  { id: 'single_event',        label: 'זה לא דפוס — אירוע יחיד' },
+  { id: 'single_event',        label: 'זה לא דפוס - אירוע יחיד' },
   { id: 'suspect_unsure',      label: 'אני חושד שיש דפוס אבל לא בטוח עדיין' },
 ];
 
@@ -222,7 +222,7 @@ export const boundaryFailure = {
       'סשן: כשלון בגבולות',
       `תאריך: ${dateIso}`,
       '',
-      '— מי ומה —',
+      '- מי ומה -',
       `האדם: ${person}`,
     ];
     if (personSubValue) {
@@ -237,12 +237,12 @@ export const boundaryFailure = {
     lines.push('');
     lines.push(`האם עוד אפשר לחזור בי: ${reversibility}`);
     lines.push('');
-    lines.push('— הרגע ואחריו —');
+    lines.push('- הרגע ואחריו -');
     lines.push(`מה קרה בגוף ברגע ה"כן": ${bodyAtYes}`);
     lines.push(`איך אני מרגיש עכשיו אחרי שהסכמתי: ${feelingNow}`);
     lines.push(`עוצמת המצוקה: ${intensity}`);
     lines.push('');
-    lines.push('— מי בפנים —');
+    lines.push('- מי בפנים -');
     lines.push('החלק / החלקים שאמרו כן:');
     lines.push(partsYes);
     lines.push('');
@@ -251,11 +251,11 @@ export const boundaryFailure = {
     lines.push('');
     lines.push(`דפוס מול האדם הזה / הסוג הזה: ${pattern}`);
     lines.push('');
-    lines.push('— הוראה לקלוד —');
+    lines.push('- הוראה לקלוד -');
     lines.push('זהו סשן כשלון בגבולות. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט.');
     lines.push('שים לב לשלוש נקודות מבניות:');
-    lines.push('1) רגע ה"כן" היה רגע של פיצול פנימי — חלק אחד אמר כן, חלק אחר רצה לומר לא. אל תזהה רק עם החלק שכועס עכשיו על מה שקרה. הזמן לשולחן גם את החלק שאמר כן ושמע מה הוא ניסה להגן עליו. הוא לא חלש, הוא מגן.');
-    lines.push('2) אם אפשר עוד לחזור בי, יש דחף מובנה לקפוץ לפעולה — "איך לנסח הודעת ביטול". עכב את הפעולה עד שהפיצול הוכר. הפעולה שתבוא אחר כך תהיה יציבה יותר.');
+    lines.push('1) רגע ה"כן" היה רגע של פיצול פנימי - חלק אחד אמר כן, חלק אחר רצה לומר לא. אל תזהה רק עם החלק שכועס עכשיו על מה שקרה. הזמן לשולחן גם את החלק שאמר כן ושמע מה הוא ניסה להגן עליו. הוא לא חלש, הוא מגן.');
+    lines.push('2) אם אפשר עוד לחזור בי, יש דחף מובנה לקפוץ לפעולה - "איך לנסח הודעת ביטול". עכב את הפעולה עד שהפיצול הוכר. הפעולה שתבוא אחר כך תהיה יציבה יותר.');
     lines.push('3) אם אי אפשר לחזור בי, העבודה היא לא תיקון אלא מפגש עם החלק שלא הצליח לדבר ברגע אמת. תן לו מקום, אל תאשים אותו, ואל תזרוק אותו לטובת קבלה מהירה.');
 
     return lines.join('\n');

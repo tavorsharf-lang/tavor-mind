@@ -78,7 +78,7 @@ export default function ImportScreen() {
     <div className="tool-page ds2-themed">
       <ToolHeader
         title="ייבוא ניתוח"
-        subtitle="הדבק JSON של ניתוח מצ'אט עם Claude. ניתן לייבא גם ניתוחים ישנים — הזן את התאריך המקורי."
+        subtitle="הדבק JSON של ניתוח מצ'אט עם Claude. ניתן לייבא גם ניתוחים ישנים - הזן את התאריך המקורי."
         backTo="/repository"
       />
       <main className="tool-content">
@@ -217,9 +217,9 @@ function PreviewCard({ analysis }) {
             {meta.label}
           </span>
         )}
-        <span className="preview-date">{analysis.occurredAt || '—'}</span>
+        <span className="preview-date">{analysis.occurredAt || '-'}</span>
       </div>
-      <h4 className="preview-title">{analysis.title || '—'}</h4>
+      <h4 className="preview-title">{analysis.title || '-'}</h4>
       <p className="preview-summary">{analysis.summary || ''}</p>
       {Array.isArray(analysis.tags) && analysis.tags.length > 0 && (
         <div className="chip-row">

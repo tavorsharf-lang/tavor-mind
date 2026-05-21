@@ -81,7 +81,7 @@ function CalibrationStat({ label, value }) {
   return (
     <div className="calibration-stat">
       <span className="calibration-label">{label}</span>
-      <span className="calibration-value">{value ?? '—'}</span>
+      <span className="calibration-value">{value ?? '-'}</span>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import { Modal } from '../../components/ui/Modal.jsx';
 import { incrementCounts, sortByFrequency } from '../../utils/optionFrequency.js';
 
 const STAGE_TOTAL = 10;
-const STAGE_LABEL = 'שלב 2 — לנתח';
+const STAGE_LABEL = 'שלב 2 - לנתח';
 const OTHER_SCHEMA = '__other__';
 
 const ACTIVATION_HIGH_THRESHOLD = 7;
@@ -240,12 +240,12 @@ export default function Phase8Trigger({
                     <p className="step0-side-trip-lead">ה-activation שלך גבוה. מה לדעתך עולה?</p>
                     {onGoToGrounding && (
                       <button type="button" className="link-btn step0-side-trip-btn" onClick={onGoToGrounding}>
-                        הגוף עדיין מתוח — לעבור גראונדינג קצר ולחזור
+                        הגוף עדיין מתוח - לעבור גראונדינג קצר ולחזור
                       </button>
                     )}
                     {activation === 'mid' && onGoToContainment && (
                       <button type="button" className="link-btn step0-side-trip-btn" onClick={onGoToContainment}>
-                        משהו ספציפי עולה — זיכרון, רגש, מחשבה שמסחפת
+                        משהו ספציפי עולה - זיכרון, רגש, מחשבה שמסחפת
                       </button>
                     )}
                   </div>
@@ -332,7 +332,7 @@ export default function Phase8Trigger({
             {step === 5 && (
               <>
                 <h1 className="phase-title">סמן אם רלוונטי</h1>
-                <p className="phase-subtitle">לא חובה לסמן. אם זה לא יושב — דלג.</p>
+                <p className="phase-subtitle">לא חובה לסמן. אם זה לא יושב - דלג.</p>
                 <div className="emotion-grid">
                   {sortedDistortions.map((d) => (
                     <button
@@ -430,9 +430,9 @@ export default function Phase8Trigger({
             )}
             {step === 8 && (
               <>
-                <h1 className="phase-title">אם המבוגר הבריא שלך היה כאן עכשיו — מה אתה צריך לשמוע ממנו?</h1>
+                <h1 className="phase-title">אם המבוגר הבריא שלך היה כאן עכשיו - מה אתה צריך לשמוע ממנו?</h1>
                 <p className="phase-subtitle">לא מה הוא "צריך" להגיד. מה אתה צריך לשמוע.</p>
-                <p className="phase-subtitle phase-subtitle-faint">אם קשה — אפשר לדלג. תרשום את מה שעולה.</p>
+                <p className="phase-subtitle phase-subtitle-faint">אם קשה - אפשר לדלג. תרשום את מה שעולה.</p>
                 <textarea
                   className="ck-textarea"
                   rows={4}

@@ -93,12 +93,12 @@ export default function PhaseContainment({
               <CNIcon kind="box" color="currentColor" size={22} />
             </div>
             <div className="modal-accent modal-accent-terra">
-              Containment — להניח רגע
+              Containment - להניח רגע
             </div>
             <h3 id={titleId} className="modal-title">לא כל מה שעולה צריך להיפתח עכשיו</h3>
             <p className="modal-body">
-              זה לא דחיקה — זו דרך מובנית לשים משהו במקום בטוח, עם הבטחה לחזור.
-              זה בא מטיפול בטראומה. עובד לרוב כשמשהו מסיט את הניתוח — זיכרון רחוק, רגש לא צפוי, מחשבה שלא קשורה ישירות.
+              זה לא דחיקה - זו דרך מובנית לשים משהו במקום בטוח, עם הבטחה לחזור.
+              זה בא מטיפול בטראומה. עובד לרוב כשמשהו מסיט את הניתוח - זיכרון רחוק, רגש לא צפוי, מחשבה שלא קשורה ישירות.
             </p>
             <div className="modal-actions">
               <button
@@ -134,7 +134,7 @@ export default function PhaseContainment({
           {showRepeatNudge && (
             <div className="ds3-callout-terra" style={{ marginTop: 8, marginBottom: 16 }}>
               <p className="ds3-body" style={{ lineHeight: 1.55, margin: 0 }}>
-                שמת כבר {containmentCountSoFar} דברים בקונטיינר היום. לפעמים זה מה שצריך. ולפעמים זו דרך לא להישאר עם משהו. שווה לבדוק עם עצמך — או עם המטפל.
+                שמת כבר {containmentCountSoFar} דברים בקונטיינר היום. לפעמים זה מה שצריך. ולפעמים זו דרך לא להישאר עם משהו. שווה לבדוק עם עצמך - או עם המטפל.
               </p>
             </div>
           )}
@@ -144,12 +144,12 @@ export default function PhaseContainment({
             rows={3}
             value={sentence}
             onChange={(e) => setSentence(e.target.value)}
-            placeholder='משהו ספציפי שעלה — משפט אחד'
+            placeholder='משהו ספציפי שעלה - משפט אחד'
             maxLength={limit}
             autoFocus
           />
           <div className="ds3-input-counter">
-            <span>תכתוב במשפט אחד — לא יותר.</span>
+            <span>תכתוב במשפט אחד - לא יותר.</span>
             <span style={{ color: len >= limit * 0.9 ? 'var(--terra)' : undefined }}>{len} / {limit}</span>
           </div>
           <div className="ds3-text-center" style={{ marginTop: 14 }}>
@@ -159,7 +159,7 @@ export default function PhaseContainment({
               style={{ height: 'auto', textDecoration: 'underline', textUnderlineOffset: 4, fontSize: 14 }}
               onClick={onAddToAnalysis}
             >
-              זה דווקא קשור לסשן — להוסיף לאירוע
+              זה דווקא קשור לסשן - להוסיף לאירוע
             </button>
           </div>
         </main>
@@ -173,7 +173,7 @@ export default function PhaseContainment({
           </button>
           {showAbortOption && (
             <button type="button" className="ds3-btn-quiet" onClick={onAbortToEnd}>
-              ה-activation לא יורד — בוא נסיים את הסשן
+              ה-activation לא יורד - בוא נסיים את הסשן
             </button>
           )}
         </footer>
@@ -311,7 +311,7 @@ export default function PhaseContainment({
         <Topbar onExit={onExit} label="containment · 4 / 4" />
         <main className="ds3-screen-content">
           <div className="ds3-stack-3" style={{ marginTop: 16 }}>
-            <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>זה לא נעלם — זה רק לא עכשיו.</h1>
+            <h1 className="ds3-h1" style={{ lineHeight: 1.35 }}>זה לא נעלם - זה רק לא עכשיו.</h1>
             <p className="ds3-body ds3-text-muted">מתי תרצה לחזור לזה?</p>
           </div>
           <div className="ds3-stack-3" style={{ marginTop: 18 }}>

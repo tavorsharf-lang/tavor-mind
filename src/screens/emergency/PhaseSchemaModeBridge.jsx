@@ -162,7 +162,7 @@ export default function PhaseSchemaModeBridge({
         </main>
         <footer className="ds3-screen-footer ds3-text-center">
           <p className="ds3-micro ds3-text-soft" style={{ opacity: 0.85, margin: 0 }}>
-            תשובת "כן" אחת תספיק — נמשיך עם המוד הזה
+            תשובת "כן" אחת תספיק - נמשיך עם המוד הזה
           </p>
         </footer>
       </div>
@@ -178,7 +178,7 @@ export default function PhaseSchemaModeBridge({
           <div className="ds3-stack-3" style={{ padding: '24px 0 8px' }}>
             <h1 className="ds3-h1">מה לא מתאים?</h1>
             <p className="ds3-body ds3-text-muted" style={{ marginTop: 8 }}>
-              שתי דרכים להמשיך — בחר את זו שמרגישה נכונה.
+              שתי דרכים להמשיך - בחר את זו שמרגישה נכונה.
             </p>
           </div>
         </main>
@@ -189,7 +189,7 @@ export default function PhaseSchemaModeBridge({
             onClick={() => onSkip('rejected_known')}
             style={{ minHeight: 64, height: 64, lineHeight: 1.35 }}
           >
-            המוד שהציעו לי לא נכון — אבל אני יודע מה כן
+            המוד שהציעו לי לא נכון - אבל אני יודע מה כן
           </button>
           <button
             type="button"
@@ -285,14 +285,14 @@ export default function PhaseSchemaModeBridge({
           className="ds3-btn ds3-btn-primary"
           onClick={() => onAccept(mapping.primary.id, 'accepted')}
         >
-          כן — אבחר את המוד הראשי
+          כן - אבחר את המוד הראשי
         </button>
         <button
           type="button"
           className="ds3-btn ds3-btn-outline-terra"
           onClick={() => setView('why_not')}
         >
-          לא — בוא נבדוק מה כן עכשיו
+          לא - בוא נבדוק מה כן עכשיו
         </button>
       </footer>
     </div>

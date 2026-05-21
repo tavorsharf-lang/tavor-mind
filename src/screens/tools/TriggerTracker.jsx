@@ -162,7 +162,7 @@ export default function TriggerTracker() {
             <button type="button" className="link-btn add-thought-btn" onClick={addThought}>
               + הוסף משפט נוסף
             </button>
-            <h3 className="form-section-label">עיוותי חשיבה אפשריים — סמן אם רלוונטי</h3>
+            <h3 className="form-section-label">עיוותי חשיבה אפשריים - סמן אם רלוונטי</h3>
             <div className="emotion-grid">
               {sortedDistortions.map((d) => (
                 <button
@@ -218,7 +218,7 @@ export default function TriggerTracker() {
         {step === 5 && (
           <>
             <h1 className="phase-title">מה המבוגר הבריא שלך היה אומר עכשיו?</h1>
-            <p className="phase-subtitle">אם קשה — אפשר לדלג, או להעתיק תזכורת.</p>
+            <p className="phase-subtitle">אם קשה - אפשר לדלג, או להעתיק תזכורת.</p>
             <textarea
               className="ck-textarea"
               rows={4}

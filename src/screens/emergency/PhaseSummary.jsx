@@ -51,7 +51,7 @@ function formatDuration(seconds) {
 
 function schemaLabel(id, otherText) {
   if (id === OTHER_SCHEMA) {
-    return otherText && otherText.trim() ? `אחרת — ${otherText.trim()}` : 'אחרת';
+    return otherText && otherText.trim() ? `אחרת - ${otherText.trim()}` : 'אחרת';
   }
   return SCHEMA_NAME_BY_ID[id] || id;
 }
@@ -190,9 +190,9 @@ export default function PhaseSummary({ session, onShowRecords, onClose }) {
   const distortionLabels = (t.distortions || []).map((id) => DISTORTION_LABEL_BY_ID[id] || id);
   const modeLabels = modesIdentified.map((id) => getModeById(id)?.label || id);
   const heavinessNote = t.heavinessCheck === 'heavier'
-    ? 'באמצע הסשן בדקת איך זה — היה יותר כבד.'
+    ? 'באמצע הסשן בדקת איך זה - היה יותר כבד.'
     : t.heavinessCheck === 'heavier_continue'
-      ? 'באמצע הסשן בדקת איך זה — היה יותר כבד, ובחרת להמשיך.'
+      ? 'באמצע הסשן בדקת איך זה - היה יותר כבד, ובחרת להמשיך.'
       : null;
   const dominantName = t.dominantSchema ? schemaLabel(t.dominantSchema, t.otherSchemaText) : null;
   const otherSchemaLabels = (t.schemas || [])

@@ -41,7 +41,7 @@ export default function TriggersList({ data, scope }) {
                     </div>
                   )}
                   {isHighlight && (
-                    <p className="trigger-note">חזר {t.count} פעמים — שווה תשומת לב.</p>
+                    <p className="trigger-note">חזר {t.count} פעמים - שווה תשומת לב.</p>
                   )}
                 </button>
                 {open && Array.isArray(t.contexts) && t.contexts.length > 0 && (

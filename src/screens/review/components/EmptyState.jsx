@@ -36,7 +36,7 @@ export default function EmptyState({ inline = false, message }) {
         אין עדיין מספיק כדי לראות דפוס.
       </p>
       <p className="review-empty-sub">
-        השלם עוד צ'ק-אינים, השתמש בכלים, או ייבא ניתוחים — והמראה תתחיל לדבר.
+        השלם עוד צ'ק-אינים, השתמש בכלים, או ייבא ניתוחים - והמראה תתחיל לדבר.
       </p>
       <div className="review-empty-actions">
         <button type="button" className="repo-import-btn" onClick={() => navigate('/repository/import')}>+ ייבא ניתוח</button>

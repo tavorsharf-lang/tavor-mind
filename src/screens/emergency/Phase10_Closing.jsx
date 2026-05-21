@@ -32,7 +32,7 @@ export default function Phase10Closing({
             ההרגשה עכשיו
           </div>
           <p className="ds3-body ds3-text-muted" style={{ marginTop: 8 }}>
-            אם בא לך לכתוב משהו לעצמך — לא חובה.
+            אם בא לך לכתוב משהו לעצמך - לא חובה.
           </p>
         </div>
 

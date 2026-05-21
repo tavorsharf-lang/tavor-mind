@@ -43,10 +43,10 @@ const WHEN_OPTIONS = [
 const REAL_OR_IMAGINED_OPTIONS = [
   { id: 'actually_negative',       label: 'הוא/הם הגיבו באמת באופן שלילי / מאכזב' },
   { id: 'neutral_but_judging',     label: 'הוא/הם הגיבו ניטרלית אבל אני בטוח שבפנים הם שופטים' },
-  { id: 'fine_loop_anyway',        label: 'הוא/הם הגיבו בסדר / חיובית — והלולאה רצה בכל זאת' },
+  { id: 'fine_loop_anyway',        label: 'הוא/הם הגיבו בסדר / חיובית - והלולאה רצה בכל זאת' },
   { id: 'silence_unknown',         label: 'אין תגובה / שתיקה, ולא ידוע אם זה רע או נייטרלי' },
   { id: 'no_chance_to_see',        label: 'לא הייתה לי הזדמנות לראות איך הוא הגיב' },
-  { id: 'nothing_bad_happened',    label: 'שום דבר רע לא קרה בפועל — הלולאה רצה בלי טריגר ברור' },
+  { id: 'nothing_bad_happened',    label: 'שום דבר רע לא קרה בפועל - הלולאה רצה בלי טריגר ברור' },
 ];
 
 const LOOP_CONTENT_OPTIONS = [
@@ -72,7 +72,7 @@ const BODY_SENSATION_OPTIONS = [
   { id: 'insomnia_brain_on',      label: 'נדודי שינה / ראש "ער" שלא נכבה' },
   { id: 'heaviness_emptiness',    label: 'כובד וריקנות (שלב מאוחר)' },
   { id: 'disconnected_fog',       label: 'מנותק / מעורפל' },
-  { id: 'no_body_all_head',       label: 'אין תחושה — הכל בראש' },
+  { id: 'no_body_all_head',       label: 'אין תחושה - הכל בראש' },
 ];
 
 const LOOP_FUNCTION_OPTIONS = [
@@ -83,19 +83,19 @@ const LOOP_FUNCTION_OPTIONS = [
   { id: 'fix_now',                label: 'למצוא דרך לתקן עכשיו (לשלוח הודעה, להתקשר)' },
   { id: 'self_punish',            label: 'להעניש את עצמי על מה שקרה' },
   { id: 'do_anything_avoid_helplessness', label: 'פשוט "לעשות משהו" כדי לא להרגיש את חוסר האונים' },
-  { id: 'unclear_function',       label: 'לא ברור — הלולאה רצה ואני לא יודע מה היא רוצה' },
+  { id: 'unclear_function',       label: 'לא ברור - הלולאה רצה ואני לא יודע מה היא רוצה' },
 ];
 
 const AVOIDED_FEELING_OPTIONS = [
   { id: 'shame',                  label: 'בושה' },
-  { id: 'helplessness',           label: 'חוסר אונים — זה קרה ואני לא יכול לשנות' },
-  { id: 'loss',                   label: 'אובדן — הרגע הזה איננו' },
+  { id: 'helplessness',           label: 'חוסר אונים - זה קרה ואני לא יכול לשנות' },
+  { id: 'loss',                   label: 'אובדן - הרגע הזה איננו' },
   { id: 'anger_unexpressed',      label: 'כעס שלא הוצא במקום ובזמן' },
   { id: 'fear_abandonment',       label: 'פחד שיעזבו / לא ירצו אותי יותר' },
   { id: 'sadness',                label: 'עצב' },
   { id: 'emptiness',              label: 'ריקנות' },
   { id: 'raw_anxiety',            label: 'חרדה גולמית בלי תוכן' },
-  { id: 'just_nothing',           label: '"סתם" כלום — שעמום או שקט' },
+  { id: 'just_nothing',           label: '"סתם" כלום - שעמום או שקט' },
   {
     id: 'cant_imagine_stopping',
     label: 'לא יודע / קשה לדמיין שהיא נעצרת',
@@ -114,7 +114,7 @@ const LEADING_VOICE_OPTIONS = [
   { id: 'control_past',           label: 'חלק שמנסה לשלוט במשהו שכבר קרה' },
   { id: 'imagining_others',       label: 'חלק שמדמיין מה אחרים חושבים ברגע זה' },
   { id: 'rotating',               label: 'מתחלף בין כמה קולות' },
-  { id: 'unclear_voice',          label: 'לא ברור — פשוט לולאה' },
+  { id: 'unclear_voice',          label: 'לא ברור - פשוט לולאה' },
 ];
 
 // ── Session definition ─────────────────────────────────────────────
@@ -156,7 +156,7 @@ export const rumination = {
       id: 'body_sensation',
       type: 'multi_select',
       label: 'תחושה גופנית עכשיו',
-      hint: 'תסמן מה מרגיש עכשיו — לא מה היה בהתחלה',
+      hint: 'תסמן מה מרגיש עכשיו - לא מה היה בהתחלה',
       options: BODY_SENSATION_OPTIONS,
     },
     {
@@ -215,10 +215,10 @@ export const rumination = {
     const leadingVoice      = formatSingleSelect(v.leading_voice, LEADING_VOICE_OPTIONS);
 
     const lines = [
-      'סשן: רומינציה — מחשבות כפייתיות אחרי אירוע',
+      'סשן: רומינציה - מחשבות כפייתיות אחרי אירוע',
       `תאריך: ${dateIso}`,
       '',
-      '— מה קרה —',
+      '- מה קרה -',
       'סוג האינטראקציה:',
       interactionList,
     ];
@@ -233,7 +233,7 @@ export const rumination = {
     lines.push(`מתי: ${whenLine}`);
     lines.push(`תגובת האדם בפועל: ${realOrImagined}`);
     lines.push('');
-    lines.push('— הלולאה —');
+    lines.push('- הלולאה -');
     lines.push('מה הלולאה חוזרת ואומרת:');
     lines.push(loopContent);
     if (loopContentCustom.length > 0) {
@@ -244,7 +244,7 @@ export const rumination = {
     lines.push(`תחושה גופנית: ${body}`);
     lines.push(`עוצמת האחיזה של הלולאה: ${intensity}`);
     lines.push('');
-    lines.push('— מתחת ללולאה —');
+    lines.push('- מתחת ללולאה -');
     lines.push(`מה הלולאה מנסה להשיג: ${loopFunction}`);
     lines.push('');
     lines.push('מה הייתי מרגיש אם היא הייתה נעצרת עכשיו:');
@@ -255,8 +255,8 @@ export const rumination = {
     lines.push('');
     lines.push(`איזה קול פנימי מריץ אותה: ${leadingVoice}`);
     lines.push('');
-    lines.push('— הוראה לקלוד —');
-    lines.push('זהו סשן רומינציה. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. סיכון מובנה: הסשן עצמו עלול להפוך לעוד שכבה של הלולאה — ניתוח למה אני מרומן, חיפוש "התשובה הנכונה", או נסיון לפתור את האינטראקציה המקורית בשיחה איתך. אל תזין את הלולאה הקוגניטיבית. הפנה אותי לגוף ולרגש שמתחת — במיוחד למה שעלה בשאלה "מה הייתי מרגיש אם הלולאה נעצרת". זה הנקודה.');
+    lines.push('- הוראה לקלוד -');
+    lines.push('זהו סשן רומינציה. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. סיכון מובנה: הסשן עצמו עלול להפוך לעוד שכבה של הלולאה - ניתוח למה אני מרומן, חיפוש "התשובה הנכונה", או נסיון לפתור את האינטראקציה המקורית בשיחה איתך. אל תזין את הלולאה הקוגניטיבית. הפנה אותי לגוף ולרגש שמתחת - במיוחד למה שעלה בשאלה "מה הייתי מרגיש אם הלולאה נעצרת". זה הנקודה.');
 
     return lines.join('\n');
   },

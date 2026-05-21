@@ -7,7 +7,7 @@ const DOMAIN_LABELS = {
 };
 
 function fmt(d) {
-  if (!d) return '—';
+  if (!d) return '-';
   try { return formatHebrewDate(d); } catch { return d; }
 }
 
@@ -20,7 +20,7 @@ export default function MetaAnalysisDetail({ analysis }) {
         <h3 className="form-section-label">תקופה</h3>
         <p className="detail-line">
           <strong>{fmt(period.start)}</strong>
-          {' '}—{' '}
+          {' '}-{' '}
           <strong>{fmt(period.end)}</strong>
         </p>
         {Number.isFinite(Number(period.sources_count)) && (
@@ -47,7 +47,7 @@ export default function MetaAnalysisDetail({ analysis }) {
               return (
                 <li key={i} className="meta-row">
                   <span className="meta-row-name">{e.name}</span>
-                  <span className="meta-row-count">{e.occurrences ?? '—'}×</span>
+                  <span className="meta-row-count">{e.occurrences ?? '-'}×</span>
                   {hasIntensity
                     ? <IntensityBar value={intensity} />
                     : <span className="no-intensity">ללא דירוג עוצמה</span>}
@@ -67,7 +67,7 @@ export default function MetaAnalysisDetail({ analysis }) {
               <li key={i} className="meta-list-row">
                 <div className="meta-row-head">
                   <span className="meta-row-name">{t.name}</span>
-                  <span className="meta-row-count">{t.count ?? '—'}×</span>
+                  <span className="meta-row-count">{t.count ?? '-'}×</span>
                 </div>
                 {Array.isArray(t.contexts) && t.contexts.length > 0 && (
                   <div className="chip-row">
@@ -88,7 +88,7 @@ export default function MetaAnalysisDetail({ analysis }) {
               <li key={i} className="meta-list-row">
                 <div className="meta-row-head">
                   <span className="meta-row-name">{lp.pattern}</span>
-                  <span className="meta-row-count">{lp.count ?? '—'}×</span>
+                  <span className="meta-row-count">{lp.count ?? '-'}×</span>
                 </div>
                 {Array.isArray(lp.examples) && lp.examples.length > 0 && (
                   <ul className="example-list">

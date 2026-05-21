@@ -61,9 +61,9 @@ const BODY_SENSATION_OPTIONS = [
   { id: 'face_heat',       label: 'חום בפנים או בראש' },
   { id: 'shoulder_tension', label: 'מתח בכתפיים' },
   { id: 'subtle_tremor',   label: 'רעד עדין' },
-  { id: 'freeze',          label: 'קיפאון — אין תנועה' },
+  { id: 'freeze',          label: 'קיפאון - אין תנועה' },
   { id: 'nausea_belly',    label: 'בחילה או כובד בבטן' },
-  { id: 'hands_energy',    label: 'אנרגיה בידיים — רצון לדחוף' },
+  { id: 'hands_energy',    label: 'אנרגיה בידיים - רצון לדחוף' },
   { id: 'no_clear_body',   label: 'אין תחושה גופנית ברורה' },
 ];
 
@@ -152,7 +152,7 @@ export const parentalAnger = {
       id: 'response_action',
       type: 'multi_select',
       label: 'מה עשית עם הכעס באותו רגע?',
-      hint: 'אפשר לסמן יותר מאחד — לפי הסדר שזה קרה',
+      hint: 'אפשר לסמן יותר מאחד - לפי הסדר שזה קרה',
       options: RESPONSE_ACTION_OPTIONS,
     },
     {
@@ -207,7 +207,7 @@ export const parentalAnger = {
       'סשן: כעס על דמות הורית',
       `תאריך: ${dateIso}`,
       '',
-      '— מה קרה —',
+      '- מה קרה -',
       `ההורה: ${parent}`,
       'מה קרה:',
       triggers,
@@ -220,13 +220,13 @@ export const parentalAnger = {
     lines.push(`מתי האירוע: ${whenEvent}`);
     lines.push(`מתי הכעס עלה: ${whenAnger}`);
     lines.push('');
-    lines.push('— איך זה מורגש —');
+    lines.push('- איך זה מורגש -');
     lines.push(`תחושה גופנית: ${body}`);
     lines.push('מה עשיתי עם הכעס באותו רגע:');
     lines.push(responses);
     lines.push(`עוצמה כרגע: ${intensity}`);
     lines.push('');
-    lines.push('— מתחת לכעס —');
+    lines.push('- מתחת לכעס -');
     lines.push('מה אני מנחש שיש שם:');
     lines.push(underneath);
     if (underneathCustom.length > 0) {
@@ -239,8 +239,8 @@ export const parentalAnger = {
       lines.push(`תיאור עמום של הקול: ${vagueVoice}`);
     }
     lines.push('');
-    lines.push('— הוראה לקלוד —');
-    lines.push('זהו סשן כעס על דמות הורית. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. שים לב לפער בין "מתי האירוע" ל"מתי הכעס עלה" — זה המדד לדפוס הבליעה.');
+    lines.push('- הוראה לקלוד -');
+    lines.push('זהו סשן כעס על דמות הורית. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. שים לב לפער בין "מתי האירוע" ל"מתי הכעס עלה" - זה המדד לדפוס הבליעה.');
 
     return lines.join('\n');
   },

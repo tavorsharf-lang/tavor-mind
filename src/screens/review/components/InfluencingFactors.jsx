@@ -34,7 +34,7 @@ export default function InfluencingFactors({ data }) {
           <p className="review-section-sub">תחומי החיים שסימנת בצ׳ק־אינים</p>
         </header>
         <p className="review-section-empty-line">
-          לא סימנת תחומים בצ׳ק־אינים בטווח הזה. בפעם הבאה — נסה לסמן.
+          לא סימנת תחומים בצ׳ק־אינים בטווח הזה. בפעם הבאה - נסה לסמן.
         </p>
       </section>
     );

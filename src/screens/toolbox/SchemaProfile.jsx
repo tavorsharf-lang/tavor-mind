@@ -16,7 +16,7 @@ export default function SchemaProfile() {
     <div className="tool-page ds2-themed">
       <ToolHeader
         title="פרופיל הסכמות"
-        subtitle="שאלון YSQ-S3 — סולם 1 (נמוך) עד 6 (גבוה)"
+        subtitle="שאלון YSQ-S3 - סולם 1 (נמוך) עד 6 (גבוה)"
       />
       <main className="tool-content">
         <ul className="schema-list">
@@ -47,7 +47,7 @@ export default function SchemaProfile() {
 
         <section className="hypothesis-section">
           <h2 className="section-title">סכמה לבחינה</h2>
-          <p className="hypothesis-subtitle">דפוס שעלה במטא-ניתוח — לא בשאלון</p>
+          <p className="hypothesis-subtitle">דפוס שעלה במטא-ניתוח - לא בשאלון</p>
           <ul className="schema-list">
             {hypothesisSchemas.map((s) => {
               const open = expanded.has(s.id);

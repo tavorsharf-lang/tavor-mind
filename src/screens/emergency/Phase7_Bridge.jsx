@@ -8,8 +8,8 @@ const MAX_EXTRA_ROUNDS = 3;
 
 const EXTRA_TOOLS = [
   { id: 'vagal',     name: 'ויברציה', sub: 'המהום וגאלי, רטט במיתרי הקול',          durationSec: 60 },
-  { id: 'butterfly', name: 'מגע',     sub: 'חיבוק פרפר — טפיחות עדינות לסירוגין',  durationSec: 60 },
-  { id: 'bodyscan',  name: 'שקט',     sub: 'סריקת גוף קצרה — 7 נקודות',             durationSec: 70 },
+  { id: 'butterfly', name: 'מגע',     sub: 'חיבוק פרפר - טפיחות עדינות לסירוגין',  durationSec: 60 },
+  { id: 'bodyscan',  name: 'שקט',     sub: 'סריקת גוף קצרה - 7 נקודות',             durationSec: 70 },
 ];
 
 function deriveZone(score) {
@@ -65,7 +65,7 @@ export default function Phase7Bridge({
           <div style={{ textAlign: 'center', marginBottom: 28 }}>
             <h2 className="ds3-h2" style={{ marginBottom: 8 }}>כמה הגוף רגוע?</h2>
             <p className="ds3-caption ds3-text-soft" style={{ fontStyle: 'italic', fontWeight: 400 }}>
-              לא הראש — הגוף בלבד. אין תשובה נכונה.
+              לא הראש - הגוף בלבד. אין תשובה נכונה.
             </p>
           </div>
 
@@ -134,7 +134,7 @@ export default function Phase7Bridge({
               <p className="ds3-body" style={{
                 color: 'var(--ink)', lineHeight: 1.55, marginBottom: 12, marginTop: 0,
               }}>
-                סימנת קודם שזה לא היה ספציפי. עכשיו אחרי שעברת — האם משהו התבהר?
+                סימנת קודם שזה לא היה ספציפי. עכשיו אחרי שעברת - האם משהו התבהר?
               </p>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button
@@ -316,8 +316,8 @@ export default function Phase7Bridge({
         <Topbar onExit={onExit} />
         <main className="ds3-screen-content ds3-screen-content-center ds3-stack-5">
           <div className="ds3-stack-3 ds3-text-center">
-            <h1 className="ds3-h1">עברנו כמה סיבובים — הגוף עדיין צריך משהו אחר.</h1>
-            <p className="ds3-body ds3-text-muted">לפעמים הגוף לא נרגע לבד, וזה לא כישלון — זה מידע.</p>
+            <h1 className="ds3-h1">עברנו כמה סיבובים - הגוף עדיין צריך משהו אחר.</h1>
+            <p className="ds3-body ds3-text-muted">לפעמים הגוף לא נרגע לבד, וזה לא כישלון - זה מידע.</p>
           </div>
           <button type="button" className="ds3-btn ds3-btn-coral" onClick={() => setShowCall(true)}>
             לקרוא לחבר

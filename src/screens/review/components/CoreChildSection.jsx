@@ -32,7 +32,7 @@ export default function CoreChildSection({ data }) {
         </p>
         {showUnaddressedNote && (
           <p className="core-child-note">
-            הוא הופיע אבל לא נפנית אליו. לא כנזיפה — כתזכורת.
+            הוא הופיע אבל לא נפנית אליו. לא כנזיפה - כתזכורת.
           </p>
         )}
         {needs_expressed.length > 0 && (

@@ -35,9 +35,9 @@ const PERSON_OPTIONS = [
 
 const CONFLICT_STAGE_OPTIONS = [
   { id: 'mid_live_argument',  label: 'עכשיו, באמצע ויכוח חי' },
-  { id: 'paused_one_left',    label: 'השיחה נעצרה — אחד מאיתנו שתק או יצא' },
+  { id: 'paused_one_left',    label: 'השיחה נעצרה - אחד מאיתנו שתק או יצא' },
   { id: 'silence_lingering',  label: 'שתיקה משתררת בלי שדיברנו' },
-  { id: 'fake_reconciliation', label: '"פיוס" מזויף — אמרנו "סבבה" אבל לא נסגר' },
+  { id: 'fake_reconciliation', label: '"פיוס" מזויף - אמרנו "סבבה" אבל לא נסגר' },
   { id: 'after_explosion',    label: 'אחרי שהתפוצצתי וטרם נסגר' },
   { id: 'after_swallow',      label: 'אחרי שבלעתי ולא אמרתי כלום' },
   { id: 'unclear_stage',      label: 'לא ברור איפה זה עומד' },
@@ -68,7 +68,7 @@ const BODY_SENSATION_OPTIONS = [
   { id: 'want_to_leave',      label: 'רצון פיזי לעזוב את החדר' },
   { id: 'want_to_approach',   label: 'רצון פיזי להתקרב אליו/ה למרות הקונפליקט' },
   { id: 'hands_energy',       label: 'אנרגיה בידיים' },
-  { id: 'disconnected',       label: 'אין תחושה ברורה — מנותק' },
+  { id: 'disconnected',       label: 'אין תחושה ברורה - מנותק' },
 ];
 
 const OUTWARD_RESPONSE_OPTIONS = [
@@ -77,10 +77,10 @@ const OUTWARD_RESPONSE_OPTIONS = [
   { id: 'insisted_right',          label: 'התעקשתי שאני צודק' },
   { id: 'exploded',                label: 'התפוצצתי / הרמתי קול' },
   { id: 'left_physically',         label: 'יצאתי מהמרחב פיזית' },
-  { id: 'disconnected_emotionally', label: 'ניתקתי רגשית — נוכח אבל לא שם' },
+  { id: 'disconnected_emotionally', label: 'ניתקתי רגשית - נוכח אבל לא שם' },
   { id: 'self_erasing',            label: 'ניסיתי להבין אותו/אותה ולוותר על עצמי' },
   { id: 'said_hurtful',            label: 'אמרתי משהו פוגעני שאני מתחרט עליו' },
-  { id: 'still_in_it',             label: 'עוד לא עשיתי כלום — אני בתוך זה עכשיו' },
+  { id: 'still_in_it',             label: 'עוד לא עשיתי כלום - אני בתוך זה עכשיו' },
 ];
 
 const WHAT_HIT_OPTIONS = [
@@ -101,7 +101,7 @@ const LEADING_PART_OPTIONS = [
   { id: 'peace_over_truth',    label: 'החלק ש"שלום עדיף על אמת"' },
   { id: 'right_no_compromise', label: 'החלק ש"אני צודק ולא אוותר"' },
   { id: 'detached',            label: 'החלק שמתנתק ועושה כאילו אין כלום' },
-  { id: 'unseen_child',        label: 'החלק הפגוע — הילד שלא נראה' },
+  { id: 'unseen_child',        label: 'החלק הפגוע - הילד שלא נראה' },
   { id: 'self_critic',         label: 'החלק שמבקר אותי על שאני בכלל בקונפליקט' },
   { id: 'rotating',            label: 'מתחלף בין כמה מהם בזמן קצר' },
   { id: 'cant_identify',       label: 'אני לא מצליח לזהות כרגע' },
@@ -231,7 +231,7 @@ export const relationshipConflict = {
       'סשן: קונפליקט פתוח עם בת זוג / קרוב',
       `תאריך: ${dateIso}`,
       '',
-      '— מי ומה —',
+      '- מי ומה -',
       `האדם: ${person}`,
     ];
     if (personSubValue) {
@@ -245,12 +245,12 @@ export const relationshipConflict = {
       lines.push(`בקול שלי: ${triggersCustom.join(', ')}`);
     }
     lines.push('');
-    lines.push('— איך זה מורגש —');
+    lines.push('- איך זה מורגש -');
     lines.push(`תחושה גופנית: ${body}`);
     lines.push(`עוצמה: ${intensity}`);
     lines.push(`מה עשיתי / עושה כלפי חוץ: ${outward}`);
     lines.push('');
-    lines.push('— מתחת לקונפליקט —');
+    lines.push('- מתחת לקונפליקט -');
     lines.push('מה זה נוגע אצלי:');
     lines.push(whatHitBullets);
     lines.push('');
@@ -262,8 +262,8 @@ export const relationshipConflict = {
       lines.push(`בקול שלי: ${innerCriticCustom.join(', ')}`);
     }
     lines.push('');
-    lines.push('— הוראה לקלוד —');
-    lines.push('זהו סשן קונפליקט פתוח עם אדם קרוב. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. שים לב לסיכון מובנה: הסשן עצמו עלול להיהפך לעוד רגע של "שלום עדיף" — אל תמהר לעבר פתרון, ניסוח מה להגיד, או פיוס. תן מקום קודם לפגיעה הגולמית ולחלק שכן רוצה לכעוס, לפני כל מחשבה על תיקון או על האדם השני.');
+    lines.push('- הוראה לקלוד -');
+    lines.push('זהו סשן קונפליקט פתוח עם אדם קרוב. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט. שים לב לסיכון מובנה: הסשן עצמו עלול להיהפך לעוד רגע של "שלום עדיף" - אל תמהר לעבר פתרון, ניסוח מה להגיד, או פיוס. תן מקום קודם לפגיעה הגולמית ולחלק שכן רוצה לכעוס, לפני כל מחשבה על תיקון או על האדם השני.');
 
     return lines.join('\n');
   },

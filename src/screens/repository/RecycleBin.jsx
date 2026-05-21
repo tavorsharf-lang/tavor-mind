@@ -24,7 +24,7 @@ function daysRemaining(deletedAt) {
 }
 
 function deletedRelative(deletedAt) {
-  if (typeof deletedAt !== 'number') return '—';
+  if (typeof deletedAt !== 'number') return '-';
   const diffMs = Date.now() - deletedAt;
   const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
   if (diffDays <= 0) return 'נמחק היום';

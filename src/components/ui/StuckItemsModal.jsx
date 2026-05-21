@@ -43,7 +43,7 @@ export default function StuckItemsModal({ open, onClose }) {
   };
 
   const discardOne = (item) => {
-    const ok = window.confirm(`להשליך את הפריט "${item.label}" — ${item.detail || ''}? פעולה לא הפיכה.`);
+    const ok = window.confirm(`להשליך את הפריט "${item.label}" - ${item.detail || ''}? פעולה לא הפיכה.`);
     if (!ok) return;
     discardStuckItem(item.id);
     refresh();

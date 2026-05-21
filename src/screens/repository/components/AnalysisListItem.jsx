@@ -20,14 +20,14 @@ const TYPE_ICON = {
 const MAX_VISIBLE_TAGS = 3;
 
 function dateLabel(occurredAt) {
-  if (!occurredAt) return '—';
+  if (!occurredAt) return '-';
   try {
     const ds = getIsraelDateString(new Date(occurredAt));
     const rel = relativeDay(ds);
     const full = formatHebrewDate(ds);
     return rel === full ? full : rel;
   } catch {
-    return '—';
+    return '-';
   }
 }
 

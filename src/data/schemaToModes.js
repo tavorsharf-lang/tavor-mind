@@ -18,17 +18,17 @@ export const SCHEMA_TO_MODES = {
   },
   mistrust_abuse: {
     // Child first: the protector enters too fast and obscures the wound.
-    primary:   { id: 'exile',    hint: 'הילד שלמד שאי אפשר לסמוך — הפצע מתחת להגנה' },
-    secondary: { id: 'guardian', hint: 'ההגנה — סוקר אנשים על סכנה ושומר מרחק' },
+    primary:   { id: 'exile',    hint: 'הילד שלמד שאי אפשר לסמוך - הפצע מתחת להגנה' },
+    secondary: { id: 'guardian', hint: 'ההגנה - סוקר אנשים על סכנה ושומר מרחק' },
   },
   approval_seeking: {
     primary:   { id: 'approval', hint: 'יודע איך להוציא איתות חיצוני שאתה בסדר' },
-    secondary: { id: 'exile',    hint: 'הילד שלא קיבל מספיק — הצורך מאחורי החיפוש' },
+    secondary: { id: 'exile',    hint: 'הילד שלא קיבל מספיק - הצורך מאחורי החיפוש' },
   },
   emotional_deprivation: {
     // Hypothesis schema. Child is direct — not via protector.
-    primary:   { id: 'exile',      hint: 'מופיע ישירות, לא דרך הגנה — הצורך הלא-נענה' },
-    secondary: { id: 'sacrificer', hint: 'תגובת ההישרדות — "אם אקריב מספיק, אולי אקבל"' },
+    primary:   { id: 'exile',      hint: 'מופיע ישירות, לא דרך הגנה - הצורך הלא-נענה' },
+    secondary: { id: 'sacrificer', hint: 'תגובת ההישרדות - "אם אקריב מספיק, אולי אקבל"' },
   },
 };
 

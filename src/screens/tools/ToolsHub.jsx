@@ -22,7 +22,7 @@ export default function ToolsHub() {
     <div className="tool-page ds2-themed">
       <ToolHeader
         title="כלים"
-        subtitle="כלים שאתה מפעיל ברגע אמת — לזיהוי, עצירה, ובחינה מחדש"
+        subtitle="כלים שאתה מפעיל ברגע אמת - לזיהוי, עצירה, ובחינה מחדש"
         backTo="/"
       />
       <main className="tool-content">

@@ -126,9 +126,9 @@ const BODY_QUALITY_OPTIONS = [
 ];
 
 const THREAT_TYPE_OPTIONS = [
-  { id: 'judgement', label: 'שיפוט — יכריעו אם אני "מספיק טוב"' },
-  { id: 'exposure',  label: 'חשיפה — יראו אותי כפי שאני באמת' },
-  { id: 'perform',   label: 'ביצוע — צריך להוציא תוצר ספציפי תחת לחץ' },
+  { id: 'judgement', label: 'שיפוט - יכריעו אם אני "מספיק טוב"' },
+  { id: 'exposure',  label: 'חשיפה - יראו אותי כפי שאני באמת' },
+  { id: 'perform',   label: 'ביצוע - צריך להוציא תוצר ספציפי תחת לחץ' },
 ];
 
 // ── Session definition ─────────────────────────────────────────────
@@ -172,7 +172,7 @@ export const anticipatoryAnxiety = {
       type: 'select_with_custom',
       multi: true,
       label: 'מה הסיוט הספציפי?',
-      hint: 'אם בחרת קטגוריה — נסה לכתוב במילים שלך מה בדיוק התרחיש',
+      hint: 'אם בחרת קטגוריה - נסה לכתוב במילים שלך מה בדיוק התרחיש',
       options: CATASTROPHIC_OPTIONS,
     },
     {
@@ -232,16 +232,16 @@ export const anticipatoryAnxiety = {
       'סשן: חרדה ציפייתית לפני אירוע',
       `תאריך: ${dateIso}`,
       '',
-      '— מה האירוע —',
+      '- מה האירוע -',
       `סוג: ${eventType}`,
       `מתי: ${timeDistance}`,
       '',
-      '— מצב נוכחי —',
+      '- מצב נוכחי -',
       `רמת מוכנות סובייקטיבית: ${preparedness}`,
-      `תחושה גופנית — מיקום: ${bodyLocation}`,
-      `תחושה גופנית — איכות: ${bodyQuality}`,
+      `תחושה גופנית - מיקום: ${bodyLocation}`,
+      `תחושה גופנית - איכות: ${bodyQuality}`,
       '',
-      '— התוכן הקוגניטיבי —',
+      '- התוכן הקוגניטיבי -',
       'התרחיש הקטסטרופי:',
       scenariosBullets,
     ];
@@ -254,7 +254,7 @@ export const anticipatoryAnxiety = {
     lines.push('');
     lines.push(`סוג איום בסיסי: ${threatType}`);
     lines.push('');
-    lines.push('— הקשר היסטורי ושיפוטי —');
+    lines.push('- הקשר היסטורי ושיפוטי -');
     lines.push('דפוס בעבר:');
     lines.push(pastPattern);
     lines.push('מי השופט:');
@@ -265,7 +265,7 @@ export const anticipatoryAnxiety = {
     }
 
     lines.push('');
-    lines.push('— הוראה לקלוד —');
+    lines.push('- הוראה לקלוד -');
     lines.push('זהו סשן חרדה ציפייתית. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט.');
 
     return lines.join('\n');

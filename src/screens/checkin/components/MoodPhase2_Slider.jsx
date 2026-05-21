@@ -67,7 +67,7 @@ export default function MoodPhase2Slider({ scope, value, onChange }) {
             onChange={(e) => onChange(parseInt(e.target.value, 10))}
             className="mood-slider-v2-input"
             dir="rtl"
-            aria-label={`עוצמת התחושה — 1 ${VALENCE_LABELS[1]} עד 7 ${VALENCE_LABELS[7]}`}
+            aria-label={`עוצמת התחושה - 1 ${VALENCE_LABELS[1]} עד 7 ${VALENCE_LABELS[7]}`}
           />
         </div>
         <div className="mood-slider-v2-ticks" aria-hidden="true">

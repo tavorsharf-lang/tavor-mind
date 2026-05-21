@@ -25,7 +25,7 @@ export default function SomaticHub() {
     <div className="tool-page ds2-themed">
       <ToolHeader
         title="ויסות בגוף"
-        subtitle="תרגילים מהירים שמדברים ישירות לגוף — לפני שהראש מספיק להבין"
+        subtitle="תרגילים מהירים שמדברים ישירות לגוף - לפני שהראש מספיק להבין"
         backTo="/tools"
       />
       <main className="tool-content">

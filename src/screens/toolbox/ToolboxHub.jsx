@@ -9,7 +9,7 @@ import {
 
 const TOOLS = [
   { id: 'schemas',    icon: <PhaseDistortion />,    tone: 'self',   title: 'פרופיל הסכמות',   subtitle: '4 הדפוסים שהכי משפיעים עליך',     route: '/toolbox/schemas' },
-  { id: 'attachment', icon: <TriggerRelational />,  tone: 'self',   title: 'פרופיל ההיקשרות', subtitle: '"החזק החרד" — איך אתה בקשרים',     route: '/toolbox/attachment' },
+  { id: 'attachment', icon: <TriggerRelational />,  tone: 'self',   title: 'פרופיל ההיקשרות', subtitle: '"החזק החרד" - איך אתה בקשרים',     route: '/toolbox/attachment' },
   { id: 'modes',      icon: <SchemaHealthyAdult />, tone: 'self',   title: '5 הקולות שלך',     subtitle: 'הילד שבמרכז, המגנים סביבו, המבוגר הבריא רואה הכל', route: '/toolbox/modes' },
   { id: 'letter',     icon: <SelfLetterIcon />,     tone: 'warmth', title: 'מכתב מעצמך השלם',  subtitle: 'להזכיר לעצמך מה כבר יש',           route: '/toolbox/letter' },
 ];
@@ -37,7 +37,7 @@ export default function ToolboxHub() {
             </li>
           ))}
         </ul>
-        <p className="hub-footnote">כל מה שכאן — אתה כתבת. זה לא תבנית.</p>
+        <p className="hub-footnote">כל מה שכאן - אתה כתבת. זה לא תבנית.</p>
       </main>
     </div>
   );

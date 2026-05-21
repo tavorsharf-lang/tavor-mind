@@ -39,7 +39,7 @@ export default function ModeCheck() {
     <div className="tool-page ds2-themed">
       <ToolHeader
         title="איזה קול מדבר עכשיו?"
-        subtitle="סמן אחד או יותר — מהירה, לא מחייב הסבר"
+        subtitle="סמן אחד או יותר - מהירה, לא מחייב הסבר"
         backTo="/tools"
       />
       <main className="tool-content">

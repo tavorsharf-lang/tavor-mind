@@ -17,7 +17,7 @@ const TYPE_ICON = {
 };
 
 function fmtDate(s) {
-  if (!s) return '—';
+  if (!s) return '-';
   try {
     return formatHebrewDate(s);
   } catch {

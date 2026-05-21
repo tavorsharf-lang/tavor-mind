@@ -57,7 +57,7 @@ export default function FactoryReset() {
 
     const uid = getUid();
     if (!uid) {
-      setError('אין uid — לא ניתן לאפס');
+      setError('אין uid - לא ניתן לאפס');
       setStage('error');
       return;
     }
@@ -124,7 +124,7 @@ export default function FactoryReset() {
         <h2 style={{ fontSize: 16, fontWeight: 700, marginBottom: 10 }}>יישאר:</h2>
         <ul style={{ paddingInlineStart: 18, lineHeight: 1.7, color: 'var(--ink)' }}>
           <li>כל הניתוחים במאגר (סשני תרפיה, זיהוי רגשות וכו׳)</li>
-          <li>הזהות שלך (uid) — הנתונים הבאים יישמרו עליה</li>
+          <li>הזהות שלך (uid) - הנתונים הבאים יישמרו עליה</li>
           <li>הגדרת יום הטיפול</li>
         </ul>
       </section>

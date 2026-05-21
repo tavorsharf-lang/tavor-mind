@@ -45,8 +45,8 @@ export default function Phase3Grounding({ activation, onNext, onExit }) {
   };
 
   const subtitle = technique === 'senses'
-    ? `תסתכל סביב — מה אתה ${SENSE_VERB[currentItem.sense]} עכשיו?`
-    : `תסתכל סביב — איפה יש ${COLOR_NAME[currentItem.color]} עכשיו?`;
+    ? `תסתכל סביב - מה אתה ${SENSE_VERB[currentItem.sense]} עכשיו?`
+    : `תסתכל סביב - איפה יש ${COLOR_NAME[currentItem.color]} עכשיו?`;
 
   const switchLabel = technique === 'senses'
     ? 'להחליף לסריקת צבעים'

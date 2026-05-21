@@ -37,7 +37,7 @@ const REJECTION_TYPE_OPTIONS = [
   { id: 'ghosting',              label: 'לא חזר/ה אליי (ghosting)' },
   { id: 'direct_no',             label: 'אמר/ה "לא" ישירות לבקשה / להצעה' },
   { id: 'cancelled_no_renew',    label: 'ביטל/ה ולא חידש/ה' },
-  { id: 'gradual_distance',      label: 'התרחקות הדרגתית — פחות תגובה, פחות יוזמה' },
+  { id: 'gradual_distance',      label: 'התרחקות הדרגתית - פחות תגובה, פחות יוזמה' },
   { id: 'not_invited',           label: 'לא הזמינו אותי למשהו שאחרים הוזמנו אליו' },
   { id: 'ended_relationship',    label: 'סיים/ה את הקשר / היחסים' },
   { id: 'defining_hurtful',      label: 'אמירה פוגעת שמגדירה את הדחייה' },
@@ -51,7 +51,7 @@ const WHEN_OPTIONS = [
   { id: 'yesterday',          label: 'אתמול' },
   { id: 'this_week',          label: 'בשבוע האחרון' },
   { id: 'this_month',         label: 'בחודש האחרון' },
-  { id: 'over_month_returns', label: 'לפני יותר מחודש — ועדיין חוזר' },
+  { id: 'over_month_returns', label: 'לפני יותר מחודש - ועדיין חוזר' },
 ];
 
 const STORY_OPTIONS = [
@@ -63,7 +63,7 @@ const STORY_OPTIONS = [
   { id: 'should_have_been_other', label: '"הייתי צריך להיות אחר / קליל יותר"' },
   { id: 'found_someone_better', label: '"הם מצאו מישהו טוב יותר"' },
   { id: 'just_no_connection', label: '"פשוט לא חיברו אליי / לא עניין אותם" (ניטרלי יותר)' },
-  { id: 'no_clear_reason',     label: '"אין סיבה ברורה — וזה הכי גרוע"' },
+  { id: 'no_clear_reason',     label: '"אין סיבה ברורה - וזה הכי גרוע"' },
   { id: 'unclear_yet',         label: 'לא ברור עדיין' },
 ];
 
@@ -78,18 +78,18 @@ const BODY_SENSATION_OPTIONS = [
   { id: 'heavy_empty',      label: 'כובד וריקנות' },
   { id: 'hole_in_chest',    label: '"חור" בחזה או בבטן' },
   { id: 'full_head',        label: 'ראש "מלא" / לחץ פנימי' },
-  { id: 'disconnected',     label: 'אין תחושה — מנותק' },
+  { id: 'disconnected',     label: 'אין תחושה - מנותק' },
 ];
 
 const URGE_OPTIONS = [
   { id: 'reach_again_beg',     label: 'לפנות שוב / להסביר / להתחנן' },
   { id: 'prove_worth',         label: 'להוכיח שאני שווה (אצלם או אצל אחרים)' },
-  { id: 'erase_them',          label: 'למחוק אותם — חסימה, ניתוק קשר' },
+  { id: 'erase_them',          label: 'למחוק אותם - חסימה, ניתוק קשר' },
   { id: 'punish_them',         label: 'להעניש / לפגוע בהם בחזרה (במחשבה או במציאות)' },
   { id: 'isolate_disappear',   label: 'להסתגר ולהיעלם מכולם' },
-  { id: 'forced_closure',      label: '"לסגור חשבון" — קבלה כפויה ועצירה רגשית' },
+  { id: 'forced_closure',      label: '"לסגור חשבון" - קבלה כפויה ועצירה רגשית' },
   { id: 'numb_distractions',   label: 'להסיח דעת באכילה / עישון / טלפון' },
-  { id: 'no_clear_urge',       label: 'אין דחף ברור — רק עצב או ריקנות' },
+  { id: 'no_clear_urge',       label: 'אין דחף ברור - רק עצב או ריקנות' },
 ];
 
 const OLD_FEELING_OPTIONS = [
@@ -98,11 +98,11 @@ const OLD_FEELING_OPTIONS = [
   { id: 'always_leave_me',     label: '"תמיד עוזבים אותי בסוף"' },
   { id: 'never_belong',        label: '"אני לא שייך באמת לאף קבוצה"' },
   { id: 'flawed_others_sense', label: '"יש בי משהו פגום שאחרים מרגישים"' },
-  { id: 'child_loneliness',    label: 'בדידות ילדית — "אף אחד לא רואה אותי"' },
+  { id: 'child_loneliness',    label: 'בדידות ילדית - "אף אחד לא רואה אותי"' },
   { id: 'not_worthy_of_love',  label: '"אני לא ראוי לאהבה / לרצייה"' },
   {
     id: 'present_pain_not_old',
-    label: 'זה לא מציף משהו ישן — הכאב נוכחי וספציפי',
+    label: 'זה לא מציף משהו ישן - הכאב נוכחי וספציפי',
     sub_input: {
       id: 'present_pain',
       label: 'מה כן מורגש כרגע, אם זה לא ישן?',
@@ -116,7 +116,7 @@ const INNER_CRITIC_OPTIONS = [
   { id: 'youre_exaggerating',     label: '"אתה מגזים, זה לא היה כזה גדול"' },
   { id: 'shaming_for_feeling',    label: '"אתה מבזה את עצמך אם תרגיש ככה"' },
   { id: 'knew_so_why_surprised',  label: '"ידעת שזה יקרה, אז למה הופתעת"' },
-  { id: 'always_like_this',       label: '"תמיד אתה ככה — נצמד / רגיש / יותר מדי"' },
+  { id: 'always_like_this',       label: '"תמיד אתה ככה - נצמד / רגיש / יותר מדי"' },
   { id: 'truly_alone',            label: '"אתה לבד באמת בעולם"' },
   { id: 'move_on_already',        label: '"תעבור הלאה כבר"' },
   { id: 'prove_them_wrong',       label: '"תוכיח להם שהם טעו"' },
@@ -237,7 +237,7 @@ export const rejection = {
       'סשן: דחייה',
       `תאריך: ${dateIso}`,
       '',
-      '— מי ומה —',
+      '- מי ומה -',
       `מי דחה: ${rejector}`,
     ];
     if (rejectorSubVal) {
@@ -246,7 +246,7 @@ export const rejection = {
     lines.push(`סוג הדחייה: ${rejectionType}`);
     lines.push(`מתי: ${whenLine}`);
     lines.push('');
-    lines.push('— הפגיעה —');
+    lines.push('- הפגיעה -');
     lines.push('הסיפור שאני מספר על למה זה קרה:');
     lines.push(story);
     if (storyCustom.length > 0) {
@@ -258,7 +258,7 @@ export const rejection = {
     lines.push(`הדחף הכי חזק עכשיו: ${urge}`);
     lines.push(`עוצמת הפגיעה: ${intensity}`);
     lines.push('');
-    lines.push('— מתחת לדחייה —');
+    lines.push('- מתחת לדחייה -');
     lines.push('התחושה הישנה שזה מציף:');
     lines.push(oldFeeling);
     if (presentPain) {
@@ -271,12 +271,12 @@ export const rejection = {
       lines.push(`בקול שלי: ${innerCriticCustom.join(', ')}`);
     }
     lines.push('');
-    lines.push('— הוראה לקלוד —');
+    lines.push('- הוראה לקלוד -');
     lines.push('זהו סשן דחייה. עבוד איתי לפי המבנה שמוגדר בסיסטם של הפרויקט.');
     lines.push('שים לב לשתי נקודות מבניות:');
-    lines.push('1) הדחייה הספציפית סביר שמפעילה תחושה ישנה שקדמה לאירוע — "יותר מדי" או "לא מספיק" — וזה השכבה שאליה צריך לרדת. השדה "התחושה הישנה שזה מציף" הוא הציר.');
-    lines.push('2) הסיפור של "אני אשם" שצפוי לעלות הוא הגנה, לא רק תקיפה — הוא משמר אשליית שליטה במקום חוסר האונים האמיתי שהדחייה מציפה. אל תתווכח עם הסיפור הזה ראש בראש, אבל גם אל תקבל אותו כתיאור מציאות. הכר במה שהוא מנסה להגן עליו.');
-    lines.push('אל תמהר לעבר "אולי הם פשוט עסוקים", "תמצא מישהי אחרת", או "כאלה הם אנשים" — כל אלה חילוץ מהבושה במקום נוכחות איתה.');
+    lines.push('1) הדחייה הספציפית סביר שמפעילה תחושה ישנה שקדמה לאירוע - "יותר מדי" או "לא מספיק" - וזה השכבה שאליה צריך לרדת. השדה "התחושה הישנה שזה מציף" הוא הציר.');
+    lines.push('2) הסיפור של "אני אשם" שצפוי לעלות הוא הגנה, לא רק תקיפה - הוא משמר אשליית שליטה במקום חוסר האונים האמיתי שהדחייה מציפה. אל תתווכח עם הסיפור הזה ראש בראש, אבל גם אל תקבל אותו כתיאור מציאות. הכר במה שהוא מנסה להגן עליו.');
+    lines.push('אל תמהר לעבר "אולי הם פשוט עסוקים", "תמצא מישהי אחרת", או "כאלה הם אנשים" - כל אלה חילוץ מהבושה במקום נוכחות איתה.');
 
     return lines.join('\n');
   },

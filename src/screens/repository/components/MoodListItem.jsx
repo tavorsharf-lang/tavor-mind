@@ -4,7 +4,7 @@ import { emotionLabelById, VALENCE_LABELS, VALENCE_COLORS } from '../../../data/
 const SCOPE_LABELS = { moment: 'כרגע', day: 'כללי' };
 
 function dateLabel(dateStr) {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   const rel = relativeDay(dateStr);
   const full = formatHebrewDate(dateStr);
   return rel === full ? full : rel;

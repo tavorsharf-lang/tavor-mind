@@ -140,7 +140,7 @@ export function buildTriggerAnalysisPrompt(session) {
   const dominantSchemaName = dominantId
     ? (dominantId === OTHER_SCHEMA
         ? (session.otherSchemaText && session.otherSchemaText.trim()
-            ? `אחרת — ${session.otherSchemaText.trim()}`
+            ? `אחרת - ${session.otherSchemaText.trim()}`
             : 'אחרת')
         : (SCHEMA_NAME_BY_ID[dominantId] || dominantId))
     : null;
@@ -148,7 +148,7 @@ export function buildTriggerAnalysisPrompt(session) {
   const otherSchemaLabels = otherSchemaIds.map(id => {
     if (id === OTHER_SCHEMA) {
       return session.otherSchemaText && session.otherSchemaText.trim()
-        ? `אחרת — ${session.otherSchemaText.trim()}`
+        ? `אחרת - ${session.otherSchemaText.trim()}`
         : 'אחרת';
     }
     return SCHEMA_NAME_BY_ID[id] || id;
@@ -185,7 +185,7 @@ export function buildTriggerAnalysisPrompt(session) {
     || thoughts.length > 0 || readBackFeeling || heavinessLine;
 
   if (whatHappenedHasContent) {
-    lines.push('', '', '—— מה קרה ——', '');
+    lines.push('', '', '-- מה קרה --', '');
     if (event) {
       lines.push(`האירוע: ${event}`, '');
     }
@@ -210,7 +210,7 @@ export function buildTriggerAnalysisPrompt(session) {
   const whatItMeansHasContent = dominantSchemaName || primaryModeLabel;
 
   if (whatItMeansHasContent) {
-    lines.push('', '', '—— מה זה אומר ——', '');
+    lines.push('', '', '-- מה זה אומר --', '');
     if (dominantSchemaName) {
       lines.push(`הסכמה הדומיננטית שפעלה כאן: ${dominantSchemaName}.`, '');
     }
@@ -226,7 +226,7 @@ export function buildTriggerAnalysisPrompt(session) {
   const childSectionHasContent = childNeeds || healthyAdultMessage;
 
   if (childSectionHasContent) {
-    lines.push('', '', '—— מה הילד צריך ——', '');
+    lines.push('', '', '-- מה הילד צריך --', '');
     if (childNeeds) {
       lines.push(`הילד צריך עכשיו: ${childNeeds}`, '');
     }
@@ -265,7 +265,7 @@ export function buildTriggerAnalysisPrompt(session) {
     metaLines.push('- דחיתי את הצעת המוד מהסכמה הדומיננטית');
   }
 
-  lines.push('', '', '—— מטא-נתונים ——', '');
+  lines.push('', '', '-- מטא-נתונים --', '');
   lines.push(...metaLines);
 
   return lines.join('\n');

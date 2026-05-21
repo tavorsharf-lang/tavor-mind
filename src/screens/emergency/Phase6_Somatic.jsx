@@ -17,7 +17,7 @@ const PRIMARY_OPTIONS_BY_ACTIVATION = {
     { id: 'cold',      name: 'עיגון קר',    sub: 'מים קרים על פרקי הידיים, או קוביית קרח על הצוואר', tone: 'blue' },
   ],
   hypo: [
-    { id: 'vagal',     name: 'רטט קולי',    sub: 'המהום נמוך וארוך — הוויברציה מפעילה את הוואגוס', tone: 'body' },
+    { id: 'vagal',     name: 'רטט קולי',    sub: 'המהום נמוך וארוך - הוויברציה מפעילה את הוואגוס', tone: 'body' },
     { id: 'butterfly', name: 'חיבוק פרפר', sub: 'הצלבת ידיים על החזה, טפיחות סירוגין', tone: 'orange' },
   ],
 };
@@ -54,7 +54,7 @@ export default function Phase6Somatic({ activation, onNext, onSkip, onExit }) {
       <main className="ds3-screen-content">
         <div className="ds3-stack-2" style={{ marginTop: 8 }}>
           <h1 className="ds3-h1">רוצה עוד רגע אחד בגוף?</h1>
-          <p className="ds3-body ds3-text-muted">בחר תרגיל קצר — או הלאה</p>
+          <p className="ds3-body ds3-text-muted">בחר תרגיל קצר - או הלאה</p>
         </div>
 
         <div className="ds3-stack-3" style={{ marginTop: 22 }}>
@@ -93,7 +93,7 @@ export default function Phase6Somatic({ activation, onNext, onSkip, onExit }) {
           <div style={{ marginTop: 18 }}>
             <div className="ds3-callout-terra" style={{ marginBottom: 12 }}>
               <p className="ds3-body" style={{ margin: 0, lineHeight: 1.55 }}>
-                במצב מרוקן, גירוי קר יכול להעמיק את ההקפאה במקום לחלץ ממנה. אם זה עובד לך — מצוין, השתמש. אם לא — נסה רטט קולי או חיבוק פרפר במקום.
+                במצב מרוקן, גירוי קר יכול להעמיק את ההקפאה במקום לחלץ ממנה. אם זה עובד לך - מצוין, השתמש. אם לא - נסה רטט קולי או חיבוק פרפר במקום.
               </p>
             </div>
             <button
@@ -149,7 +149,7 @@ function ButterflyExercise({ onDone, onBack, onExit }) {
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-5 ds3-text-center">
         <div className="ds3-stack-2">
           <h1 className="ds3-h1">חיבוק פרפר</h1>
-          <p className="ds3-body ds3-text-muted">הצלב ידיים על החזה, טפיחות עדינות לסירוגין — אחת בשנייה</p>
+          <p className="ds3-body ds3-text-muted">הצלב ידיים על החזה, טפיחות עדינות לסירוגין - אחת בשנייה</p>
         </div>
         <div className="ds3-center" style={{ minHeight: 220 }}>
           {!done && <ButterflyAnim durationSec={BUTTERFLY_DURATION_SEC} onComplete={handleComplete} />}
@@ -329,7 +329,7 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
           {[
             'יד אחת על הגרון, יד שנייה על החזה',
             'שאף עמוק דרך האף',
-            'בנשיפה — הפק קול "מממם" נמוך',
+            'בנשיפה - הפק קול "מממם" נמוך',
             'שים לב לוויברציה תחת ידיך',
           ].map((line, i) => (
             <div key={i} style={{
@@ -393,7 +393,7 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
             onClick={() => setSilent((s) => !s)}
             aria-pressed={silent}
           >
-            {silent ? 'מצב ללא קול פעיל — לחץ לחזרה לקול' : 'אי אפשר להשמיע קול עכשיו? המהם בפה סגור'}
+            {silent ? 'מצב ללא קול פעיל - לחץ לחזרה לקול' : 'אי אפשר להשמיע קול עכשיו? המהם בפה סגור'}
           </button>
         </div>
       </main>
@@ -414,12 +414,12 @@ function VagalHummingExercise({ onDone, onBack, onExit }) {
 const COLD_STEPS_BY_ACTIVATION = {
   hyper: [
     'מים קרים מהברז על פרקי הידיים',
-    'או — שטוף פנים, התרכז סביב העיניים',
+    'או - שטוף פנים, התרכז סביב העיניים',
     'נשום רגיל תוך כדי',
   ],
   mid: [
     'מים קרים מהברז על פרקי הידיים',
-    'או — קוביית קרח על הצוואר, חזית הגרון',
+    'או - קוביית קרח על הצוואר, חזית הגרון',
     'נשום רגיל תוך כדי',
   ],
   hypo: [
@@ -436,7 +436,7 @@ function ColdAnchorExercise({ activation, onDone, onBack, onExit }) {
       <main className="ds3-screen-content">
         <div className="ds3-stack-2" style={{ marginTop: 8 }}>
           <h1 className="ds3-h1">עיגון קר</h1>
-          <p className="ds3-caption ds3-text-muted">mammalian dive reflex — מוריד דופק ב-10 עד 15 פעימות</p>
+          <p className="ds3-caption ds3-text-muted">mammalian dive reflex - מוריד דופק ב-10 עד 15 פעימות</p>
         </div>
         <div className="ds3-stack-3" style={{ marginTop: 22 }}>
           {steps.map((step, i) => (

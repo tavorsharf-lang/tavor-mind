@@ -1,5 +1,5 @@
 export const distortions = [
-  { id: 'all_or_nothing', label: 'הכל-או-כלום', cue: 'בלי אזורי אפור — או הצלחה גמורה או כישלון מוחלט' },
+  { id: 'all_or_nothing', label: 'הכל-או-כלום', cue: 'בלי אזורי אפור - או הצלחה גמורה או כישלון מוחלט' },
   { id: 'overgeneralization', label: 'הכללת יתר', cue: 'מאירוע אחד למסקנה גורפת ("תמיד", "אף פעם")' },
   { id: 'mental_filter', label: 'שליליות', cue: 'התמקדות רק במה שלא עבד' },
   { id: 'mind_reading', label: 'קריאת מחשבות', cue: 'הנחה שאתה יודע מה האחר חושב' },

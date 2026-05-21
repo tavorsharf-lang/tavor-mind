@@ -95,7 +95,7 @@ function NvcCell({ label, value }) {
   return (
     <div className="nvc-cell">
       <h4 className="nvc-cell-label">{label}</h4>
-      <p className="nvc-cell-value">{value || '—'}</p>
+      <p className="nvc-cell-value">{value || '-'}</p>
     </div>
   );
 }

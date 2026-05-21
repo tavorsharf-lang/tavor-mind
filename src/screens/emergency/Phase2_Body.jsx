@@ -43,19 +43,19 @@ function WaitingForReturn() {
         margin: '0 auto',
         animation: 'ds3BreathPulse 2.4s ease-in-out infinite',
       }} />
-      <p className="ds3-body ds3-text-muted">כשתחזור לכאן — נתחיל.</p>
+      <p className="ds3-body ds3-text-muted">כשתחזור לכאן - נתחיל.</p>
     </div>
   );
 }
 
 const HYPO_STEPS = [
   'קום ועמוד אם אתה יושב או שוכב.',
-  '10 קפיצות במקום — עכשיו.',
+  '10 קפיצות במקום - עכשיו.',
   'נער ידיים ורגליים בכוח, 10 שניות.',
   'שים יד אחת על הלב, יד אחת על הבטן.',
 ];
 
-const AFTER_LINE = 'שים לב — הדופק והנשימה שונים עכשיו ממה שהיו לפני שתי דקות.';
+const AFTER_LINE = 'שים לב - הדופק והנשימה שונים עכשיו ממה שהיו לפני שתי דקות.';
 const PATTERN_BY_ACTIVATION = { hyper: 'physio_sigh', hypo: 'coherent', mid: 'box' };
 const CYCLES_BY_PATTERN = { '478': 4, box: 6, coherent: 6, physio_sigh: 4 };
 const DEFAULT_PACE_BY_BRANCH = { hyper: 'normal', hypo: 'slow', mid: 'normal' };
@@ -98,7 +98,7 @@ function NoteField({ note, setNote }) {
   return (
     <div style={{ marginTop: 18 }}>
       <p className="ds3-caption ds3-text-muted" style={{ marginBottom: 8 }}>
-        אם בא לך לכתוב מה עולה עכשיו — לא חובה
+        אם בא לך לכתוב מה עולה עכשיו - לא חובה
       </p>
       <textarea
         className="ds3-textarea"
@@ -169,7 +169,7 @@ function HyperBranch({ onNext, onSkip, onExit, onRestart }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        <h1 className="ds3-h1">נשימה — תכניס ותוציא</h1>
+        <h1 className="ds3-h1">נשימה - תכניס ותוציא</h1>
         {ready ? (
           <BreathingExercise
             key={`hyper-${round}`}
@@ -267,7 +267,7 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
               שלב 1 מתוך 2
             </div>
             <h1 className="ds3-h1">נשימה מעוררת</h1>
-            <p className="ds3-body ds3-text-muted">שאיפה — נשיפה קצרה</p>
+            <p className="ds3-body ds3-text-muted">שאיפה - נשיפה קצרה</p>
           </div>
         </main>
 
@@ -281,10 +281,10 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
             <div className="modal-accent modal-accent-lichen">
               נשימה לתת-עוררות
             </div>
-            <h3 id="hypo-onboard-title" className="modal-title">שאיפה — נשיפה קצרה</h3>
+            <h3 id="hypo-onboard-title" className="modal-title">שאיפה - נשיפה קצרה</h3>
             <p className="modal-body">
               במצב מרוקן, הנשימה הזו עובדת בכיוון שונה ממה שאתה רגיל.
-              ננסה 2 מחזורים — ואז נבדוק איך זה הרגיש.
+              ננסה 2 מחזורים - ואז נבדוק איך זה הרגיש.
               אחר כך נעבור לנשימה מאזנת.
             </p>
             <div className="modal-actions">
@@ -322,7 +322,7 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
               שלב 1 מתוך 2
             </div>
             <h1 className="ds3-h1">נשימה מעוררת</h1>
-            <p className="ds3-body ds3-text-muted">2 מחזורי בדיקה — שאיפה 4, נשיפה 2</p>
+            <p className="ds3-body ds3-text-muted">2 מחזורי בדיקה - שאיפה 4, נשיפה 2</p>
           </div>
           <BreathingExercise
             key={`hypo-42-init-${round}`}
@@ -386,9 +386,9 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
 
   if (stage === 'breathe42_check') {
     const checkItems = [
-      { id: 'more4',   label: 'להמשיך — עוד 4 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת' },
-      { id: 'more8',   label: 'להמשיך — עוד 8 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת, קצת יותר' },
-      { id: 'balance', label: 'לעבור לנשימה המאזנת',     tint: 'var(--orange)', sub: 'מספיק מעורר — הלאה', filled: true },
+      { id: 'more4',   label: 'להמשיך - עוד 4 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת' },
+      { id: 'more8',   label: 'להמשיך - עוד 8 מחזורים', tint: 'var(--lichen)', sub: 'נשימה מעוררת, קצת יותר' },
+      { id: 'balance', label: 'לעבור לנשימה המאזנת',     tint: 'var(--orange)', sub: 'מספיק מעורר - הלאה', filled: true },
     ];
     return (
       <div className="ds3-screen">
@@ -458,7 +458,7 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
               letterSpacing: '0.04em',
               alignSelf: 'center',
             }}>
-              שלב 1 מתוך 2 — ממשיכים
+              שלב 1 מתוך 2 - ממשיכים
             </div>
             <h1 className="ds3-h1">נשימה מעוררת</h1>
             <p className="ds3-body ds3-text-muted">עוד {moreCycles} מחזורים</p>
@@ -540,7 +540,7 @@ function HypoBranch({ onNext, onSkip, onExit, felt62, setFelt62 }) {
               שלב 2 מתוך 2
             </div>
             <h1 className="ds3-h1">נשימה מאזנת</h1>
-            <p className="ds3-body ds3-text-muted">5 שאיפה — 5 נשיפה</p>
+            <p className="ds3-body ds3-text-muted">5 שאיפה - 5 נשיפה</p>
           </div>
           <BreathingExercise
             key={`hypo-55-${round}`}
@@ -614,7 +614,7 @@ function MidBranch({ onNext, onSkip, onExit, onRestart, note, setNote }) {
     <div className="ds3-screen">
       <Topbar onExit={onExit} />
       <main className="ds3-screen-content ds3-screen-content-center ds3-stack-4 ds3-text-center">
-        <h1 className="ds3-h1">נשימה — תכניס ותוציא</h1>
+        <h1 className="ds3-h1">נשימה - תכניס ותוציא</h1>
         {ready ? (
           <BreathingExercise
             key={`mid-${round}`}

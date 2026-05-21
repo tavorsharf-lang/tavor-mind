@@ -103,7 +103,7 @@ export default function HrSetup() {
         <div className="ds3-stack-2" style={{ marginTop: 8 }}>
           <h1 className="ds3-h1">חיבור Apple Watch</h1>
           <p className="ds3-body ds3-text-muted">
-            iOS לא חושף דופק חי מ-workout ל-Shortcuts (מגבלת אפל). במקום זה — אתה מתחיל workout בשעון לפני סשן, רץ דרך הסשן, ובסוף ה-Shortcut קורא את כל הדגימות מ-HealthKit ושולח לאפליקציה. תקבל גרף + סיכום בסוף הסשן.
+            iOS לא חושף דופק חי מ-workout ל-Shortcuts (מגבלת אפל). במקום זה - אתה מתחיל workout בשעון לפני סשן, רץ דרך הסשן, ובסוף ה-Shortcut קורא את כל הדגימות מ-HealthKit ושולח לאפליקציה. תקבל גרף + סיכום בסוף הסשן.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function HrSetup() {
 
         <Step num={1} title="צור Shortcut באייפון">
           <p className="hr-setup-step-body">
-            פתח את אפליקציית <b>Shortcuts</b> באייפון. אם יש לך כבר Shortcut קיים בשם "TavorMind HR" — מחק אותו ותיצור חדש. צור חדש עם השם בדיוק:
+            פתח את אפליקציית <b>Shortcuts</b> באייפון. אם יש לך כבר Shortcut קיים בשם "TavorMind HR" - מחק אותו ותיצור חדש. צור חדש עם השם בדיוק:
           </p>
           <CopyRow
             label="copy-name"
@@ -127,14 +127,14 @@ export default function HrSetup() {
 
         <Step num={2} title="הוסף את הפעולות (לפי הסדר)">
           <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 18, fontSize: 14, lineHeight: 1.7, color: 'var(--ink-soft)' }}>
-            <li><b>סיום אימון</b> (End Workout) — סוגר את ה-workout בשעון אם פעיל. הופך את הסיום לאוטומטי בלחיצה אחת על "סיימתי" ב-tavor-mind.</li>
+            <li><b>סיום אימון</b> (End Workout) - סוגר את ה-workout בשעון אם פעיל. הופך את הסיום לאוטומטי בלחיצה אחת על "סיימתי" ב-tavor-mind.</li>
             <li><b>קבלת מלל מהקלט</b>: <b>מקור = קלט של קיצור</b>.</li>
-            <li><b>חיפוש דגימות בריאות</b> — Type: <b>Heart Rate</b>, תאריך התחלה בטווח של <b>1 יום</b>, <b>הגבלה: כבוי</b>, מיון: תאריך התחלה.</li>
-            <li><b>חזור עם כל פריט בתוך</b> פלט "חיפוש דגימות בריאות" — תוך הלולאה:
+            <li><b>חיפוש דגימות בריאות</b> - Type: <b>Heart Rate</b>, תאריך התחלה בטווח של <b>1 יום</b>, <b>הגבלה: כבוי</b>, מיון: תאריך התחלה.</li>
+            <li><b>חזור עם כל פריט בתוך</b> פלט "חיפוש דגימות בריאות" - תוך הלולאה:
               <ol style={{ margin: '4px 0 0 0', paddingInlineStart: 16 }}>
-                <li><b>קבלת ערך</b> מתוך פריט חוזר — Attribute: <b>ערך</b> (BPM).</li>
-                <li><b>קבלת ערך</b> מתוך פריט חוזר — Attribute: <b>תאריך התחלה</b>.</li>
-                <li><b>מבנה תאריך</b> על "תאריך התחלה" — תבנית: <b>ISO 8601</b>, ❗ <b>הדלק "הכללת זמן"</b>.</li>
+                <li><b>קבלת ערך</b> מתוך פריט חוזר - Attribute: <b>ערך</b> (BPM).</li>
+                <li><b>קבלת ערך</b> מתוך פריט חוזר - Attribute: <b>תאריך התחלה</b>.</li>
+                <li><b>מבנה תאריך</b> על "תאריך התחלה" - תבנית: <b>ISO 8601</b>, ❗ <b>הדלק "הכללת זמן"</b>.</li>
                 <li><b>קבלת התוכן של URL</b>: URL = <span style={{fontFamily:'monospace'}}>https://yaniv-game-aeb26-default-rtdb.firebaseio.com/tavormindLiveHr/[ה-UID שלך]/[מלל]/samples.json</span>. Method: <b>POST</b>. Request Body: <b>JSON</b>. שדות: <span style={{fontFamily:'monospace'}}>bpm</span> = ערך, <span style={{fontFamily:'monospace'}}>ts</span> = תאריך מובנה.</li>
               </ol>
             </li>
@@ -153,7 +153,7 @@ export default function HrSetup() {
               onCopy={() => copyText('copy-url', `${FIREBASE_DB_URL}/${LIVE_HR_ROOT}/${uid}/`)}
             />
           ) : (
-            <div className="hr-setup-code">UID לא זמין — רענן את הדף</div>
+            <div className="hr-setup-code">UID לא זמין - רענן את הדף</div>
           )}
         </Step>
 
@@ -171,7 +171,7 @@ export default function HrSetup() {
 
         <Step num={5} title="בדיקה">
           <p className="hr-setup-step-body">
-            ודא שיש לך לפחות דגימת Heart Rate אחת ב-HealthKit מהשעה האחרונה (אם לא — שב 5 דקות עם השעון על היד, או הפעל workout קצר ועצור). לחץ "הפעל בדיקה" — ה-Shortcut יקרא את הדגימות וישלח. תוך 15-30 שניות תראה ✓.
+            ודא שיש לך לפחות דגימת Heart Rate אחת ב-HealthKit מהשעה האחרונה (אם לא - שב 5 דקות עם השעון על היד, או הפעל workout קצר ועצור). לחץ "הפעל בדיקה" - ה-Shortcut יקרא את הדגימות וישלח. תוך 15-30 שניות תראה ✓.
           </p>
           {(testStatus === 'idle' || testStatus === 'waiting') && (
             <a
@@ -197,7 +197,7 @@ export default function HrSetup() {
               onClick={handleRetryReset}
               style={{ width: '100%', height: 48, borderRadius: 24, marginTop: 6 }}
             >
-              {testStatus === 'ok' ? 'בדיקה הצליחה ✓ — בדוק שוב' : 'נסה שוב'}
+              {testStatus === 'ok' ? 'בדיקה הצליחה ✓ - בדוק שוב' : 'נסה שוב'}
             </button>
           )}
 
@@ -213,7 +213,7 @@ export default function HrSetup() {
           )}
         </Step>
 
-        <Step num={6} title='Shortcut נוסף — "TavorMind HR Start" (אופציונלי)'>
+        <Step num={6} title='Shortcut נוסף - "TavorMind HR Start" (אופציונלי)'>
           <p className="hr-setup-step-body">
             כדי לחסוך לך התעסקות עם השעון בכל סשן, אפשר ליצור Shortcut קטן שמתחיל workout בלחיצה אחת מ-tavor-mind.
           </p>
@@ -227,7 +227,7 @@ export default function HrSetup() {
             onCopy={() => copyText('copy-start-name', SHORTCUT_NAME_START)}
           />
           <p className="hr-setup-step-body" style={{ marginTop: 8 }}>
-            <b>פעולה יחידה:</b> "התחלת אימון" (Start Workout) — Type: <b>Other</b>, Goal: <b>Open</b>.
+            <b>פעולה יחידה:</b> "התחלת אימון" (Start Workout) - Type: <b>Other</b>, Goal: <b>Open</b>.
           </p>
           <p className="hr-setup-step-body" style={{ marginTop: 4, fontSize: 13, color: 'var(--ink-muted)' }}>
             ברגע שתיצור אותו, ב-Phase 1 של "עכשיו קשה לי" יופיע לינק "התחל מעקב דופק בשעון" שמפעיל אותו.

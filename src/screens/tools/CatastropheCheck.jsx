@@ -82,7 +82,7 @@ export default function CatastropheCheck() {
             />
             {showAgainstHint && (
               <p className="empty-hint">
-                אם באמת אין כלום — ננסה משהו אחר. לפעמים השאלה "האם זה כבר קרה לי בעבר ועברתי?" עוזרת.
+                אם באמת אין כלום - ננסה משהו אחר. לפעמים השאלה "האם זה כבר קרה לי בעבר ועברתי?" עוזרת.
               </p>
             )}
           </>
@@ -90,7 +90,7 @@ export default function CatastropheCheck() {
         {step === 4 && (
           <>
             <h1 className="phase-title">נניח שזה באמת קרה. מה תעשה?</h1>
-            <p className="phase-subtitle">לא "הכל יהיה בסדר" — תוכנית מעשית.</p>
+            <p className="phase-subtitle">לא "הכל יהיה בסדר" - תוכנית מעשית.</p>
             <textarea
               className="ck-textarea"
               rows={6}
