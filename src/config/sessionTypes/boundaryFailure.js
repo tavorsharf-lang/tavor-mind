@@ -4,6 +4,7 @@
 import {
   formatSingleSelect,
   formatMultiSelect,
+  formatMultiSelectBullets,
   formatBulletList,
   formatScale,
   getSubInput,
@@ -213,8 +214,8 @@ export const boundaryFailure = {
     const bodyAtYes       = formatMultiSelect(v.body_at_yes, BODY_AT_YES_OPTIONS);
     const feelingNow      = formatMultiSelect(v.feeling_now, FEELING_NOW_OPTIONS);
     const intensity       = formatScale(v.intensity);
-    const partsYes        = formatBulletList(v.part_that_said_yes, PART_THAT_SAID_YES_OPTIONS);
-    const fearedConsequence = formatBulletList(v.feared_consequence, FEARED_CONSEQUENCE_OPTIONS);
+    const partsYes        = formatMultiSelectBullets(v.part_that_said_yes, PART_THAT_SAID_YES_OPTIONS);
+    const fearedConsequence = formatMultiSelectBullets(v.feared_consequence, FEARED_CONSEQUENCE_OPTIONS);
     const pattern         = formatSingleSelect(v.pattern, PATTERN_OPTIONS);
 
     const lines = [

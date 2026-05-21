@@ -70,33 +70,61 @@ export function formatMultiSelectBullets(value, staticOpts) {
   return ids.map((id) => `- ${lookup(id)}`).join('\n');
 }
 
+// Extract selected option ids from ANY select-style value shape. Tolerant by
+// design so a formatter is never silently emptied by a question/formatter
+// mismatch (e.g. a plain multi_select array passed to a select_with_custom
+// formatter). Accepts:
+//   { selected: [...] | 'id', ... }   — select_with_custom / structured shape
+//   ['id', ...]                       — plain multi_select
+//   'id'                              — plain single_select
+// Returns null only for an explicit skip / unusable input.
+function flexibleSelectedIds(value) {
+  if (value == null) return null;
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') return value ? [value] : [];
+  if (typeof value === 'object') {
+    if (Array.isArray(value.selected)) return value.selected;
+    if (typeof value.selected === 'string') return value.selected ? [value.selected] : [];
+    return [];
+  }
+  return [];
+}
+
+function flexibleCustomLabels(value) {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value.custom_labels || null)
+    : null;
+}
+
 // select_with_custom (single): value is { selected: 'id', sub_inputs, custom_labels } | null
+// Shape-tolerant: also accepts a plain string id.
 export function formatSelectWithCustomSingle(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const id = Array.isArray(value.selected) ? value.selected[0] : value.selected;
-  if (!id) return NULL_TOKEN;
-  return makeLabelLookup(staticOpts)(id, value.custom_labels);
+  const ids = flexibleSelectedIds(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
+  return makeLabelLookup(staticOpts)(ids[0], flexibleCustomLabels(value));
 }
 
-// select_with_custom (multi): comma-separated list
+// select_with_custom (multi): comma-separated list. Shape-tolerant: also
+// accepts a plain multi_select array.
 export function formatSelectWithCustomList(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const arr = asArray(value.selected) || [];
-  if (arr.length === 0) return NULL_TOKEN;
+  const ids = flexibleSelectedIds(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
   const lookup = makeLabelLookup(staticOpts);
-  return arr.map((id) => lookup(id, value.custom_labels)).join(', ');
+  const customLabels = flexibleCustomLabels(value);
+  return ids.map((id) => lookup(id, customLabels)).join(', ');
 }
 
-// select_with_custom (multi): bullet list (each item on its own line with "- ")
+// Bullet list (each item on its own line with "- "). Shape-tolerant: accepts
+// the select_with_custom { selected } shape OR a plain multi_select array.
 export function formatBulletList(value, staticOpts) {
   if (value === null) return NULL_TOKEN;
-  if (!value || typeof value !== 'object') return NULL_TOKEN;
-  const ids = asArray(value.selected) || [];
-  if (ids.length === 0) return NULL_TOKEN;
+  const ids = flexibleSelectedIds(value);
+  if (!ids || ids.length === 0) return NULL_TOKEN;
   const lookup = makeLabelLookup(staticOpts);
-  return ids.map((id) => `- ${lookup(id, value.custom_labels)}`).join('\n');
+  const customLabels = flexibleCustomLabels(value);
+  return ids.map((id) => `- ${lookup(id, customLabels)}`).join('\n');
 }
 
 // scale: number 0..N (or null when skipped). Pass max to override default 10.
